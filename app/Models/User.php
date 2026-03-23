@@ -13,6 +13,8 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 
 final class User extends Authenticatable
 {
+    private const string DATE_FORMAT = 'M j, Y';
+
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
 
@@ -47,11 +49,11 @@ final class User extends Authenticatable
 
     public function getFormattedCreatedAtAttribute(): ?string
     {
-        return $this->created_at?->format('M j, Y');
+        return $this->created_at?->format(self::DATE_FORMAT);
     }
 
     public function getFormattedEmailVerifiedAtAttribute(): ?string
     {
-        return $this->created_at?->format('M j, Y');
+        return $this->created_at?->format(self::DATE_FORMAT);
     }
 }
