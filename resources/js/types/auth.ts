@@ -3,12 +3,10 @@ export type User = {
     first_name: string;
     last_name: string;
     email: string;
-    avatar?: string;
-    email_verified_at: string | null;
-    two_factor_enabled?: boolean;
     created_at: string;
-    updated_at: string;
-    [key: string]: unknown;
+    formatted_created_at: string;
+    email_verified_at: string | null;
+    formatted_email_verified_at: string | null;
 };
 
 export type Auth = {

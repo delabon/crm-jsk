@@ -44,4 +44,14 @@ final class User extends Authenticatable
         'password' => 'hashed',
         'two_factor_confirmed_at' => 'datetime',
     ];
+
+    public function getFormattedCreatedAtAttribute(): ?string
+    {
+        return $this->created_at?->format('M j, Y');
+    }
+
+    public function getFormattedEmailVerifiedAtAttribute(): ?string
+    {
+        return $this->created_at?->format('M j, Y');
+    }
 }
