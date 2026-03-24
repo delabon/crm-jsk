@@ -1,5 +1,7 @@
 import {PropsWithChildren} from "react";
 import {Label} from "@/components/ui/label";
+import InputError from "@/components/input-error";
+import InputHelp from "@/components/input-help";
 
 type Props = PropsWithChildren<{
     htmlFor?: string,
@@ -14,7 +16,7 @@ export function FormField({children, htmlFor, label, error, help}: Props) {
             {label}
         </Label>
         {children}
-        {help && <p className="text-sm text-muted-foreground -mt-1">{help}</p>}
-        {error && <p className="text-sm text-destructive">{error}</p>}
+        <InputHelp message={help} />
+        <InputError message={error} />
     </div>
 }

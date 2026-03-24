@@ -1,4 +1,5 @@
 import {Form, Head} from '@inertiajs/react';
+import PasswordInput from "@/components/password-input";
 import {Button} from "@/components/ui/button";
 import {FormField} from "@/components/ui/form-field";
 import {Input} from "@/components/ui/input";
@@ -43,26 +44,54 @@ export default function UserForm({user}: Props) {
                 <Form {...formProps} className="max-w-full w-100 flex flex-col gap-3">
                     {({errors, processing}) => (
                         <>
-                            <div className="flex gap-3">
-                                <FormField label="First Name" htmlFor="first_name" error={errors['first_name'] ?? null}>
-                                    <Input id="first_name" name="first_name" aria-invalid={!!errors['first_name']} defaultValue={user?.id ? user.first_name : ''} />
-                                </FormField>
+                            <FormField label="First Name" htmlFor="first_name" error={errors['first_name'] ?? null}>
+                                <Input
+                                    id="first_name"
+                                    name="first_name"
+                                    placeholder="First name"
+                                    aria-invalid={!!errors['first_name']}
+                                    defaultValue={user?.id ? user.first_name : ''} />
+                            </FormField>
 
-                                <FormField label="Last Name" htmlFor="last_name" error={errors['last_name'] ?? null}>
-                                    <Input id="last_name" name="last_name" aria-invalid={!!errors['last_name']} defaultValue={user?.id ? user.last_name : ''} />
-                                </FormField>
-                            </div>
+                            <FormField label="Last Name" htmlFor="last_name" error={errors['last_name'] ?? null}>
+                                <Input
+                                    id="last_name"
+                                    name="last_name"
+                                    placeholder="Last name"
+                                    aria-invalid={!!errors['last_name']}
+                                    defaultValue={user?.id ? user.last_name : ''} />
+                            </FormField>
 
                             <FormField label="Email" htmlFor="email" error={errors['email'] ?? null}>
-                                <Input type="email" id="email" name="email" aria-invalid={!!errors['email']} defaultValue={user?.id ? user.email : ''} />
+                                <Input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    placeholder="Email"
+                                    aria-invalid={!!errors['email']} defaultValue={user?.id ? user.email : ''}
+                                />
                             </FormField>
 
                             <FormField label="Password" htmlFor="password" error={errors['password'] ?? null}>
-                                <Input type="password" id="password" name="password" aria-invalid={!!errors['password']} />
+                                <PasswordInput
+                                    id="password"
+                                    required
+                                    autoComplete="new-password"
+                                    name="password"
+                                    placeholder="Password"
+                                    aria-invalid={!!errors['password']}
+                                />
                             </FormField>
 
                             <FormField label="Confirm Password" htmlFor="password_confirmation" error={errors['password_confirmation'] ?? null}>
-                                <Input type="password" id="password_confirmation" name="password_confirmation" aria-invalid={!!errors['password_confirmation']} />
+                                <PasswordInput
+                                    id="password_confirmation"
+                                    required
+                                    autoComplete="new-password"
+                                    name="password_confirmation"
+                                    placeholder="Confirm password"
+                                    aria-invalid={!!errors['password_confirmation']}
+                                />
                             </FormField>
 
                             <div>
