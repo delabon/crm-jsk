@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Actions\Fortify\CreateNewUser;
+use App\Actions\Users\StoreUserAction;
 use App\Actions\Users\DeleteUserAction;
 use App\Actions\Users\UpdateUserAction;
 use App\Http\Requests\UserFormRequest;
@@ -32,12 +32,12 @@ final class UserController extends Controller
         return Inertia::render('users/user-form');
     }
 
-    public function store(UserFormRequest $request, CreateNewUser $action): RedirectResponse
+    public function store(UserFormRequest $request, StoreUserAction $action): RedirectResponse
     {
-        $action->handle($request->validated());
+        $action->handle($request->validated(), isVerified: true);
 
         return to_route('users.index')
-            ->with('success', 'The new account has been created.');
+            ->with('success', 'The user has been created.');
     }
 
     public function edit(User $user)
