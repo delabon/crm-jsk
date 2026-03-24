@@ -9,7 +9,7 @@ use App\Concerns\ProfileValidationRules;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-final class StoreUserRequest extends FormRequest
+final class UserFormRequest extends FormRequest
 {
     use ProfileValidationRules,
         PasswordValidationRules;
@@ -29,8 +29,10 @@ final class StoreUserRequest extends FormRequest
      */
     public function rules(): array
     {
+        $user = $this->route('user');
+
         return [
-            ...$this->profileRules($this->user()?->id),
+            ...$this->profileRules($user?->id),
             'password' => $this->passwordRules(),
         ];
     }

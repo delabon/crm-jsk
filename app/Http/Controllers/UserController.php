@@ -6,11 +6,11 @@ namespace App\Http\Controllers;
 
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Users\DeleteUserAction;
-use App\Http\Requests\StoreUserRequest;
+use App\Actions\Users\UpdateUserAction;
+use App\Http\Requests\UserFormRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
@@ -29,30 +29,30 @@ final class UserController extends Controller
 
     public function create(): InertiaResponse
     {
-        return Inertia::render('users/create');
+        return Inertia::render('users/user-form');
     }
 
-    public function store(StoreUserRequest $request, CreateNewUser $action): RedirectResponse
+    public function store(UserFormRequest $request, CreateNewUser $action): RedirectResponse
     {
         $action->handle($request->validated());
 
         return to_route('users.index')
-            ->with('success', 'Account created successfully!');
-    }
-
-    public function show(User $user)
-    {
-        //
+            ->with('success', 'The new account has been created.');
     }
 
     public function edit(User $user)
     {
-        //
+        return Inertia::render('users/user-form', [
+            'user' => new UserResource($user),
+        ]);
     }
 
-    public function update(Request $request, User $user)
+    public function update(UserFormRequest $request, User $user, UpdateUserAction $action)
     {
-        //
+        $action->handle($user, $request->validated());
+
+        return to_route('users.index')
+            ->with('success', 'The user #'.$user->id.' has been updated.');
     }
 
     public function destroy(User $user, DeleteUserAction $action)

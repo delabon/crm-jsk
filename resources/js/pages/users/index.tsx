@@ -68,7 +68,7 @@ export default function Index({collection}: UsersCollection) {
                                 <TableCell>
                                     <div className="inline-flex gap-2">
                                         <Button asChild variant="default">
-                                            <Link>Edit</Link>
+                                            <Link href={usersRoute.edit(user.id).url}>Edit</Link>
                                         </Button>
                                         <Form
                                             {...usersRoute.destroy.form(user.id)}

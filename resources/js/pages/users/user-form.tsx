@@ -5,46 +5,56 @@ import {Input} from "@/components/ui/input";
 import AppLayout from '@/layouts/app-layout';
 import {dashboard} from "@/routes";
 import users from '@/routes/users';
-import type {BreadcrumbItem} from '@/types';
+import type {BreadcrumbItem, User} from '@/types';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-    },
-    {
-        title: 'Users',
-        href: users.index(),
-    },
-    {
-        title: 'Create',
-        href: users.create(),
-    },
-];
+type Props = {
+    user: User,
+}
 
-export default function Create() {
+export default function UserForm({user}: Props) {
+    const actionTitle = user?.id ? 'Edit' : 'Create';
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            title: 'Dashboard',
+            href: dashboard(),
+        },
+        {
+            title: 'Users',
+            href: users.index(),
+        },
+        {
+            title: actionTitle,
+            href: user?.id ? users.edit(user.id) : users.create() ,
+        },
+    ];
+    const formProps = user?.id
+        ? users.update.form(user.id)
+        : users.store.form();
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Create User" />
+            <Head title={`${actionTitle} User`} />
 
             <div className="space-y-4 p-6">
-                <h1 className="text-xl font-bold">Create User</h1>
+                <h1 className="text-xl font-bold">
+                    {`${actionTitle} User`}
+                </h1>
 
-                <Form {...users.store.form()} className="max-w-full w-100 flex flex-col gap-3">
+                <Form {...formProps} className="max-w-full w-100 flex flex-col gap-3">
                     {({errors, processing}) => (
                         <>
                             <div className="flex gap-3">
                                 <FormField label="First Name" htmlFor="first_name" error={errors['first_name'] ?? null}>
-                                    <Input id="first_name" name="first_name" aria-invalid={!!errors['first_name']} />
+                                    <Input id="first_name" name="first_name" aria-invalid={!!errors['first_name']} defaultValue={user?.id ? user.first_name : ''} />
                                 </FormField>
 
                                 <FormField label="Last Name" htmlFor="last_name" error={errors['last_name'] ?? null}>
-                                    <Input id="last_name" name="last_name" aria-invalid={!!errors['last_name']} />
+                                    <Input id="last_name" name="last_name" aria-invalid={!!errors['last_name']} defaultValue={user?.id ? user.last_name : ''} />
                                 </FormField>
                             </div>
 
                             <FormField label="Email" htmlFor="email" error={errors['email'] ?? null}>
-                                <Input type="email" id="email" name="email" aria-invalid={!!errors['email']} />
+                                <Input type="email" id="email" name="email" aria-invalid={!!errors['email']} defaultValue={user?.id ? user.email : ''} />
                             </FormField>
 
                             <FormField label="Password" htmlFor="password" error={errors['password'] ?? null}>
@@ -58,6 +68,7 @@ export default function Create() {
                             <div>
                                 <Button
                                     disabled={processing}
+                                    className="cursor-pointer"
                                 >
                                     Save
                                 </Button>

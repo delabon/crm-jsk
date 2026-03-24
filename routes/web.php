@@ -34,6 +34,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('users/{user}', [UserController::class, 'destroy'])
         ->middleware(['throttle:10,1'])
         ->name('users.destroy');
+    Route::get('users/{user}', [UserController::class, 'edit'])
+        ->name('users.edit');
+    Route::patch('users/{user}', [UserController::class, 'update'])
+        ->middleware(['throttle:10,1'])
+        ->name('users.update');
 });
 
 Route::resource('posts', UserController::class);
