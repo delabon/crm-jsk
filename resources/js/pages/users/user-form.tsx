@@ -7,6 +7,7 @@ import AppLayout from '@/layouts/app-layout';
 import {dashboard} from "@/routes";
 import users from '@/routes/users';
 import type {BreadcrumbItem, User} from '@/types';
+import {Spinner} from "@/components/ui/spinner";
 
 type Props = {
     user: User,
@@ -99,7 +100,8 @@ export default function UserForm({user}: Props) {
                                     disabled={processing}
                                     className="cursor-pointer"
                                 >
-                                    Save
+                                    {processing && <Spinner data-icon="inline-start" />}
+                                    {processing ? 'Saving' : 'Save'}
                                 </Button>
                             </div>
                         </>
