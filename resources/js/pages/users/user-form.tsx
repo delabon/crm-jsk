@@ -41,7 +41,7 @@ export default function UserForm({user}: Props) {
                     {`${actionTitle} User`}
                 </h1>
 
-                <Form {...formProps} className="max-w-full w-100 flex flex-col gap-3">
+                <Form {...formProps} className="max-w-full w-100 flex flex-col gap-4">
                     {({errors, processing}) => (
                         <>
                             <FormField label="First Name" htmlFor="first_name" error={errors['first_name'] ?? null}>

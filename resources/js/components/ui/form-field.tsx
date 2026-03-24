@@ -11,7 +11,7 @@ type Props = PropsWithChildren<{
 }>;
 
 export function FormField({children, htmlFor, label, error, help}: Props) {
-    return <div className="space-y-2">
+    return <div className="flex flex-col gap-2">
         <Label htmlFor={htmlFor}>
             {label}
         </Label>
