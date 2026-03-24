@@ -1,4 +1,4 @@
-import {Head, Link} from '@inertiajs/react';
+import {Form, Head, Link} from '@inertiajs/react';
 import {CollectionPagination} from "@/components/collection-pagination";
 import {Button} from "@/components/ui/button";
 import {
@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import AppLayout from '@/layouts/app-layout';
 import {dashboard} from "@/routes";
-import users from '@/routes/users';
+import usersRoute from '@/routes/users';
 import type {BreadcrumbItem, PaginatedCollection, User} from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -21,7 +21,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
     {
         title: 'Users',
-        href: users.index(),
+        href: usersRoute.index(),
     },
 ];
 
@@ -40,7 +40,7 @@ export default function Index({collection}: UsersCollection) {
                     <Button
                         asChild
                     >
-                        <Link href={users.create()}>
+                        <Link href={usersRoute.create()}>
                             Create User
                         </Link>
                     </Button>
@@ -54,6 +54,7 @@ export default function Index({collection}: UsersCollection) {
                             <TableHead>Email</TableHead>
                             <TableHead>Verified At</TableHead>
                             <TableHead>Registered At</TableHead>
+                            <TableHead>Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -64,6 +65,25 @@ export default function Index({collection}: UsersCollection) {
                                 <TableCell>{user.email}</TableCell>
                                 <TableCell>{user.formatted_email_verified_at}</TableCell>
                                 <TableCell>{user.formatted_created_at}</TableCell>
+                                <TableCell>
+                                    <div className="inline-flex gap-2">
+                                        <Button asChild variant="default">
+                                            <Link>Edit</Link>
+                                        </Button>
+                                        <Form
+                                            {...usersRoute.destroy.form(user.id)}
+                                            onBefore={() => confirm('Are you sure you to permanently delete this user (#' + user.id + ')?')}
+                                        >
+                                            <Button
+                                                variant="destructive"
+                                                type="submit"
+                                                className="cursor-pointer"
+                                            >
+                                                Delete
+                                            </Button>
+                                        </Form>
+                                    </div>
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

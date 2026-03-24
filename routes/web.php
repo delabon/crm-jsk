@@ -31,6 +31,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('users', [UserController::class, 'store'])
         ->middleware(['throttle:10,1'])
         ->name('users.store');
+    Route::delete('users/{user}', [UserController::class, 'destroy'])
+        ->middleware(['throttle:10,1'])
+        ->name('users.destroy');
 });
+
+Route::resource('posts', UserController::class);
+
 
 require __DIR__.'/settings.php';

@@ -32,7 +32,7 @@ const FlashToast = () => {
 export default function AppLayout({ children, breadcrumbs, ...props }: AppLayoutProps) {
     return <AppLayoutTemplate breadcrumbs={breadcrumbs} {...props}>
         <div>
-            <Toaster position="bottom-right" closeButton/>
+            <Toaster position="top-right" closeButton/>
             <FlashToast/>
             {children}
         </div>

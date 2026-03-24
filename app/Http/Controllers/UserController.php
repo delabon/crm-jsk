@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Actions\Fortify\CreateNewUser;
+use App\Actions\Users\DeleteUserAction;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -54,8 +55,11 @@ final class UserController extends Controller
         //
     }
 
-    public function destroy(User $user)
+    public function destroy(User $user, DeleteUserAction $action)
     {
-        //
+        $id = $action->handle($user);
+
+        return to_route('users.index')
+            ->with('success', 'The user #'.$id.' has been deleted.');
     }
 }
