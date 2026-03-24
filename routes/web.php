@@ -41,7 +41,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('users.update');
 });
 
-Route::resource('posts', UserController::class);
-
-
 require __DIR__.'/settings.php';
