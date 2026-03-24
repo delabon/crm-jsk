@@ -54,6 +54,6 @@ final class User extends Authenticatable
 
     public function getFormattedEmailVerifiedAtAttribute(): ?string
     {
-        return $this->created_at?->format(self::DATE_FORMAT);
+        return $this->email_verified_at?->format(self::DATE_FORMAT);
     }
 }
