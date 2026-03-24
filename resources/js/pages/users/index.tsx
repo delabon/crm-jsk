@@ -1,5 +1,6 @@
-import { Head } from '@inertiajs/react';
+import {Head, Link} from '@inertiajs/react';
 import {CollectionPagination} from "@/components/collection-pagination";
+import {Button} from "@/components/ui/button";
 import {
     Table,
     TableBody,
@@ -10,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import AppLayout from '@/layouts/app-layout';
 import {dashboard} from "@/routes";
-import {index} from '@/routes/users';
+import users from '@/routes/users';
 import type {BreadcrumbItem, PaginatedCollection, User} from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -20,7 +21,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
     {
         title: 'Users',
-        href: index(),
+        href: users.index(),
     },
 ];
 
@@ -34,7 +35,16 @@ export default function Index({collection}: UsersCollection) {
             <Head title="Users" />
 
             <div className="space-y-4 p-6">
-                <h1 className="text-xl font-bold">Users</h1>
+                <div className="flex items-center justify-between gap-3 flex-wrap lg:flex-nowrap">
+                    <h1 className="text-xl font-bold">Users</h1>
+                    <Button
+                        asChild
+                    >
+                        <Link href={users.create()}>
+                            Create User
+                        </Link>
+                    </Button>
+                </div>
 
                 <Table>
                     <TableHeader>

@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Actions\Fortify\CreateNewUser;
+use App\Http\Requests\StoreUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Inertia\Response;
+use Inertia\Response as InertiaResponse;
 
 final class UserController extends Controller
 {
     private const int PER_PAGE = 20;
 
-    public function index(): Response
+    public function index(): InertiaResponse
     {
         $users = User::query()->orderByDesc('id')->paginate(self::PER_PAGE);
 
@@ -23,14 +26,17 @@ final class UserController extends Controller
         ]);
     }
 
-    public function create()
+    public function create(): InertiaResponse
     {
-        //
+        return Inertia::render('users/create');
     }
 
-    public function store(Request $request)
+    public function store(StoreUserRequest $request, CreateNewUser $action): RedirectResponse
     {
-        //
+        $action->handle($request->validated());
+
+        return to_route('users.index')
+            ->with('success', 'Account created successfully!');
     }
 
     public function show(User $user)
