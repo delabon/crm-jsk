@@ -17,11 +17,7 @@ final class SecurityController extends Controller
      */
     public function edit(): Response
     {
-        $props = [
-            'canManageTwoFactor' => true,
-        ];
-
-        return Inertia::render('settings/security', $props);
+        return Inertia::render('settings/security');
     }
 
     /**

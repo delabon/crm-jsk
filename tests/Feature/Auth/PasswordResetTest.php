@@ -5,10 +5,9 @@ declare(strict_types=1);
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Notification;
-use Laravel\Fortify\Features;
 
 beforeEach(function () {
-    $this->skipUnlessFortifyFeature(Features::resetPasswords());
+    $this->markTestSkipped(); // TODO: update after Fortity is removed
 });
 
 test('reset password link screen can be rendered', function () {

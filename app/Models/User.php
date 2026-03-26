@@ -33,8 +33,6 @@ final class User extends Authenticatable implements MustVerifyEmail
      */
     protected $hidden = [
         'password',
-        'two_factor_secret',
-        'two_factor_recovery_codes',
         'remember_token',
     ];
 
@@ -44,7 +42,6 @@ final class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'two_factor_confirmed_at' => 'datetime',
     ];
 
     public function getFormattedCreatedAtAttribute(): ?string
