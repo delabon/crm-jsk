@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Actions\Users\StoreUserAction;
 use App\Actions\Users\DeleteUserAction;
+use App\Actions\Users\StoreUserAction;
 use App\Actions\Users\UpdateUserAction;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\UserFormRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
