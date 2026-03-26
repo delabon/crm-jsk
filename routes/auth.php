@@ -17,7 +17,7 @@ Route::prefix('/login')->middleware('guest')->name('login')->group(function () {
         ->name('.store');
 });
 
-Route::get('/logout', [LoginController::class, 'destroy'])
+Route::delete('/logout', [LoginController::class, 'destroy'])
     ->middleware(['auth'])
     ->name('logout');
 
