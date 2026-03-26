@@ -13,7 +13,7 @@ Route::prefix('/login')->middleware('guest')->name('login')->group(function () {
     Route::inertia('/', 'auth/login');
 
     Route::post('/', [LoginController::class, 'store'])
-        ->middleware(['throttle:10,1'])
+        ->middleware(['throttle:5,1'])
         ->name('.store');
 });
 
@@ -26,7 +26,7 @@ Route::prefix('/register')->middleware('guest')->name('register')->group(functio
     Route::inertia('/', 'auth/register');
 
     Route::post('/', RegisterController::class)
-        ->middleware(['throttle:10,1'])
+        ->middleware(['throttle:5,1'])
         ->name('.store');
 });
 
@@ -48,7 +48,9 @@ Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
 
     session()->flash('success', 'Verification link sent!');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+})
+    ->middleware(['auth', 'throttle:5,1'])
+    ->name('verification.send');
 
 // --- Password Reset ---
 Route::prefix('/forgot-password')->middleware('guest')->name('password')->group(function () {
@@ -56,6 +58,7 @@ Route::prefix('/forgot-password')->middleware('guest')->name('password')->group(
         ->name('.request');
 
     Route::post('/', [PasswordController::class, 'sendResetEmail'])
+        ->middleware('throttle:5,1')
         ->name('.email');
 });
 
@@ -64,5 +67,5 @@ Route::get('/reset-password/{token}', [PasswordController::class, 'resetPassword
     ->name('password.reset');
 
 Route::post('/reset-password', [PasswordController::class, 'resetPassword'])
-    ->middleware('guest')
+    ->middleware(['guest', 'throttle:5,1'])
     ->name('password.update');
