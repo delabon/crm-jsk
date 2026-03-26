@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Auth;
 
-use App\Actions\Auth\WebLoginAction;
+use App\Actions\Auth\AuthAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 final class LoginController extends Controller
 {
-    public function store(LoginRequest $request, WebLoginAction $action): RedirectResponse
+    public function store(LoginRequest $request, AuthAction $action): RedirectResponse
     {
         if ($action->handle($request)) {
             return to_route('dashboard');

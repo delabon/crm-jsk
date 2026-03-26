@@ -7,7 +7,7 @@ namespace App\Actions\Auth;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Auth;
 
-final class WebLoginAction
+final class AuthAction
 {
     public function handle(LoginRequest $request): bool
     {
