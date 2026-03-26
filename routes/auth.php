@@ -12,10 +12,14 @@ use Illuminate\Http\Request;
 Route::prefix('/login')->middleware('guest')->name('login')->group(function () {
     Route::inertia('/', 'auth/login');
 
-    Route::post('/', LoginController::class)
+    Route::post('/', [LoginController::class, 'store'])
         ->middleware(['throttle:10,1'])
         ->name('.store');
 });
+
+Route::get('/logout', [LoginController::class, 'destroy'])
+    ->middleware(['auth'])
+    ->name('logout');
 
 // --- Register ---
 Route::prefix('/register')->middleware('guest')->name('register')->group(function () {

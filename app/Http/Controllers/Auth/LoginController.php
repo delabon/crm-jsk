@@ -8,10 +8,12 @@ use App\Actions\Auth\WebLoginAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 final class LoginController extends Controller
 {
-    public function __invoke(LoginRequest $request, WebLoginAction $action): RedirectResponse
+    public function store(LoginRequest $request, WebLoginAction $action): RedirectResponse
     {
         if ($action->handle($request)) {
             return to_route('dashboard');
@@ -20,5 +22,16 @@ final class LoginController extends Controller
         return to_route('login')->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
+    }
+
+    public function destroy(Request $request): RedirectResponse
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return to_route('login')->with('success', 'You just logged out.');
     }
 }

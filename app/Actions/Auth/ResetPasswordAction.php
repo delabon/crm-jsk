@@ -9,9 +9,8 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-use Laravel\Fortify\Contracts\ResetsUserPasswords;
 
-final class ResetPasswordAction implements ResetsUserPasswords
+final class ResetPasswordAction
 {
     public function handle(array $data): string
     {
