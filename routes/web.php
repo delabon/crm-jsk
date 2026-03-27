@@ -29,16 +29,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 ->name('index');
             Route::get('/create', 'create')
                 ->name('create');
-            Route::post('users', 'store')
+            Route::post('/', 'store')
                 ->middleware('throttle:10,1')
                 ->name('store');
-            Route::delete('users/{user}', 'destroy')
-                ->middleware('throttle:10,1')
+            Route::delete('/{user}', 'destroy')
+                ->middleware(['throttle:10,1', 'can:delete,user'])
                 ->name('destroy');
-            Route::get('users/{user}', 'edit')
+            Route::get('/{user}', 'edit')
+                ->middleware('can:update,user')
                 ->name('edit');
-            Route::patch('users/{user}', 'update')
-                ->middleware('throttle:10,1')
+            Route::patch('/{user}', 'update')
+                ->middleware(['throttle:10,1', 'can:update,user'])
                 ->name('update');
         });
 });
