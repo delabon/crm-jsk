@@ -8,10 +8,10 @@ export type User = {
     formatted_created_at: string;
     email_verified_at: string | null;
     formatted_email_verified_at: string | null;
+    permission_names?: string[];
+    role_names?: string[];
 };
 
 export type Auth = {
     user: User;
-    permissions?: string[];
-    roles?: string[];
 };

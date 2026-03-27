@@ -10,6 +10,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Spatie\Permission\Traits\HasRoles;
 
 final class User extends Authenticatable implements MustVerifyEmail
@@ -61,5 +62,15 @@ final class User extends Authenticatable implements MustVerifyEmail
     public function getFormattedRoleAttribute(): ?string
     {
         return Role::from($this->roles->first()?->name)->label();
+    }
+
+    public function getRoleNamesAttribute(): ?Collection
+    {
+        return $this->roles?->pluck('name');
+    }
+
+    public function getPermissionNamesAttribute(): ?Collection
+    {
+        return $this->getPermissionsViaRoles()->pluck('name');
     }
 }

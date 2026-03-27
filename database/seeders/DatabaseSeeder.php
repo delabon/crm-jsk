@@ -16,18 +16,27 @@ final class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        /** @var User $superAdmin */
-        $superAdmin = User::factory()->create([
-            'first_name' => 'Super',
-            'last_name' => 'Admin',
-            'email' => 'super.admin@example.com',
-        ]);
-
         $this->call([
             RolesAndPermissionsSeeder::class,
         ]);
 
-        $superAdmin->assignRole(Role::SuperAdmin);
+        User::factory()->create([
+            'first_name' => 'Super',
+            'last_name' => 'Admin',
+            'email' => 'super.admin@example.com',
+        ])->assignRole(Role::SuperAdmin);
+
+        User::factory()->create([
+            'first_name' => 'Manager',
+            'last_name' => 'User',
+            'email' => 'manager@example.com',
+        ])->assignRole(Role::Manager);
+
+        User::factory()->create([
+            'first_name' => 'Sales',
+            'last_name' => 'Agent',
+            'email' => 'sales.agent@example.com',
+        ])->assignRole(Role::SalesAgent);
 
         // User::factory()->create([
         //     'first_name' => 'Sales',

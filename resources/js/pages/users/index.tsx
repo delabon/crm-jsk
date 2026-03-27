@@ -1,4 +1,4 @@
-import {Form, Head, Link} from '@inertiajs/react';
+import {Form, Head, Link, usePage} from '@inertiajs/react';
 import {CollectionPagination} from "@/components/collection-pagination";
 import {Button} from "@/components/ui/button";
 import {
@@ -30,6 +30,9 @@ type UsersCollection = {
 }
 
 export default function Index({collection}: UsersCollection) {
+    const {auth} = usePage().props;
+    console.log(auth);
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Users" />
@@ -69,21 +72,27 @@ export default function Index({collection}: UsersCollection) {
                                 <TableCell>{user.formatted_created_at}</TableCell>
                                 <TableCell>
                                     <div className="inline-flex gap-2">
-                                        <Button asChild variant="default">
-                                            <Link href={usersRoute.edit(user.id).url}>Edit</Link>
-                                        </Button>
-                                        <Form
-                                            {...usersRoute.destroy.form(user.id)}
-                                            onBefore={() => confirm('Are you sure you to permanently delete this user (#' + user.id + ')?')}
-                                        >
-                                            <Button
-                                                variant="destructive"
-                                                type="submit"
-                                                className="cursor-pointer"
-                                            >
-                                                Delete
-                                            </Button>
-                                        </Form>
+                                        {(
+                                            (auth.user.permission_names?.includes('users.manage') && (auth.user.id === user.id || !user.role_names?.includes('super_admin')))
+                                            &&
+                                                <>
+                                                    <Button asChild variant="default">
+                                                        <Link href={usersRoute.edit(user.id).url}>Edit</Link>
+                                                    </Button>
+                                                    <Form
+                                                        {...usersRoute.destroy.form(user.id)}
+                                                        onBefore={() => confirm('Are you sure you want to permanently delete this user (#' + user.id + ')?')}
+                                                    >
+                                                        <Button
+                                                            variant="destructive"
+                                                            type="submit"
+                                                            className="cursor-pointer"
+                                                        >
+                                                            Delete
+                                                        </Button>
+                                                    </Form>
+                                                </>
+                                        )}
                                     </div>
                                 </TableCell>
                             </TableRow>

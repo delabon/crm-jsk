@@ -11,9 +11,9 @@ import type { NavItem } from '@/types';
 
 export function NavMain({ items = [] }: { items: NavItem[] }) {
     const { isCurrentUrl } = useCurrentUrl();
-    const { permissions } = usePage().props.auth;
+    const { permission_names } = usePage().props.auth.user;
 
-    items = items.filter((item) => item.permission && permissions?.includes(item.permission ?? ''));
+    items = items.filter((item) => item.permission && permission_names?.includes(item.permission ?? ''));
 
     return (
         <SidebarGroup className="px-2 py-0">

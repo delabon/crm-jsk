@@ -12,7 +12,7 @@ final class GetPaginatedUsersAction
     public function handle(int $perPage = 10): LengthAwarePaginator
     {
         return User::query()
-            ->with(['roles'])
+            ->with(['roles:id,name', 'roles.permissions:id,name'])
             ->orderByDesc('id')
             ->paginate($perPage);
     }

@@ -4,18 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use App\Actions\Users\GetUserPermissionNamesAction;
-use App\Actions\Users\GetUserRoleNamesAction;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
 final class HandleInertiaRequests extends Middleware
 {
-    public function __construct(
-        private readonly GetUserPermissionNamesAction $getUserPermissionNamesAction,
-        private readonly GetUserRoleNamesAction $getUserRoleNamesAction
-    ) {}
-
     /**
      * The root template that's loaded on the first page visit.
      *
@@ -44,19 +38,14 @@ final class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        $user = $request->user();
+        $user = $request->user()
+            ->loadMissing(['roles:id,name', 'roles.permissions:id,name']);
 
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'auth' => [
-                'user' => $user,
-                'permissions' => $user
-                    ? $this->getUserPermissionNamesAction->handle($user)
-                    : [],
-                'roles' => $user
-                    ? $this->getUserRoleNamesAction->handle($user)
-                    : [],
+                'user' => new UserResource($user),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'flash' => [
