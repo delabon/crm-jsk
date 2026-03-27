@@ -31,6 +31,7 @@ final class UserResource extends JsonResource
             'formatted_created_at' => $this->resource->formatted_created_at,
             'email_verified_at' => $this->resource->email_verified_at,
             'formatted_email_verified_at' => $this->resource->formatted_email_verified_at,
+            'formatted_role' => $this->resource->formatted_role,
         ];
     }
 }

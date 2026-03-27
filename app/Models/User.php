@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\Role;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -55,5 +56,10 @@ final class User extends Authenticatable implements MustVerifyEmail
     public function getFormattedEmailVerifiedAtAttribute(): ?string
     {
         return $this->email_verified_at?->format(self::DATE_FORMAT);
+    }
+
+    public function getFormattedRoleAttribute(): ?string
+    {
+        return Role::from($this->roles->first()?->name)->label();
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Actions\Users\DeleteUserAction;
+use App\Actions\Users\GetPaginatedUsersAction;
 use App\Actions\Users\StoreUserAction;
 use App\Actions\Users\UpdateUserAction;
 use App\Http\Controllers\Controller;
@@ -19,12 +20,12 @@ final class UserController extends Controller
 {
     private const int PER_PAGE = 20;
 
-    public function index(): InertiaResponse
+    public function index(GetPaginatedUsersAction $action): InertiaResponse
     {
-        $users = User::query()->orderByDesc('id')->paginate(self::PER_PAGE);
-
         return Inertia::render('users/index', [
-            'collection' => UserResource::collection($users),
+            'collection' => UserResource::collection(
+                $action->handle(self::PER_PAGE)
+            ),
         ]);
     }
 

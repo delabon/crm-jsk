@@ -49,9 +49,10 @@ export default function Index({collection}: UsersCollection) {
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="w-[100px]">ID</TableHead>
+                            <TableHead className="w-25">ID</TableHead>
                             <TableHead>Name</TableHead>
                             <TableHead>Email</TableHead>
+                            <TableHead>Role</TableHead>
                             <TableHead>Verified At</TableHead>
                             <TableHead>Registered At</TableHead>
                             <TableHead>Actions</TableHead>
@@ -63,6 +64,7 @@ export default function Index({collection}: UsersCollection) {
                                 <TableCell className="font-medium">{user.id}</TableCell>
                                 <TableCell>{user.first_name + ' ' + user.last_name}</TableCell>
                                 <TableCell>{user.email}</TableCell>
+                                <TableCell>{user.formatted_role}</TableCell>
                                 <TableCell>{user.formatted_email_verified_at}</TableCell>
                                 <TableCell>{user.formatted_created_at}</TableCell>
                                 <TableCell>
