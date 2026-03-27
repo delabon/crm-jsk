@@ -31,7 +31,6 @@ type UsersCollection = {
 
 export default function Index({collection}: UsersCollection) {
     const {auth} = usePage().props;
-    console.log(auth);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
