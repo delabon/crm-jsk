@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Auth;
 
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-final class UserFormRequest extends FormRequest
+final class RegisterRequest extends FormRequest
 {
     use ProfileValidationRules,
         PasswordValidationRules;
@@ -29,10 +29,8 @@ final class UserFormRequest extends FormRequest
      */
     public function rules(): array
     {
-        $user = $this->route('user');
-
         return [
-            ...$this->profileRules($user?->id),
+            ...$this->profileRules(),
             'password' => $this->passwordRules(),
         ];
     }

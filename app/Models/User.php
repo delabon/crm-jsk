@@ -73,4 +73,9 @@ final class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->getPermissionsViaRoles()->pluck('name');
     }
+
+    public function getMainRoleAttribute(): ?Role
+    {
+        return Role::tryFrom($this->roles->first()?->name);
+    }
 }

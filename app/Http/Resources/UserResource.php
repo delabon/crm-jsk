@@ -32,6 +32,7 @@ final class UserResource extends JsonResource
             'email_verified_at' => $this->resource->email_verified_at,
             'formatted_email_verified_at' => $this->resource->formatted_email_verified_at,
             'formatted_role' => $this->resource->formatted_role,
+            'main_role' => $this->resource->main_role,
             'role_names' => $this->resource->role_names,
             'permission_names' => $this->resource->permission_names,
         ];

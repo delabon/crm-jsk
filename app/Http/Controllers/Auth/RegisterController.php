@@ -5,16 +5,20 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Auth;
 
 use App\Actions\Users\StoreUserAction;
+use App\Enums\Role;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UserFormRequest;
+use App\Http\Requests\Auth\RegisterRequest;
 use Auth;
 use Illuminate\Http\RedirectResponse;
 
 final class RegisterController extends Controller
 {
-    public function __invoke(UserFormRequest $request, StoreUserAction $action): RedirectResponse
+    public function __invoke(RegisterRequest $request, StoreUserAction $action): RedirectResponse
     {
-        $user = $action->handle($request->validated());
+        $data = $request->validated();
+        $data['role'] = Role::User->value;
+
+        $user = $action->handle($data);
 
         Auth::login($user);
 

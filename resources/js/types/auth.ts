@@ -3,6 +3,7 @@ export type User = {
     first_name: string;
     last_name: string;
     email: string;
+    main_role: string | null;
     formatted_role: string | null;
     created_at: string;
     formatted_created_at: string;

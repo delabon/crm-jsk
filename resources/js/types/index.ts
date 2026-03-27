@@ -25,3 +25,8 @@ export type PaginatedCollection<T> = {
         }[];
     }
 };
+
+export type RoleOption = {
+    value: string;
+    label: string;
+}

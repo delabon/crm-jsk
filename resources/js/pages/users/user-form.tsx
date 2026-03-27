@@ -3,17 +3,20 @@ import PasswordInput from "@/components/password-input";
 import {Button} from "@/components/ui/button";
 import {FormField} from "@/components/ui/form-field";
 import {Input} from "@/components/ui/input";
+import {Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {Spinner} from "@/components/ui/spinner";
 import AppLayout from '@/layouts/app-layout';
 import {dashboard} from "@/routes";
 import users from '@/routes/users';
-import type {BreadcrumbItem, User} from '@/types';
-import {Spinner} from "@/components/ui/spinner";
+import type {BreadcrumbItem, RoleOption, User} from '@/types';
+import {SelectWithItems} from "@/components/ui/select-with-items";
 
 type Props = {
-    user: User,
-}
+    user: User;
+    roles: RoleOption[];
+};
 
-export default function UserForm({user}: Props) {
+export default function UserForm({user, roles}: Props) {
     const actionTitle = user?.id ? 'Edit' : 'Create';
     const breadcrumbs: BreadcrumbItem[] = [
         {
@@ -69,7 +72,19 @@ export default function UserForm({user}: Props) {
                                     id="email"
                                     name="email"
                                     placeholder="Email"
-                                    aria-invalid={!!errors['email']} defaultValue={user?.id ? user.email : ''}
+                                    aria-invalid={!!errors['email']}
+                                    defaultValue={user?.id ? user.email : ''}
+                                />
+                            </FormField>
+
+                            <FormField label="Role" htmlFor="role" error={errors['role'] ?? null}>
+                                <SelectWithItems
+                                    id="role"
+                                    name="role"
+                                    items={roles}
+                                    placeholder="Select role"
+                                    aria-invalid={!!errors['role']}
+                                    defaultValue={user?.id ? user.main_role ?? '' : ''}
                                 />
                             </FormField>
 

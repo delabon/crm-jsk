@@ -34,7 +34,9 @@ final class StoreUserAction
             event(new Verified($user));
         }
 
-        $user->assignRole(Role::SalesAgent->value);
+        $role = Role::from($input['role']);
+
+        $user->assignRole($role->value);
 
         return $user;
     }

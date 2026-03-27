@@ -38,14 +38,14 @@ final class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        $user = $request->user()
-            ->loadMissing(['roles:id,name', 'roles.permissions:id,name']);
+        $user = $request->user()?->loadMissing(['roles:id,name', 'roles.permissions:id,name']);
+        $user = $user ? new UserResource($user) : null;
 
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'auth' => [
-                'user' => new UserResource($user),
+                'user' => $user,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'flash' => [

@@ -8,8 +8,9 @@ use App\Actions\Users\DeleteUserAction;
 use App\Actions\Users\GetPaginatedUsersAction;
 use App\Actions\Users\StoreUserAction;
 use App\Actions\Users\UpdateUserAction;
+use App\Enums\Role;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UserFormRequest;
+use App\Http\Requests\Admin\UserFormRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -31,7 +32,9 @@ final class UserController extends Controller
 
     public function create(): InertiaResponse
     {
-        return Inertia::render('users/user-form');
+        return Inertia::render('users/user-form', [
+            'roles' => Role::options(),
+        ]);
     }
 
     public function store(UserFormRequest $request, StoreUserAction $action): RedirectResponse
@@ -46,6 +49,7 @@ final class UserController extends Controller
     {
         return Inertia::render('users/user-form', [
             'user' => new UserResource($user),
+            'roles' => Role::options(),
         ]);
     }
 
