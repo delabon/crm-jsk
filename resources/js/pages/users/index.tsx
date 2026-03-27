@@ -13,6 +13,8 @@ import AppLayout from '@/layouts/app-layout';
 import {dashboard} from "@/routes";
 import usersRoute from '@/routes/users';
 import type {BreadcrumbItem, PaginatedCollection, User} from '@/types';
+import {Spinner} from "@/components/ui/spinner";
+import DeleteButton from "@/components/delete-button";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -78,18 +80,9 @@ export default function Index({collection}: UsersCollection) {
                                                     <Button asChild variant="default">
                                                         <Link href={usersRoute.edit(user.id).url}>Edit</Link>
                                                     </Button>
-                                                    <Form
+                                                    <DeleteButton
                                                         {...usersRoute.destroy.form(user.id)}
-                                                        onBefore={() => confirm('Are you sure you want to permanently delete this user (#' + user.id + ')?')}
-                                                    >
-                                                        <Button
-                                                            variant="destructive"
-                                                            type="submit"
-                                                            className="cursor-pointer"
-                                                        >
-                                                            Delete
-                                                        </Button>
-                                                    </Form>
+                                                    />
                                                 </>
                                         )}
                                     </div>
