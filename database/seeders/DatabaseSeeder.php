@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Enums\Role;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,16 +16,23 @@ final class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'first_name' => 'Test',
-            'last_name' => 'User',
-            'email' => 'test@example.com',
+        /** @var User $superAdmin */
+        $superAdmin = User::factory()->create([
+            'first_name' => 'Super',
+            'last_name' => 'Admin',
+            'email' => 'super.admin@example.com',
         ]);
 
         $this->call([
             RolesAndPermissionsSeeder::class,
         ]);
+
+        $superAdmin->assignRole(Role::SuperAdmin);
+
+        // User::factory()->create([
+        //     'first_name' => 'Sales',
+        //     'last_name' => 'Agent',
+        //     'email' => 'sales.agent@example.com',
+        // ])->assignRole(Role::SalesAgent);
     }
 }

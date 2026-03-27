@@ -9,13 +9,16 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 final class User extends Authenticatable implements MustVerifyEmail
 {
     private const string DATE_FORMAT = 'M j, Y';
 
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory,
+        Notifiable,
+        HasRoles;
 
     /**
      * @var list<string>

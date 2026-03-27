@@ -23,11 +23,13 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+        permission: 'dashboard.view',
     },
     {
         title: 'Users',
         href: users.index(),
         icon: UsersIcon,
+        permission: 'users.manage',
     },
 ];
 

@@ -18,6 +18,9 @@ final class RolesAndPermissionsSeeder extends Seeder
         app()[PermissionRegistrar::class]
             ->forgetCachedPermissions();
 
+        // --- Dashboard ---
+        Permission::create(['name' => 'dashboard.view']);
+
         // --- Contacts ---
         Permission::create(['name' => 'contacts.view-any']);
         Permission::create(['name' => 'contacts.view-own']);
@@ -53,6 +56,7 @@ final class RolesAndPermissionsSeeder extends Seeder
 
         $manager = Role::create(['name' => RoleEnum::Manager->value]);
         $manager->givePermissionTo([
+            'dashboard.view',
             'contacts.view-any',
             'contacts.create',
             'contacts.update',
@@ -70,6 +74,7 @@ final class RolesAndPermissionsSeeder extends Seeder
 
         $salesAgent = Role::create(['name' => RoleEnum::SalesAgent->value]);
         $salesAgent->givePermissionTo([
+            'dashboard.view',
             'contacts.view-own',
             'contacts.create',
             'contacts.update',

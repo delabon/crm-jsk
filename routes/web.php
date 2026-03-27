@@ -16,21 +16,31 @@ Route::get('/', function () {
 
 // --- Dashboard ---
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
+    Route::inertia('dashboard', 'dashboard')
+        ->name('dashboard');
 
-    Route::get('users', [UserController::class, 'index'])->name('users.index');
-    Route::get('users/create', [UserController::class, 'create'])->name('users.create');
-    Route::post('users', [UserController::class, 'store'])
-        ->middleware(['throttle:10,1'])
-        ->name('users.store');
-    Route::delete('users/{user}', [UserController::class, 'destroy'])
-        ->middleware(['throttle:10,1'])
-        ->name('users.destroy');
-    Route::get('users/{user}', [UserController::class, 'edit'])
-        ->name('users.edit');
-    Route::patch('users/{user}', [UserController::class, 'update'])
-        ->middleware(['throttle:10,1'])
-        ->name('users.update');
+    // --- Users ---
+    Route::prefix('users')
+        ->middleware('can:users.manage')
+        ->name('users.')
+        ->controller(UserController::class)
+        ->group(function () {
+            Route::get('/', 'index')
+                ->name('index');
+            Route::get('/create', 'create')
+                ->name('create');
+            Route::post('users', 'store')
+                ->middleware('throttle:10,1')
+                ->name('store');
+            Route::delete('users/{user}', 'destroy')
+                ->middleware('throttle:10,1')
+                ->name('destroy');
+            Route::get('users/{user}', 'edit')
+                ->name('edit');
+            Route::patch('users/{user}', 'update')
+                ->middleware('throttle:10,1')
+                ->name('update');
+        });
 });
 
 require __DIR__.'/auth.php';

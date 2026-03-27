@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Users;
 
+use App\Enums\Role;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Events\Verified;
@@ -32,6 +33,8 @@ final class StoreUserAction
             $user->markEmailAsVerified();
             event(new Verified($user));
         }
+
+        $user->assignRole(Role::SalesAgent->value);
 
         return $user;
     }
