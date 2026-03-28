@@ -154,7 +154,7 @@ export default function Profile({
                     </Form>
                 </div>
 
-                <UpdatePassword action={UserPasswordRoute.update.form(auth.user).action}/>
+                <UpdatePassword action={UserPasswordRoute.update.form(auth.user.id).action}/>
                 <DeleteUser />
             </SettingsLayout>
         </AppLayout>
