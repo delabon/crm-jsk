@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\Request;
 
 // --- Login ---
 Route::prefix('/login')->middleware('guest')->name('login')->group(function () {
@@ -44,11 +44,7 @@ Route::prefix('/email/verify')->name('verification')->group(function () {
         ->name('.verify');
 });
 
-Route::post('/email/verification-notification', function (Request $request) {
-    $request->user()->sendEmailVerificationNotification();
-
-    session()->flash('success', 'Verification link sent!');
-})
+Route::post('/email/verification-notification', EmailVerificationController::class)
     ->middleware(['auth', 'throttle:5,1'])
     ->name('verification.send');
 
