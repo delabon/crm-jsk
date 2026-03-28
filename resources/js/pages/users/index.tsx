@@ -38,6 +38,58 @@ export default function Index({collection}: UsersCollection) {
             && (auth.user.id === user.id || !user.role_names?.includes('super_admin'))
     };
 
+    const renderItems = () => {
+        if (collection.data.length === 0) {
+            return <div>No users yet.</div>
+        }
+
+        return <>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="w-25">ID</TableHead>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Role</TableHead>
+                        <TableHead>Verified At</TableHead>
+                        <TableHead>Registered At</TableHead>
+                        <TableHead>Actions</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {collection.data.map((user: User) => (
+                        <TableRow key={`users-${user.id}`}>
+                            <TableCell className="font-medium">{user.id}</TableCell>
+                            <TableCell>{user.first_name + ' ' + user.last_name}</TableCell>
+                            <TableCell>{user.email}</TableCell>
+                            <TableCell>{user.formatted_role}</TableCell>
+                            <TableCell>{user.formatted_email_verified_at}</TableCell>
+                            <TableCell>{user.formatted_created_at}</TableCell>
+                            <TableCell>
+                                <div className="inline-flex gap-2">
+                                    {(
+                                        canManageUser(user)
+                                        &&
+                                        <>
+                                            <Button asChild variant="default">
+                                                <Link href={usersRoute.edit(user.id).url}>Edit</Link>
+                                            </Button>
+                                            <DeleteButton
+                                                {...usersRoute.destroy.form(user.id)}
+                                            />
+                                        </>
+                                    )}
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+
+            <CollectionPagination collection={collection}/>
+        </>
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Users" />
@@ -54,49 +106,7 @@ export default function Index({collection}: UsersCollection) {
                     </Button>
                 </div>
 
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead className="w-25">ID</TableHead>
-                            <TableHead>Name</TableHead>
-                            <TableHead>Email</TableHead>
-                            <TableHead>Role</TableHead>
-                            <TableHead>Verified At</TableHead>
-                            <TableHead>Registered At</TableHead>
-                            <TableHead>Actions</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {collection.data.map((user: User) => (
-                            <TableRow key={`users-${user.id}`}>
-                                <TableCell className="font-medium">{user.id}</TableCell>
-                                <TableCell>{user.first_name + ' ' + user.last_name}</TableCell>
-                                <TableCell>{user.email}</TableCell>
-                                <TableCell>{user.formatted_role}</TableCell>
-                                <TableCell>{user.formatted_email_verified_at}</TableCell>
-                                <TableCell>{user.formatted_created_at}</TableCell>
-                                <TableCell>
-                                    <div className="inline-flex gap-2">
-                                        {(
-                                            canManageUser(user)
-                                            &&
-                                                <>
-                                                    <Button asChild variant="default">
-                                                        <Link href={usersRoute.edit(user.id).url}>Edit</Link>
-                                                    </Button>
-                                                    <DeleteButton
-                                                        {...usersRoute.destroy.form(user.id)}
-                                                    />
-                                                </>
-                                        )}
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-
-                <CollectionPagination collection={collection}/>
+                {renderItems()}
             </div>
         </AppLayout>
     );
