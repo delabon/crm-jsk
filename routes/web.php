@@ -3,9 +3,12 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Settings\PasswordController;
+use App\Http\Controllers\Settings\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+// --- Home ---
 Route::get('/', function () {
     if (Auth::check()) {
         return to_route('dashboard');
@@ -44,5 +47,25 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 });
 
+// --- Profile Settings ---
+Route::middleware(['auth'])->group(function () {
+    Route::redirect('settings', '/settings/profile');
+
+    Route::get('settings/profile', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+    Route::patch('settings/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
+    Route::delete('settings/profile', [ProfileController::class, 'destroy'])
+        ->name('profile.destroy');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::put('settings/password/{user}', [PasswordController::class, 'update'])
+        ->middleware(['throttle:10,1', 'can:update,user'])
+        ->name('user-password.update');
+
+    Route::inertia('settings/appearance', 'settings/appearance')
+        ->name('appearance.edit');
+});
+
 require __DIR__.'/auth.php';
-require __DIR__.'/settings.php';

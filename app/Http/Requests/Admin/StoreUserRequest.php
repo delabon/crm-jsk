@@ -11,7 +11,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-final class UserFormRequest extends FormRequest
+final class StoreUserRequest extends FormRequest
 {
     use ProfileValidationRules,
         PasswordValidationRules;

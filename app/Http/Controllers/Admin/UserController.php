@@ -10,7 +10,8 @@ use App\Actions\Users\StoreUserAction;
 use App\Actions\Users\UpdateUserAction;
 use App\Enums\Role;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\UserFormRequest;
+use App\Http\Requests\Admin\UpdateUserRequest;
+use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -32,12 +33,12 @@ final class UserController extends Controller
 
     public function create(): InertiaResponse
     {
-        return Inertia::render('users/user-form', [
+        return Inertia::render('users/store', [
             'roles' => Role::options(),
         ]);
     }
 
-    public function store(UserFormRequest $request, StoreUserAction $action): RedirectResponse
+    public function store(StoreUserRequest $request, StoreUserAction $action): RedirectResponse
     {
         $action->handle($request->validated(), isVerified: true);
 
@@ -47,13 +48,13 @@ final class UserController extends Controller
 
     public function edit(User $user)
     {
-        return Inertia::render('users/user-form', [
+        return Inertia::render('users/edit', [
             'user' => new UserResource($user),
             'roles' => Role::options(),
         ]);
     }
 
-    public function update(UserFormRequest $request, User $user, UpdateUserAction $action)
+    public function update(UpdateUserRequest $request, User $user, UpdateUserAction $action)
     {
         $action->handle($user, $request->validated());
 

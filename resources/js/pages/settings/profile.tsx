@@ -1,4 +1,3 @@
-import { Transition } from '@headlessui/react';
 import { Form, Head, Link, usePage } from '@inertiajs/react';
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import DeleteUser from '@/components/delete-user';
@@ -7,9 +6,12 @@ import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {Spinner} from "@/components/ui/spinner";
+import UpdatePassword from "@/components/update-password";
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 import { edit } from '@/routes/profile';
+import UserPasswordRoute from '@/routes/user-password';
 import { send } from '@/routes/verification';
 import type { BreadcrumbItem } from '@/types';
 
@@ -36,7 +38,7 @@ export default function Profile({
             <h1 className="sr-only">Profile settings</h1>
 
             <SettingsLayout>
-                <div className="space-y-6">
+                <div className="space-y-6 max-w-xl">
                     <Heading
                         variant="small"
                         title="Profile information"
@@ -50,7 +52,7 @@ export default function Profile({
                         }}
                         className="space-y-6"
                     >
-                        {({ processing, recentlySuccessful, errors }) => (
+                        {({ processing, errors }) => (
                             <>
                                 <div className="grid gap-2">
                                     <Label htmlFor="first_name">First name</Label>
@@ -140,28 +142,19 @@ export default function Profile({
                                 <div className="flex items-center gap-4">
                                     <Button
                                         disabled={processing}
+                                        className="cursor-pointer"
                                         data-test="update-profile-button"
                                     >
-                                        Save
+                                        {processing && <Spinner data-icon="inline-start" />}
+                                        {processing ? 'Saving' : 'Save'}
                                     </Button>
-
-                                    <Transition
-                                        show={recentlySuccessful}
-                                        enter="transition ease-in-out"
-                                        enterFrom="opacity-0"
-                                        leave="transition ease-in-out"
-                                        leaveTo="opacity-0"
-                                    >
-                                        <p className="text-sm text-neutral-600">
-                                            Saved
-                                        </p>
-                                    </Transition>
                                 </div>
                             </>
                         )}
                     </Form>
                 </div>
 
+                <UpdatePassword action={UserPasswordRoute.update.form(auth.user).action}/>
                 <DeleteUser />
             </SettingsLayout>
         </AppLayout>

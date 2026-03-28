@@ -10,11 +10,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\SendPasswordLinkEmailRequest;
 use App\Http\Requests\Auth\ResetPasswordRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
-final class PasswordController extends Controller
+final class PasswordResetController extends Controller
 {
     public function sendResetEmail(SendPasswordLinkEmailRequest $request, SendPasswordResetLinkAction $action): RedirectResponse
     {
@@ -33,12 +34,17 @@ final class PasswordController extends Controller
         ]);
     }
 
-    public function resetPassword(ResetPasswordRequest $request, ResetPasswordAction $action)
+    public function resetPassword(ResetPasswordRequest $request, ResetPasswordAction $action): RedirectResponse
     {
         $status = $action->handle($request->only('email', 'password', 'password_confirmation', 'token'));
 
         return $status === Password::PasswordReset
             ? to_route('login')->with('success', 'Your password has been reset.')
             : to_route('password.reset')->withErrors(['email' => [__($status)]]);
+    }
+
+    public function update(Request $request): void
+    {
+        dd($request->all());
     }
 }

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
@@ -57,15 +57,15 @@ Route::prefix('/forgot-password')->middleware('guest')->name('password')->group(
     Route::inertia('/', 'auth/forgot-password')
         ->name('.request');
 
-    Route::post('/', [PasswordController::class, 'sendResetEmail'])
+    Route::post('/', [PasswordResetController::class, 'sendResetEmail'])
         ->middleware('throttle:5,1')
         ->name('.email');
 });
 
-Route::get('/reset-password/{token}', [PasswordController::class, 'resetPasswordForm'])
+Route::get('/reset-password/{token}', [PasswordResetController::class, 'resetPasswordForm'])
     ->middleware('guest')
     ->name('password.reset');
 
-Route::post('/reset-password', [PasswordController::class, 'resetPassword'])
+Route::post('/reset-password', [PasswordResetController::class, 'resetPassword'])
     ->middleware(['guest', 'throttle:5,1'])
     ->name('password.update');

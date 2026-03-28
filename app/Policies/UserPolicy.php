@@ -11,11 +11,21 @@ final class UserPolicy
 {
     public function update(User $user, User $model): bool
     {
-        if ($user->main_role !== Role::SuperAdmin) {
+        if (!$model->id) {
             return false;
         }
 
-        if ($model->main_role === Role::SuperAdmin && $model->id !== $user->id) {
+        // Bail if non-admin trying to update another user's password
+        if ($user->id !== $model->id
+            && $user->main_role !== Role::SuperAdmin
+        ) {
+            return false;
+        }
+
+        // Bail if admin trying to update another admin's password
+        if ($user->id !== $model->id
+            && $model->main_role === Role::SuperAdmin
+        ) {
             return false;
         }
 
