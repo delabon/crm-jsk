@@ -37,7 +37,7 @@ export default function UserForm({user, roles}: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Edit User" />
 
-            <div className="space-y-6 p-6">
+            <div className="space-y-6 p-6 max-w-xl">
                 <Heading
                     variant="small"
                     title="Edit user"
@@ -45,7 +45,7 @@ export default function UserForm({user, roles}: Props) {
 
                 <Form
                     {...users.update.form(user.id)}
-                    className="space-y-4 max-w-xl"
+                    className="w-full flex flex-col gap-4"
                 >
                     {({errors, processing}) => (
                         <>

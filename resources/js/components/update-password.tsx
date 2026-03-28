@@ -1,9 +1,8 @@
 import {Form} from "@inertiajs/react";
 import Heading from "@/components/heading";
-import InputError from "@/components/input-error";
 import PasswordInput from "@/components/password-input";
 import {Button} from "@/components/ui/button";
-import {Label} from "@/components/ui/label";
+import {FormField} from "@/components/ui/form-field";
 import {Spinner} from "@/components/ui/spinner";
 
 type Props = {
@@ -30,61 +29,39 @@ export default function UpdatePassword({action}: Props) {
                 'current_password',
             ]}
             resetOnSuccess
-            className="space-y-4 "
+            className="w-full flex flex-col gap-4"
         >
             {({ errors, processing }) => (
                 <>
-                    <div className="grid gap-2">
-                        <Label htmlFor="current_password">
-                            Current password
-                        </Label>
-
+                    <FormField label="Current password" htmlFor="current_password" error={errors['current_password'] ?? null}>
                         <PasswordInput
                             id="current_password"
                             name="current_password"
-                            className="mt-1 block w-full"
                             autoComplete="current-password"
                             placeholder="Current password"
+                            aria-invalid={!!errors['current_password']}
                         />
+                    </FormField>
 
-                        <InputError
-                            message={errors.current_password}
-                        />
-                    </div>
-
-                    <div className="grid gap-2">
-                        <Label htmlFor="password">
-                            New password
-                        </Label>
-
+                    <FormField label="New password" htmlFor="password" error={errors['password'] ?? null}>
                         <PasswordInput
                             id="password"
                             name="password"
-                            className="mt-1 block w-full"
                             autoComplete="new-password"
                             placeholder="New password"
+                            aria-invalid={!!errors['password']}
                         />
+                    </FormField>
 
-                        <InputError message={errors.password} />
-                    </div>
-
-                    <div className="grid gap-2">
-                        <Label htmlFor="password_confirmation">
-                            Confirm password
-                        </Label>
-
+                    <FormField label="Confirm password" htmlFor="password_confirmation" error={errors['password_confirmation'] ?? null}>
                         <PasswordInput
                             id="password_confirmation"
                             name="password_confirmation"
-                            className="mt-1 block w-full"
                             autoComplete="new-password"
                             placeholder="Confirm password"
+                            aria-invalid={!!errors['password_confirmation']}
                         />
-
-                        <InputError
-                            message={errors.password_confirmation}
-                        />
-                    </div>
+                    </FormField>
 
                     <div className="flex items-center gap-4">
                         <Button

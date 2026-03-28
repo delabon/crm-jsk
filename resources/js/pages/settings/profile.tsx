@@ -14,6 +14,7 @@ import { edit } from '@/routes/profile';
 import UserPasswordRoute from '@/routes/user-password';
 import { send } from '@/routes/verification';
 import type { BreadcrumbItem } from '@/types';
+import {FormField} from "@/components/ui/form-field";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -54,63 +55,42 @@ export default function Profile({
                     >
                         {({ processing, errors }) => (
                             <>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="first_name">First name</Label>
-
+                                <FormField label="First name" htmlFor="first_name" error={errors['first_name'] ?? null}>
                                     <Input
                                         id="first_name"
-                                        className="mt-1 block w-full"
-                                        defaultValue={auth.user.first_name}
                                         name="first_name"
+                                        placeholder="First name"
+                                        aria-invalid={!!errors['first_name']}
+                                        defaultValue={auth.user.first_name}
                                         required
                                         autoComplete="first_name"
-                                        placeholder="First name"
                                     />
+                                </FormField>
 
-                                    <InputError
-                                        className="mt-2"
-                                        message={errors.first_name}
-                                    />
-                                </div>
-
-                                <div className="grid gap-2">
-                                    <Label htmlFor="last_name">Last name</Label>
-
+                                <FormField label="Last name" htmlFor="last_name" error={errors['last_name'] ?? null}>
                                     <Input
                                         id="last_name"
-                                        className="mt-1 block w-full"
-                                        defaultValue={auth.user.last_name}
                                         name="last_name"
+                                        placeholder="Last name"
+                                        aria-invalid={!!errors['last_name']}
+                                        defaultValue={auth.user.last_name}
                                         required
                                         autoComplete="last_name"
-                                        placeholder="Last name"
                                     />
+                                </FormField>
 
-                                    <InputError
-                                        className="mt-2"
-                                        message={errors.last_name}
-                                    />
-                                </div>
-
-                                <div className="grid gap-2">
-                                    <Label htmlFor="email">Email address</Label>
-
+                                <FormField label="Email address" htmlFor="email" error={errors['email'] ?? null}>
                                     <Input
-                                        id="email"
                                         type="email"
-                                        className="mt-1 block w-full"
-                                        defaultValue={auth.user.email}
+                                        id="email"
                                         name="email"
+                                        placeholder="Last name"
+                                        aria-invalid={!!errors['email']}
+                                        defaultValue={auth.user.email}
                                         required
-                                        autoComplete="username"
-                                        placeholder="Email address"
+                                        autoComplete="email"
                                     />
-
-                                    <InputError
-                                        className="mt-2"
-                                        message={errors.email}
-                                    />
-                                </div>
+                                </FormField>
 
                                 {mustVerifyEmail &&
                                     auth.user.email_verified_at === null && (

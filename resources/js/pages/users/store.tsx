@@ -35,12 +35,12 @@ export default function UserForm({roles}: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Create User" />
 
-            <div className="space-y-4 p-6">
+            <div className="space-y-4 p-6 max-w-xl">
                 <h1 className="text-xl font-bold">
                     Create user
                 </h1>
 
-                <Form {...formProps} className="max-w-full w-100 flex flex-col gap-4">
+                <Form {...formProps} className="w-full flex flex-col gap-4">
                     {({errors, processing}) => (
                         <>
                             <FormField label="First name" htmlFor="first_name" error={errors['first_name'] ?? null}>
