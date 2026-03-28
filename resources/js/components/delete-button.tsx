@@ -19,6 +19,7 @@ export default function DeleteButton ({action, method, message}: Props) {
                 variant="destructive"
                 type="submit"
                 className="cursor-pointer"
+                disabled={processing}
             >
                 {processing && <Spinner data-icon="inline-start" />}
                 {processing ? 'Deleting' : 'Delete'}
