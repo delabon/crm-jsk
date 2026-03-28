@@ -1,5 +1,6 @@
-import {Form, Head, Link, usePage} from '@inertiajs/react';
+import {Head, Link, usePage} from '@inertiajs/react';
 import {CollectionPagination} from "@/components/collection-pagination";
+import DeleteButton from "@/components/delete-button";
 import {Button} from "@/components/ui/button";
 import {
     Table,
@@ -13,8 +14,6 @@ import AppLayout from '@/layouts/app-layout';
 import {dashboard} from "@/routes";
 import usersRoute from '@/routes/users';
 import type {BreadcrumbItem, PaginatedCollection, User} from '@/types';
-import {Spinner} from "@/components/ui/spinner";
-import DeleteButton from "@/components/delete-button";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
