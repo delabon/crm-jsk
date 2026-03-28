@@ -33,6 +33,11 @@ type UsersCollection = {
 export default function Index({collection}: UsersCollection) {
     const {auth} = usePage().props;
 
+    const canManageUser = (user: User) => {
+        return auth.user.permission_names?.includes('users.manage')
+            && (auth.user.id === user.id || !user.role_names?.includes('super_admin'))
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Users" />
@@ -73,7 +78,7 @@ export default function Index({collection}: UsersCollection) {
                                 <TableCell>
                                     <div className="inline-flex gap-2">
                                         {(
-                                            (auth.user.permission_names?.includes('users.manage') && (auth.user.id === user.id || !user.role_names?.includes('super_admin')))
+                                            canManageUser(user)
                                             &&
                                                 <>
                                                     <Button asChild variant="default">
