@@ -42,9 +42,4 @@ final class PasswordResetController extends Controller
             ? to_route('login')->with('success', 'Your password has been reset.')
             : to_route('password.reset')->withErrors(['email' => [__($status)]]);
     }
-
-    public function update(Request $request): void
-    {
-        dd($request->all());
-    }
 }
