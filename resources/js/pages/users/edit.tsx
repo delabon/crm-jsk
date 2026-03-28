@@ -1,5 +1,5 @@
 import {Form, Head} from '@inertiajs/react';
-import PasswordInput from "@/components/password-input";
+import Heading from "@/components/heading";
 import {Button} from "@/components/ui/button";
 import {FormField} from "@/components/ui/form-field";
 import {Input} from "@/components/ui/input";
@@ -11,8 +11,6 @@ import {dashboard} from "@/routes";
 import UserPasswordRoute from "@/routes/user-password";
 import users from '@/routes/users';
 import type {BreadcrumbItem, RoleOption, User} from '@/types';
-import Heading from "@/components/heading";
-import SettingsLayout from "@/layouts/settings/layout";
 
 type Props = {
     user: User;
