@@ -26,7 +26,7 @@ final class GetPaginatedUsersAction
                 static fn (Builder $q) => $q->whereNull('email_verified_at')
             )
             ->when(
-                $filters['role'] ?? null && $filters['role'] !== 'all',
+                ($filters['role'] ?? null) && $filters['role'] !== 'all',
                 static fn (Builder $q) => $q->whereHas(
                     'roles',
                     static fn (Builder $q) => $q->where('name', $filters['role'])
