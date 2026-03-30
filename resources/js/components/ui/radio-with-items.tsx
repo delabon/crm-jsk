@@ -8,12 +8,13 @@ export type RadioOption = {
 
 type Props = {
     items: RadioOption[],
+    name?: string,
     className?: string,
     defaultValue?: string,
 };
 
-export function RadioWithItems({items, defaultValue}: Props) {
-    return <RadioGroup defaultValue={defaultValue ? defaultValue : ''} className="w-fit">
+export function RadioWithItems({items, name, className, defaultValue}: Props) {
+    return <RadioGroup defaultValue={defaultValue ? defaultValue : ''} name={name} className="w-fit">
         {items.map(function (item) {
             const itemId = `radio-item-${item.value}`;
 

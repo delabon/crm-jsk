@@ -45,12 +45,18 @@ const verifiedFilterItems = [
     },
 ];
 
+type Filters = {
+    role?: string;
+    verified?: string;
+};
+
 type Props = {
     collection: PaginatedCollection<User>;
     roles: RoleOption[];
+    filters: Filters;
 }
 
-export default function Index({collection, roles}: Props) {
+export default function Index({collection, roles, filters}: Props) {
     const {auth} = usePage().props;
 
     const canManageUser = (user: User) => {
@@ -118,16 +124,24 @@ export default function Index({collection, roles}: Props) {
                 <div className="flex items-center justify-between gap-3 flex-wrap lg:flex-nowrap">
                     <h1 className="text-xl font-bold">Users</h1>
                     <div className="flex flex-wrap items-center gap-3">
-                        <ListFilters action="/asdasd">
+                        <ListFilters action={usersRoute.index().url}>
                             <Filter title="Verified">
                                 <FormField>
-                                    <RadioWithItems defaultValue="all" items={verifiedFilterItems}/>
+                                    <RadioWithItems
+                                        name="verified"
+                                        defaultValue={filters.verified ?? 'all'}
+                                        items={verifiedFilterItems}
+                                    />
                                 </FormField>
                             </Filter>
 
                             <Filter title="Role">
                                 <FormField>
-                                    <RadioWithItems defaultValue="all" items={roles}/>
+                                    <RadioWithItems
+                                        name="role"
+                                        defaultValue={filters.role ?? 'all'}
+                                        items={roles}
+                                    />
                                 </FormField>
                             </Filter>
                         </ListFilters>

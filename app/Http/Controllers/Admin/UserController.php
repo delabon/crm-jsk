@@ -10,6 +10,7 @@ use App\Actions\Users\StoreUserAction;
 use App\Actions\Users\UpdateUserAction;
 use App\Enums\Role;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\IndexUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Resources\UserResource;
@@ -22,11 +23,11 @@ final class UserController extends Controller
 {
     private const int PER_PAGE = 20;
 
-    public function index(GetPaginatedUsersAction $action): InertiaResponse
+    public function index(IndexUserRequest $request, GetPaginatedUsersAction $action): InertiaResponse
     {
         return Inertia::render('users/index', [
             'collection' => UserResource::collection(
-                $action->handle(self::PER_PAGE)
+                $action->handle(self::PER_PAGE, $request->validated())
             ),
             'roles' => [
                 [
@@ -35,6 +36,10 @@ final class UserController extends Controller
                 ],
                 ...Role::options(),
             ],
+            'filters' => [
+                'verified' => $request->verified ?? 'all',
+                'role' => $request->role ?? 'all',
+            ]
         ]);
     }
 

@@ -38,10 +38,8 @@ final class DatabaseSeeder extends Seeder
             'email' => 'sales.agent@example.com',
         ])->assignRole(Role::SalesAgent);
 
-        // User::factory()->create([
-        //     'first_name' => 'Sales',
-        //     'last_name' => 'Agent',
-        //     'email' => 'sales.agent@example.com',
-        // ])->assignRole(Role::SalesAgent);
+        // User::factory(19)
+        //     ->create()
+        //     ->each(static fn (User $user) => $user->assignRole(Role::User->value));
     }
 }

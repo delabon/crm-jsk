@@ -5,15 +5,37 @@ declare(strict_types=1);
 namespace App\Actions\Users;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 final class GetPaginatedUsersAction
 {
-    public function handle(int $perPage = 10): LengthAwarePaginator
+    public function handle(int $perPage = 10, array $filters = []): LengthAwarePaginator
     {
         return User::query()
             ->with(['roles:id,name', 'roles.permissions:id,name'])
+            ->when(
+                !empty($filters['verified']) && $filters['verified'] !== 'all',
+                static function (Builder $q) use ($filters) {
+                    return $q->when(
+                        $filters['verified'] === 'yes',
+                        static fn (Builder $q) => $q->whereNotNull('email_verified_at')
+                    )
+                        ->when(
+                            $filters['verified'] === 'no',
+                            static fn (Builder $q) => $q->whereNull('email_verified_at')
+                        );
+                }
+            )
+            ->when(
+                !empty($filters['role']) && $filters['role'] !== 'all',
+                static fn (Builder $q) => $q->whereHas(
+                    'roles',
+                    static fn (Builder $q) => $q->where('name', $filters['role'])
+                )
+            )
             ->orderByDesc('id')
-            ->paginate($perPage);
+            ->paginate($perPage)
+            ->appends($filters);
     }
 }

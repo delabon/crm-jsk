@@ -23,7 +23,7 @@ export default function ListFilters({children, action}: Props) {
             <ChevronDownIcon className={isVisible ? 'hidden' : 'inline-flex'}/>
             <ChevronUpIcon className={isVisible ? 'inline-flex' : 'hidden'}/>
         </Button>
-        <Form action={action} method="POST">
+        <Form action={action} method="GET">
             <div className={cn("w-full md:w-88 fixed inset-0 md:absolute md:top-[110%] md:right-0 md:left-auto md:bottom-auto overflow-hidden md:rounded-lg md:border md:border-gray-300 md:shadow-lg", isVisible ? 'flex' : 'hidden')}>
                 <div className="text-gray-800 w-full flex flex-col gap-4 bg-white  p-4  md:max-h-96 overflow-y-auto">
                     <div className="flex items-center justify-between gap-3">
