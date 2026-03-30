@@ -66,7 +66,6 @@ export default function UpdatePassword({action}: Props) {
                     <div className="flex items-center gap-4">
                         <Button
                             disabled={processing}
-                            className="cursor-pointer"
                             data-test="update-password-button"
                         >
                             {processing && <Spinner data-icon="inline-start" />}

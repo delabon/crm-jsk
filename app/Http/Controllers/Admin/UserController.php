@@ -28,6 +28,13 @@ final class UserController extends Controller
             'collection' => UserResource::collection(
                 $action->handle(self::PER_PAGE)
             ),
+            'roles' => [
+                [
+                    'value' => 'all',
+                    'label' => 'All',
+                ],
+                ...Role::options(),
+            ],
         ]);
     }
 

@@ -5,16 +5,16 @@ import InputHelp from "@/components/input-help";
 
 type Props = PropsWithChildren<{
     htmlFor?: string,
-    label: string,
+    label?: string,
     error?: string,
     help?: string,
 }>;
 
 export function FormField({children, htmlFor, label, error, help}: Props) {
     return <div className="flex flex-col gap-2">
-        <Label htmlFor={htmlFor}>
+        {label && (<Label htmlFor={htmlFor}>
             {label}
-        </Label>
+        </Label>)}
         {children}
         <InputHelp message={help} />
         <InputError message={error} />

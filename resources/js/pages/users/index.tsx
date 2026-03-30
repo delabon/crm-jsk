@@ -1,7 +1,11 @@
 import {Head, Link, usePage} from '@inertiajs/react';
 import {CollectionPagination} from "@/components/collection-pagination";
 import DeleteButton from "@/components/delete-button";
+import ListFilter from "@/components/list-filter";
+import ListFilters from "@/components/list-filters";
 import {Button} from "@/components/ui/button";
+import {FormField} from "@/components/ui/form-field";
+import {RadioWithItems} from "@/components/ui/radio-with-items";
 import {
     Table,
     TableBody,
@@ -13,7 +17,7 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import {dashboard} from "@/routes";
 import usersRoute from '@/routes/users';
-import type {BreadcrumbItem, PaginatedCollection, User} from '@/types';
+import type {BreadcrumbItem, PaginatedCollection, RoleOption, User} from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -26,11 +30,27 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-type UsersCollection = {
+const verifiedFilterItems = [
+    {
+        value: 'all',
+        label: 'All'
+    },
+    {
+        value: 'yes',
+        label: 'Yes'
+    },
+    {
+        value: 'no',
+        label: 'No'
+    },
+];
+
+type Props = {
     collection: PaginatedCollection<User>;
+    roles: RoleOption[];
 }
 
-export default function Index({collection}: UsersCollection) {
+export default function Index({collection, roles}: Props) {
     const {auth} = usePage().props;
 
     const canManageUser = (user: User) => {
@@ -97,13 +117,28 @@ export default function Index({collection}: UsersCollection) {
             <div className="space-y-4 p-6">
                 <div className="flex items-center justify-between gap-3 flex-wrap lg:flex-nowrap">
                     <h1 className="text-xl font-bold">Users</h1>
-                    <Button
-                        asChild
-                    >
-                        <Link href={usersRoute.create()}>
-                            Create User
-                        </Link>
-                    </Button>
+                    <div className="flex flex-wrap items-center gap-3">
+                        <ListFilters action="/asdasd">
+                            <ListFilter title="Verified">
+                                <FormField>
+                                    <RadioWithItems defaultValue="all" items={verifiedFilterItems}/>
+                                </FormField>
+                            </ListFilter>
+
+                            <ListFilter title="Role">
+                                <FormField>
+                                    <RadioWithItems defaultValue="all" items={roles}/>
+                                </FormField>
+                            </ListFilter>
+                        </ListFilters>
+                        <Button
+                            asChild
+                        >
+                            <Link href={usersRoute.create()}>
+                                Create User
+                            </Link>
+                        </Button>
+                    </div>
                 </div>
 
                 {renderItems()}
