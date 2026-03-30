@@ -13,7 +13,10 @@ final class GetPaginatedUsersAction
     public function handle(int $perPage = 10, array $filters = []): LengthAwarePaginator
     {
         return User::query()
-            ->with(['roles:id,name', 'roles.permissions:id,name'])
+            ->with([
+                'roles:id,name',
+                'roles.permissions:id,name',
+            ])
             ->when(
                 ($filters['verified'] ?? null) === 'yes',
                 static fn (Builder $q) => $q->whereNotNull('email_verified_at')
