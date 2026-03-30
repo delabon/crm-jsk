@@ -28,6 +28,7 @@ final class UserController extends Controller
         return Inertia::render('users/index', [
             'collection' => UserResource::collection(
                 $action->handle(self::PER_PAGE, $request->validated())
+                    ->appends($request->validated())
             ),
             'roles' => [
                 [

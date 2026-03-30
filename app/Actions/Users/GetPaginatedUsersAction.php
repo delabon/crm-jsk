@@ -15,27 +15,21 @@ final class GetPaginatedUsersAction
         return User::query()
             ->with(['roles:id,name', 'roles.permissions:id,name'])
             ->when(
-                !empty($filters['verified']) && $filters['verified'] !== 'all',
-                static function (Builder $q) use ($filters) {
-                    return $q->when(
-                        $filters['verified'] === 'yes',
-                        static fn (Builder $q) => $q->whereNotNull('email_verified_at')
-                    )
-                        ->when(
-                            $filters['verified'] === 'no',
-                            static fn (Builder $q) => $q->whereNull('email_verified_at')
-                        );
-                }
+                ($filters['verified'] ?? null) === 'yes',
+                static fn (Builder $q) => $q->whereNotNull('email_verified_at')
             )
             ->when(
-                !empty($filters['role']) && $filters['role'] !== 'all',
+                ($filters['verified'] ?? null) === 'no',
+                static fn (Builder $q) => $q->whereNull('email_verified_at')
+            )
+            ->when(
+                $filters['role'] ?? null && $filters['role'] !== 'all',
                 static fn (Builder $q) => $q->whereHas(
                     'roles',
                     static fn (Builder $q) => $q->where('name', $filters['role'])
                 )
             )
             ->orderByDesc('id')
-            ->paginate($perPage)
-            ->appends($filters);
+            ->paginate($perPage);
     }
 }
