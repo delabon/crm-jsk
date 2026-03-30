@@ -1,5 +1,5 @@
 import {Form} from "@inertiajs/react";
-import {ArrowDownIcon, ArrowUpIcon, ChevronDownIcon, ChevronUpIcon, XIcon} from "lucide-react";
+import {ChevronDownIcon, ChevronUpIcon, XIcon} from "lucide-react";
 import type {PropsWithChildren} from "react";
 import {useState} from "react";
 import {Button} from "@/components/ui/button";

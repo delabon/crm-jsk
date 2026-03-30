@@ -1,7 +1,7 @@
 import {Head, Link, usePage} from '@inertiajs/react';
 import {CollectionPagination} from "@/components/collection-pagination";
 import DeleteButton from "@/components/delete-button";
-import ListFilter from "@/components/list-filter";
+import Filter from "@/components/filter";
 import ListFilters from "@/components/list-filters";
 import {Button} from "@/components/ui/button";
 import {FormField} from "@/components/ui/form-field";
@@ -119,17 +119,17 @@ export default function Index({collection, roles}: Props) {
                     <h1 className="text-xl font-bold">Users</h1>
                     <div className="flex flex-wrap items-center gap-3">
                         <ListFilters action="/asdasd">
-                            <ListFilter title="Verified">
+                            <Filter title="Verified">
                                 <FormField>
                                     <RadioWithItems defaultValue="all" items={verifiedFilterItems}/>
                                 </FormField>
-                            </ListFilter>
+                            </Filter>
 
-                            <ListFilter title="Role">
+                            <Filter title="Role">
                                 <FormField>
                                     <RadioWithItems defaultValue="all" items={roles}/>
                                 </FormField>
-                            </ListFilter>
+                            </Filter>
                         </ListFilters>
                         <Button
                             asChild

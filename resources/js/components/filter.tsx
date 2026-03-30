@@ -7,7 +7,7 @@ type Props = PropsWithChildren<{
     title: string;
 }>;
 
-export default function ListFilter({children, title}: Props) {
+export default function Filter({children, title}: Props) {
     const [isVisible, setIsVisible] = useState(false);
     const toggleFilter = () => {
         setIsVisible(!isVisible);
