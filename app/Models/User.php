@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\Role;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -15,12 +15,12 @@ use Spatie\Permission\Traits\HasRoles;
 
 final class User extends Authenticatable implements MustVerifyEmail
 {
-    private const string DATE_FORMAT = 'M j, Y';
-
     /** @use HasFactory<UserFactory> */
     use HasFactory,
-        Notifiable,
-        HasRoles;
+        HasRoles,
+        Notifiable;
+
+    private const string DATE_FORMAT = 'M j, Y';
 
     /**
      * @var list<string>

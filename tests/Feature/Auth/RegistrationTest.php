@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 beforeEach(function () {
     $this->markTestSkipped(); // TODO: update after Fortity is removed
 });

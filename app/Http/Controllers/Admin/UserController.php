@@ -11,8 +11,8 @@ use App\Actions\Users\UpdateUserAction;
 use App\Enums\Role;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\IndexUserRequest;
-use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Http\Requests\Admin\StoreUserRequest;
+use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -40,7 +40,7 @@ final class UserController extends Controller
             'filters' => [
                 'verified' => $request->verified ?? 'all',
                 'role' => $request->role ?? 'all',
-            ]
+            ],
         ]);
     }
 

@@ -30,7 +30,7 @@ final class IndexUserRequest extends FormRequest
                 'nullable',
                 'string',
                 'in:all,yes,no',
-            ]
+            ],
         ];
     }
 

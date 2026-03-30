@@ -13,8 +13,8 @@ use Illuminate\Validation\Rule;
 
 final class StoreUserRequest extends FormRequest
 {
-    use ProfileValidationRules,
-        PasswordValidationRules;
+    use PasswordValidationRules,
+        ProfileValidationRules;
 
     /**
      * Determine if the user is authorized to make this request.

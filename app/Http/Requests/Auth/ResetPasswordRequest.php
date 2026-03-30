@@ -35,7 +35,7 @@ final class ResetPasswordRequest extends FormRequest
             ],
             'token' => [
                 'required',
-                'string'
+                'string',
             ],
             'password' => $this->passwordRules(),
         ];

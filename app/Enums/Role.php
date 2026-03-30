@@ -11,16 +11,6 @@ enum Role: string
     case SalesAgent = 'sales_agent';
     case User = 'user';
 
-    public function label(): string
-    {
-        return match ($this) {
-            self::SuperAdmin => 'Super Admin',
-            self::Manager => 'Manager',
-            self::SalesAgent => 'Sales Agent',
-            self::User => 'User',
-        };
-    }
-
     public static function options(): array
     {
         return collect(self::cases())
@@ -29,5 +19,15 @@ enum Role: string
                 'label' => $role->label(),
             ])
             ->all();
+    }
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::SuperAdmin => 'Super Admin',
+            self::Manager => 'Manager',
+            self::SalesAgent => 'Sales Agent',
+            self::User => 'User',
+        };
     }
 }

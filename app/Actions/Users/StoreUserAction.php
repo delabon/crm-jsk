@@ -27,7 +27,7 @@ final class StoreUserAction
 
         $user = User::create($data);
 
-        if (!$isVerified) {
+        if (! $isVerified) {
             event(new Registered($user));
         } else {
             $user->markEmailAsVerified();

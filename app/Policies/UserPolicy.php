@@ -11,7 +11,7 @@ final class UserPolicy
 {
     public function update(User $user, User $model): bool
     {
-        if (!$model->id) {
+        if (! $model->id) {
             return false;
         }
 
