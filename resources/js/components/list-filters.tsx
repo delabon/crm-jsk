@@ -1,4 +1,4 @@
-import {Form} from "@inertiajs/react";
+import {Form, Link} from "@inertiajs/react";
 import {ChevronDownIcon, ChevronUpIcon, XIcon} from "lucide-react";
 import type {PropsWithChildren} from "react";
 import {useState} from "react";
@@ -42,8 +42,13 @@ export default function ListFilters({children, action}: Props) {
                         <Button
                             variant="secondary"
                             type="reset"
+                            asChild
                         >
-                            Reset
+                            <Link
+                                href={action}
+                            >
+                                Reset
+                            </Link>
                         </Button>
 
                         <Button
