@@ -1,17 +1,17 @@
-import {Form} from '@inertiajs/react';
-import { router } from '@inertiajs/react'
+import {router, usePage} from '@inertiajs/react'
 import {SearchIcon, XIcon} from "lucide-react";
 import React, {useState} from "react";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 
 type Props = {
-    action: string;
     initialSearch?: string;
 };
 
-export default function ListSearch({action, initialSearch}: Props) {
+export default function ListSearch({initialSearch}: Props) {
+    const {errors} = usePage().props;
     const [search, setSearch] = useState(initialSearch ?? '');
+    const [processing, setProcessing] = useState(false);
 
     const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value);
@@ -46,50 +46,54 @@ export default function ListSearch({action, initialSearch}: Props) {
 
         params.delete('page'); // Reset pagination
 
+        setProcessing(true);
+
         router.visit(window.location.pathname, {
             data: Object.fromEntries(params.entries()),
             preserveState: true,
+            onFinish: () => {
+                setProcessing(false)
+            }
         })
     };
 
-    return <Form action={action} method="GET" onSubmit={handleSubmit}>
-        {({errors, processing}) => (
-            <div className="flex relative">
-                <Input
-                    name="search"
-                    placeholder="Search..."
-                    className="min-w-64 pr-18"
-                    onChange={handleQueryChange}
-                    aria-invalid={!!errors['search']}
-                    value={search}
-                />
-                <div className="inline-flex items-center absolute right-0">
-                    {(search && search !== '') &&
-                        <Button
-                            variant="link"
-                            size="icon"
-                            type="button"
-                            disabled={processing}
-                            onClick={handleReset}
-                        >
-                            <XIcon
-                                size={16}
-                            />
-                        </Button>
-                    }
-
+    return <form onSubmit={handleSubmit}>
+        <div className="flex relative">
+            <Input
+                name="search"
+                placeholder="Search..."
+                className="min-w-64 pr-18"
+                onChange={handleQueryChange}
+                aria-invalid={!!errors['search']}
+                value={search}
+                disabled={processing}
+            />
+            <div className="inline-flex items-center absolute right-0">
+                {(search && search !== '') &&
                     <Button
                         variant="link"
                         size="icon"
-                        type="submit"
+                        type="button"
                         disabled={processing}
+                        onClick={handleReset}
                     >
-                        <SearchIcon
+                        <XIcon
                             size={16}
                         />
                     </Button>
-                </div>
+                }
+
+                <Button
+                    variant="link"
+                    size="icon"
+                    type="submit"
+                    disabled={processing}
+                >
+                    <SearchIcon
+                        size={16}
+                    />
+                </Button>
             </div>
-        )}
-    </Form>
+        </div>
+    </form>
 }
