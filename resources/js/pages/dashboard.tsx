@@ -32,16 +32,17 @@ export default function Dashboard({metrics}: Props) {
             <Head title="Dashboard" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <h1 className="font-bold">Hi {auth.user.first_name}</h1>
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
+                <div className="grid gap-4 lg:grid-cols-3">
                     {auth.user.permission_names?.includes('users.manage') &&
-                        <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                            <div className="w-full p-6">
+                        <div className="relative overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
+                            <div className="w-full p-6 flex flex-col gap-3">
+                                <h3 className="text-xl font-bold">Users</h3>
                                 <ul className="flex flex-col gap-2">
-                                    <li><strong>All Users:</strong> {userMetrics?.all ?? ''}</li>
-                                    <li><strong>Super Admins:</strong> {userMetrics?.super_admin ?? ''}</li>
-                                    <li><strong>Managers:</strong> {userMetrics?.manager ?? ''}</li>
-                                    <li><strong>Sales Agents:</strong> {userMetrics?.sales_agent ?? ''}</li>
-                                    <li><strong>Normal Users:</strong> {userMetrics?.user ?? ''}</li>
+                                    <li><span className="font-semibold">All Users:</span> {userMetrics?.all ?? ''}</li>
+                                    <li><span className="font-semibold">Super Admins:</span> {userMetrics?.super_admin ?? ''}</li>
+                                    <li><span className="font-semibold">Managers:</span> {userMetrics?.manager ?? ''}</li>
+                                    <li><span className="font-semibold">Sales Agents:</span> {userMetrics?.sales_agent ?? ''}</li>
+                                    <li><span className="font-semibold">Normal Users:</span> {userMetrics?.user ?? ''}</li>
                                 </ul>
                             </div>
                         </div>
