@@ -18,6 +18,7 @@ import AppLayout from '@/layouts/app-layout';
 import {dashboard} from "@/routes";
 import usersRoute from '@/routes/users';
 import type {BreadcrumbItem, PaginatedCollection, RoleOption, User} from '@/types';
+import ListSearch from "@/components/list-search";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -54,9 +55,10 @@ type Props = {
     collection: PaginatedCollection<User>;
     roles: RoleOption[];
     filters: Filters;
+    search?: string;
 }
 
-export default function Index({collection, roles, filters}: Props) {
+export default function Index({collection, roles, filters, search}: Props) {
     const {auth} = usePage().props;
 
     const canManageUser = (user: User) => {
@@ -124,6 +126,7 @@ export default function Index({collection, roles, filters}: Props) {
                 <div className="flex items-center justify-between gap-3 flex-wrap lg:flex-nowrap">
                     <h1 className="text-xl font-bold">Users</h1>
                     <div className="flex flex-wrap items-center gap-3">
+                        <ListSearch action={usersRoute.index().url} initialSearch={search}/>
                         <ListFilters action={usersRoute.index().url}>
                             <Filter title="Verified">
                                 <FormField>

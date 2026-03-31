@@ -31,6 +31,12 @@ final class IndexUserRequest extends FormRequest
                 'string',
                 'in:all,yes,no',
             ],
+            'search' => [
+                'nullable',
+                'string',
+                'min:1',
+                'max:255',
+            ],
         ];
     }
 
