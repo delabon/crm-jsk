@@ -1,20 +1,18 @@
 import { Form, Head, Link, usePage } from '@inertiajs/react';
-import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import DeleteUser from '@/components/delete-user';
 import Heading from '@/components/heading';
-import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import {FormField} from "@/components/ui/form-field";
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {Spinner} from "@/components/ui/spinner";
 import UpdatePassword from "@/components/update-password";
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 import { edit } from '@/routes/profile';
+import UserProfileRoute from '@/routes/profile';
 import UserPasswordRoute from '@/routes/user-password';
 import { send } from '@/routes/verification';
 import type { BreadcrumbItem } from '@/types';
-import {FormField} from "@/components/ui/form-field";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -47,7 +45,7 @@ export default function Profile({
                     />
 
                     <Form
-                        {...ProfileController.update.form()}
+                        {...UserProfileRoute.update.form()}
                         options={{
                             preserveScroll: true,
                         }}
