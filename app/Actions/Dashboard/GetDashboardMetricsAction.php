@@ -46,9 +46,7 @@ final class GetDashboardMetricsAction
                     ->groupBy('roles.name')
                     ->pluck('count', 'name');
 
-                $usersByRoleCount['all'] = collect($usersByRoleCount)
-                    ->reduce(static fn ($carry, $count) => $carry + $count);
-
+                $usersByRoleCount['all'] = $usersByRoleCount->sum();
 
                 return $usersByRoleCount->map(static fn ($item) => Number::forHumans($item))
                     ->all();
