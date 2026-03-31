@@ -77,4 +77,9 @@ final class User extends Authenticatable implements MustVerifyEmail
     {
         return Role::tryFrom($this->roles->first()?->name);
     }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->main_role === Role::SuperAdmin;
+    }
 }
