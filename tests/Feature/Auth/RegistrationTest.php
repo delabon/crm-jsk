@@ -30,153 +30,69 @@ test('new users can register', function () {
     $this->assertNull($user->email_verified_at);
 });
 
-it('fails to register with invalid user data',
-    function (array $data, string $invalidParam, string $expectedMessage) {
-    // dd($data, $invalidParam, $expectedMessage);
-        $this->post(route('register.store'), $data)
+it('fails to register when using invalid first name',
+    function (mixed $invalidValue, string $expectedMessage) {
+        $this->post(route('register.store'), [
+            'first_name' => $invalidValue,
+            'last_name' => 'User',
+            'email' => 'test@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ])
             ->assertRedirectBack()
-            ->assertSessionHasErrors([$invalidParam => $expectedMessage]);
+            ->assertSessionHasErrors(['first_name' => $expectedMessage]);
 
         $this->assertDatabaseCount('users', 0);
     }
-)->with([
-    // First Name
-    [
-        [
-            'first_name' => null,
-            'last_name' => 'User',
+)->with('invalid-user-first-name');
+
+it('fails to register when using invalid last name',
+    function (mixed $invalidValue, string $expectedMessage) {
+        $this->post(route('register.store'), [
+            'first_name' => 'Test',
+            'last_name' => $invalidValue,
             'email' => 'test@example.com',
             'password' => 'password',
             'password_confirmation' => 'password',
-        ],
-        'first_name',
-        'The first name field is required.'
-    ],
-    [
-        [
-            'first_name' => '',
-            'last_name' => 'User',
-            'email' => 'test@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ],
-        'first_name',
-        'The first name field is required.'
-    ],
-    [
-        [
-            'first_name' => str_repeat('A', 256),
-            'last_name' => 'User',
-            'email' => 'test@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ],
-        'first_name',
-        'The first name field must not be greater than 255 characters.'
-    ],
-    // Last Name
-    [
-        [
-            'first_name' => 'Test',
-            'last_name' => null,
-            'email' => 'test@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ],
-        'last_name',
-        'The last name field is required.'
-    ],
-    [
-        [
-            'first_name' => 'Test',
-            'last_name' => '',
-            'email' => 'test@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ],
-        'last_name',
-        'The last name field is required.'
-    ],
-    [
-        [
-            'first_name' => 'Test',
-            'last_name' => str_repeat('A', 256),
-            'email' => 'test@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ],
-        'last_name',
-        'The last name field must not be greater than 255 characters.'
-    ],
-    // Email
-    [
-        [
+        ])
+            ->assertRedirectBack()
+            ->assertSessionHasErrors(['last_name' => $expectedMessage]);
+
+        $this->assertDatabaseCount('users', 0);
+    }
+)->with('invalid-user-last-name');
+
+it('fails to register when using invalid email',
+    function (mixed $invalidValue, string $expectedMessage) {
+        $this->post(route('register.store'), [
             'first_name' => 'Test',
             'last_name' => 'User',
-            'email' => null,
+            'email' => $invalidValue,
             'password' => 'password',
             'password_confirmation' => 'password',
-        ],
-        'email',
-        'The email field is required.'
-    ],
-    [
-        [
+        ])
+            ->assertRedirectBack()
+            ->assertSessionHasErrors(['email' => $expectedMessage]);
+
+        $this->assertDatabaseCount('users', 0);
+    }
+)->with('invalid-user-email');
+
+it('fails to register when using invalid password',
+    function (mixed $invalidValue, string $expectedMessage) {
+        $this->post(route('register.store'), [
             'first_name' => 'Test',
             'last_name' => 'User',
-            'email' => 'some-invalid-email',
-            'password' => 'password',
+            'email' => 'test.user@test.cc',
+            'password' => $invalidValue,
             'password_confirmation' => 'password',
-        ],
-        'email',
-        'The email field must be a valid email address.'
-    ],
-    [
-        [
-            'first_name' => 'Test',
-            'last_name' => 'User',
-            'email' => str_repeat('a', 255).'@cc.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ],
-        'email',
-        'The email field must not be greater than 255 characters.'
-    ],
-    // Password
-    [
-        [
-            'first_name' => 'Test',
-            'last_name' => 'User',
-            'email' => 'valid@email.com',
-            'password' => null,
-            'password_confirmation' => 'password',
-        ],
-        'password',
-        'The password field is required.'
-    ],
-    [
-        [
-            'first_name' => 'Test',
-            'last_name' => 'User',
-            'email' => 'valid@email.com',
-            'password' => '1',
-            'password_confirmation' => 'password',
-        ],
-        'password',
-        'The password field must be at least 8 characters.'
-    ],
-    [
-        [
-            'first_name' => 'Test',
-            'last_name' => 'User',
-            'email' => 'valid@email.com',
-            'password' => '12345678',
-            'password_confirmation' => 'password',
-        ],
-        'password',
-        'The password field confirmation does not match.'
-    ],
-]);
+        ])
+            ->assertRedirectBack()
+            ->assertSessionHasErrors(['password' => $expectedMessage]);
+
+        $this->assertDatabaseCount('users', 0);
+    }
+)->with('invalid-user-password');
 
 test('fails when trying to registered with an already existed email', function () {
     $user = User::factory()->create();

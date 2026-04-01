@@ -49,10 +49,9 @@ test('super admins can create a verified user', function () {
 
     $this->assertDatabaseCount('users', 2);
 
-    $user = User::find(2);
+    $user = User::query()->where('email', $newUserDate['email'])->first();
 
     expect($user->id)->not()->toEqual($admin->id)
-        ->and($user->email)->toEqual($newUserDate['email'])
         ->and($user->first_name)->toEqual($newUserDate['first_name'])
         ->and($user->last_name)->toEqual($newUserDate['last_name'])
         ->and($user->main_role->value)->toEqual($newUserDate['role'])
@@ -66,192 +65,112 @@ test('non super admins cannot create users', function () {
         ->assertForbidden();
 });
 
-it('fails to create a new user when using invalid user data',
-    function (array $data, string $invalidParam, string $expectedMessage) {
+it('fails to create a new user when using invalid first name',
+    function (mixed $invalidValue, string $expectedMessage) {
         $admin = User::factory()->create()
             ->removeRole(Role::User->value)
             ->assignRole(Role::SuperAdmin->value);
         $this->actingAs($admin);
 
-        // dd($data, $invalidParam, $expectedMessage);
-        $this->post(route('users.store'), $data)
+        $this->post(route('users.store'), [
+            'first_name' => $invalidValue,
+            'last_name' => 'User',
+            'email' => 'test@example.com',
+            'role' => Role::User->value,
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ])
             ->assertRedirectBack()
-            ->assertSessionHasErrors([$invalidParam => $expectedMessage]);
+            ->assertSessionHasErrors(['first_name' => $expectedMessage]);
 
         $this->assertDatabaseCount('users', 1);
     }
-)->with([
-    // First Name
-    [
-        [
-            'first_name' => null,
-            'last_name' => 'User',
+)->with('invalid-user-first-name');
+
+it('fails to create a new user when using invalid last name',
+    function (mixed $invalidValue, string $expectedMessage) {
+        $admin = User::factory()->create()
+            ->removeRole(Role::User->value)
+            ->assignRole(Role::SuperAdmin->value);
+        $this->actingAs($admin);
+
+        $this->post(route('users.store'), [
+            'first_name' => 'Test',
+            'last_name' => $invalidValue,
             'email' => 'test@example.com',
             'role' => Role::User->value,
             'password' => 'password',
             'password_confirmation' => 'password',
-        ],
-        'first_name',
-        'The first name field is required.'
-    ],
-    [
-        [
-            'first_name' => '',
+        ])
+            ->assertRedirectBack()
+            ->assertSessionHasErrors(['last_name' => $expectedMessage]);
+
+        $this->assertDatabaseCount('users', 1);
+    }
+)->with('invalid-user-last-name');
+
+it('fails to create a new user when using invalid email',
+    function (mixed $invalidValue, string $expectedMessage) {
+        $admin = User::factory()->create()
+            ->removeRole(Role::User->value)
+            ->assignRole(Role::SuperAdmin->value);
+        $this->actingAs($admin);
+
+        $this->post(route('users.store'), [
+            'first_name' => 'Test',
             'last_name' => 'User',
-            'email' => 'test@example.com',
+            'email' => $invalidValue,
             'role' => Role::User->value,
             'password' => 'password',
             'password_confirmation' => 'password',
-        ],
-        'first_name',
-        'The first name field is required.'
-    ],
-    [
-        [
-            'first_name' => str_repeat('A', 256),
-            'last_name' => 'User',
-            'email' => 'test@example.com',
-            'role' => Role::User->value,
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ],
-        'first_name',
-        'The first name field must not be greater than 255 characters.'
-    ],
-    // Last Name
-    [
-        [
-            'first_name' => 'Test',
-            'last_name' => null,
-            'email' => 'test@example.com',
-            'role' => Role::User->value,
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ],
-        'last_name',
-        'The last name field is required.'
-    ],
-    [
-        [
-            'first_name' => 'Test',
-            'last_name' => '',
-            'email' => 'test@example.com',
-            'role' => Role::User->value,
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ],
-        'last_name',
-        'The last name field is required.'
-    ],
-    [
-        [
-            'first_name' => 'Test',
-            'last_name' => str_repeat('A', 256),
-            'email' => 'test@example.com',
-            'role' => Role::User->value,
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ],
-        'last_name',
-        'The last name field must not be greater than 255 characters.'
-    ],
-    // Email
-    [
-        [
+        ])
+            ->assertRedirectBack()
+            ->assertSessionHasErrors(['email' => $expectedMessage]);
+
+        $this->assertDatabaseCount('users', 1);
+    }
+)->with('invalid-user-email');
+
+it('fails to create a new user when using invalid password',
+    function (mixed $invalidValue, string $expectedMessage) {
+        $admin = User::factory()->create()
+            ->removeRole(Role::User->value)
+            ->assignRole(Role::SuperAdmin->value);
+        $this->actingAs($admin);
+
+        $this->post(route('users.store'), [
             'first_name' => 'Test',
             'last_name' => 'User',
-            'email' => null,
+            'email' => 'test.user@test.cc',
             'role' => Role::User->value,
+            'password' => $invalidValue,
+            'password_confirmation' => 'password',
+        ])
+            ->assertRedirectBack()
+            ->assertSessionHasErrors(['password' => $expectedMessage]);
+
+        $this->assertDatabaseCount('users', 1);
+    }
+)->with('invalid-user-password');
+
+it('fails to create a new user when using invalid role',
+    function (mixed $invalidValue, string $expectedMessage) {
+        $admin = User::factory()->create()
+            ->removeRole(Role::User->value)
+            ->assignRole(Role::SuperAdmin->value);
+        $this->actingAs($admin);
+
+        $this->post(route('users.store'), [
+            'first_name' => 'Test',
+            'last_name' => 'User',
+            'email' => 'test.user@test.cc',
+            'role' => $invalidValue,
             'password' => 'password',
             'password_confirmation' => 'password',
-        ],
-        'email',
-        'The email field is required.'
-    ],
-    [
-        [
-            'first_name' => 'Test',
-            'last_name' => 'User',
-            'email' => 'some-invalid-email',
-            'role' => Role::User->value,
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ],
-        'email',
-        'The email field must be a valid email address.'
-    ],
-    [
-        [
-            'first_name' => 'Test',
-            'last_name' => 'User',
-            'email' => str_repeat('a', 255).'@cc.com',
-            'role' => Role::User->value,
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ],
-        'email',
-        'The email field must not be greater than 255 characters.'
-    ],
-    // Password
-    [
-        [
-            'first_name' => 'Test',
-            'last_name' => 'User',
-            'email' => 'valid@email.com',
-            'role' => Role::User->value,
-            'password' => null,
-            'password_confirmation' => 'password',
-        ],
-        'password',
-        'The password field is required.'
-    ],
-    [
-        [
-            'first_name' => 'Test',
-            'last_name' => 'User',
-            'email' => 'valid@email.com',
-            'role' => Role::User->value,
-            'password' => '1',
-            'password_confirmation' => 'password',
-        ],
-        'password',
-        'The password field must be at least 8 characters.'
-    ],
-    [
-        [
-            'first_name' => 'Test',
-            'last_name' => 'User',
-            'email' => 'valid@email.com',
-            'role' => Role::User->value,
-            'password' => '12345678',
-            'password_confirmation' => 'password',
-        ],
-        'password',
-        'The password field confirmation does not match.'
-    ],
-    // Role
-    [
-        [
-            'first_name' => 'Test',
-            'last_name' => 'User',
-            'email' => 'valid@email.com',
-            'role' => null,
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ],
-        'role',
-        'The role field is required.'
-    ],
-    [
-        [
-            'first_name' => 'Test',
-            'last_name' => 'User',
-            'email' => 'valid@email.com',
-            'role' => 'non-existent role',
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ],
-        'role',
-        'The selected role is invalid.'
-    ],
-]);
+        ])
+            ->assertRedirectBack()
+            ->assertSessionHasErrors(['role' => $expectedMessage]);
+
+        $this->assertDatabaseCount('users', 1);
+    }
+)->with('invalid-user-role');
