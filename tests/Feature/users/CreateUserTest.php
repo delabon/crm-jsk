@@ -181,3 +181,33 @@ it('fails to create a new user when using invalid role',
         $this->assertDatabaseCount('users', 1);
     }
 )->with('invalid-user-role');
+
+test('create users is rate limited', function () {
+    $admin = User::factory()->create()
+        ->removeRole(Role::User->value)
+        ->assignRole(Role::SuperAdmin->value);
+    $this->actingAs($admin);
+
+    $newUserDate = [
+        'first_name' => 'John',
+        'last_name' => 'doe',
+        'password' => '12345678',
+        'password_confirmation' => '12345678',
+        'role' => Role::User->value,
+    ];
+
+    for ($i=0; $i<10; $i++) {
+        $newUserDate['email'] = 'super'.$i.'@test.com';
+
+        $this->post(route('users.store'), $newUserDate)
+            ->assertRedirectToRoute('users.index')
+            ->assertSessionHas('success', 'The user has been created.');
+    }
+
+    $newUserDate['email'] = 'super11098@test.com';
+
+    $this->post(route('users.store'), $newUserDate)
+        ->assertTooManyRequests();
+
+    $this->assertDatabaseCount('users', 11);
+});

@@ -43,7 +43,7 @@ test('super admins can edit a user', function () {
 
     $user = User::factory()->create();
 
-    $newUserDate = [
+    $newUserData = [
         'first_name' => 'John',
         'last_name' => 'doe',
         'email' => 'john.doe@test.com',
@@ -52,19 +52,19 @@ test('super admins can edit a user', function () {
         'role' => Role::User->value,
     ];
 
-    $this->patch(route('users.update', $user), $newUserDate)
+    $this->patch(route('users.update', $user), $newUserData)
         ->assertRedirectToRoute('users.index')
         ->assertSessionHas('success', 'The user #'.$user->id.' has been updated.');
 
     $this->assertDatabaseCount('users', 2);
 
-    $user = User::query()->where('email', $newUserDate['email'])->first();
+    $user = User::query()->where('email', $newUserData['email'])->first();
 
     expect($user->id)->not()->toEqual($admin->id)
-        ->and($user->first_name)->toEqual($newUserDate['first_name'])
-        ->and($user->last_name)->toEqual($newUserDate['last_name'])
-        ->and($user->main_role->value)->toEqual($newUserDate['role'])
-        ->and(Hash::check($newUserDate['password'], $user->password));
+        ->and($user->first_name)->toEqual($newUserData['first_name'])
+        ->and($user->last_name)->toEqual($newUserData['last_name'])
+        ->and($user->main_role->value)->toEqual($newUserData['role'])
+        ->and(Hash::check($newUserData['password'], $user->password));
 });
 
 test('non super admins cannot edit users', function () {
@@ -211,4 +211,46 @@ it('fails to edit the password of the user when using invalid password',
     }
 )->with('invalid-user-password');
 
+test('edit users is rate limited', function () {
+    $admin = User::factory()->create()
+        ->removeRole(Role::User->value)
+        ->assignRole(Role::SuperAdmin->value);
+    $this->actingAs($admin);
 
+    $user = User::factory()->create();
+
+    $newUserData = [
+        'first_name' => 'John',
+        'last_name' => 'doe',
+        'email' => 'john.doe@test.com',
+        'password' => '12345678',
+        'password_confirmation' => '12345678',
+        'role' => Role::User->value,
+    ];
+
+    for ($i=0; $i<10; $i++) {
+        $this->patch(route('users.update', $user), $newUserData)
+            ->assertRedirectToRoute('users.index')
+            ->assertSessionHas('success', 'The user #'.$user->id.' has been updated.');
+    }
+
+    $this->patch(route('users.update', $user), [
+        'first_name' => 'Jina',
+        'last_name' => 'Notdoe',
+        'email' => 'jina.notdoe@test.com',
+        'password' => 'password',
+        'password_confirmation' => 'password',
+        'role' => Role::Manager->value,
+    ])
+        ->assertTooManyRequests();
+
+    $this->assertDatabaseCount('users', 2);
+
+    $user->refresh();
+
+    expect($user->first_name)->toEqual($newUserData['first_name'])
+        ->and($user->last_name)->toEqual($newUserData['last_name'])
+        ->and($user->email)->toEqual($newUserData['email'])
+        ->and($user->main_role->value)->toEqual($newUserData['role'])
+        ->and(Hash::check($newUserData['password'], $user->password));
+});

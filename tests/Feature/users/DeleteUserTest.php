@@ -38,3 +38,27 @@ test('non super admins cannot delete users', function () {
 
     $this->assertDatabaseCount('users', 2);
 });
+
+test('delete users is rate limited', function () {
+    $admin = User::factory()->create()
+        ->removeRole(Role::User->value)
+        ->assignRole(Role::SuperAdmin->value);
+    $this->actingAs($admin);
+
+    $users = User::factory(11)->create();
+
+    $this->assertDatabaseCount('users', 12);
+
+    for ($i=0; $i<10; $i++) {
+        $this->delete(route('users.destroy', $users[$i]))
+            ->assertRedirectBack()
+            ->assertSessionHas('success', 'The user #'.$users[$i]->id.' has been deleted.');
+
+        $this->assertDatabaseCount('users', 12 - ($i+1));
+    }
+
+    $this->delete(route('users.destroy', $users[10]))
+        ->assertTooManyRequests();
+
+    $this->assertDatabaseCount('users', 2);
+});
