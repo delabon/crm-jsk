@@ -35,12 +35,12 @@ final class StoreUserRequest extends FormRequest
 
         return [
             ...$this->profileRules($user?->id),
-            'password' => $this->passwordRules(),
             'role' => [
                 'required',
                 'string',
                 Rule::enum(Role::class),
             ],
+            'password' => $this->passwordRules(),
         ];
     }
 }
