@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Models\User;
-use Illuminate\Support\Facades\RateLimiter;
 
 test('login screen can be rendered', function () {
     $response = $this->get(route('login'));
@@ -37,21 +36,29 @@ test('users can not authenticate with invalid password', function () {
 test('users can logout', function () {
     $user = User::factory()->create();
 
-    $response = $this->actingAs($user)->post(route('logout'));
+    $response = $this->actingAs($user)->delete(route('logout'));
 
     $this->assertGuest();
-    $response->assertRedirect(route('home'));
+    $response->assertRedirect(route('login'));
 });
 
-test('users are rate limited', function () {
+test('login is rate limited', function () {
     $user = User::factory()->create();
 
-    RateLimiter::increment(md5('login'.implode('|', [$user->email, '127.0.0.1'])), amount: 5);
+    for ($i=0; $i<5; $i++) {
+        $this->post(route('login.store'), [
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+        $this->assertAuthenticated();
 
-    $response = $this->post(route('login.store'), [
+        $this->delete(route('logout'));
+        $this->assertGuest();
+    }
+
+    $this->post(route('login.store'), [
         'email' => $user->email,
-        'password' => 'wrong-password',
-    ]);
-
-    $response->assertTooManyRequests();
+        'password' => 'password',
+    ])->assertTooManyRequests();
+    $this->assertGuest();
 });
