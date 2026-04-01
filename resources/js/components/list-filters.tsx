@@ -30,7 +30,7 @@ export default function ListFilters({children, action}: Props) {
                     <div className="flex items-center justify-between gap-3">
                         <span className="font-semibold">Filters</span>
                         <Button
-                            className="!px-0"
+                            className="px-0!"
                             onClick={toggleFilters}
                             variant="link"
                             type="button"
