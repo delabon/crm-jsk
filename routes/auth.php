@@ -54,10 +54,11 @@ Route::prefix('/forgot-password')->middleware('guest')->name('password')->group(
         ->name('.email');
 });
 
-Route::get('/reset-password/{token}', [PasswordResetController::class, 'resetPasswordForm'])
-    ->middleware('guest')
-    ->name('password.reset');
+Route::prefix('/email/verify')->middleware('guest')->name('password')->group(function () {
+    Route::get('/{token}', [PasswordResetController::class, 'resetPasswordForm'])
+        ->name('.reset');
 
-Route::post('/reset-password', [PasswordResetController::class, 'resetPassword'])
-    ->middleware(['guest', 'throttle:5,1'])
-    ->name('password.update');
+    Route::post('/', [PasswordResetController::class, 'resetPassword'])
+        ->middleware('throttle:5,1')
+        ->name('.update');
+});
