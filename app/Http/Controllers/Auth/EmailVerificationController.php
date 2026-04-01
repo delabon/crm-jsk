@@ -13,7 +13,14 @@ final class EmailVerificationController extends Controller
 {
     public function sendLink(Request $request): RedirectResponse
     {
-        $request->user()->sendEmailVerificationNotification();
+        $user = $request->user();
+
+        if ($user->email_verified_at) {
+            return back()
+                ->with('info', 'The email is already verified!');
+        }
+
+        $user->sendEmailVerificationNotification();
 
         return back()
             ->with('success', 'Verification link sent!');
