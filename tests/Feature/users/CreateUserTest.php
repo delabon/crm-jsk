@@ -22,8 +22,8 @@ test('super admins can visit the create user page', function () {
 
     $this->get(route('users.create'))
         ->assertOk()
-        ->assertInertia(static function (AssertableInertia $component) {
-            $component->component('users/store');
+        ->assertInertia(static function (AssertableInertia $page) {
+            $page->component('users/store');
         });
 });
 

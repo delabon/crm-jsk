@@ -22,8 +22,8 @@ test('super admins can visit the edit user page', function () {
 
     $this->get(route('users.edit', $admin))
         ->assertOk()
-        ->assertInertia(static function (AssertableInertia $component) {
-            $component->component('users/edit');
+        ->assertInertia(static function (AssertableInertia $page) {
+            $page->component('users/edit');
         });
 });
 

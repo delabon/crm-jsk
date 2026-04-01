@@ -7,13 +7,16 @@ use Illuminate\Auth\Events\Verified;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;
+use Inertia\Testing\AssertableInertia;
 
 test('email verification screen can be rendered', function () {
     $user = User::factory()->unverified()->create();
 
-    $response = $this->actingAs($user)->get(route('verification.notice'));
-
-    $response->assertOk();
+    $this->actingAs($user)->get(route('verification.notice'))
+        ->assertOk()
+        ->assertInertia(static function (AssertableInertia $page) {
+            $page->component('auth/verify-email');
+        });
 });
 
 test('email can be verified', function () {

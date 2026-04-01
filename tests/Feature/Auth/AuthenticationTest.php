@@ -3,11 +3,14 @@
 declare(strict_types=1);
 
 use App\Models\User;
+use Inertia\Testing\AssertableInertia;
 
 test('login screen can be rendered', function () {
-    $response = $this->get(route('login'));
-
-    $response->assertOk();
+    $this->get(route('login'))
+        ->assertOk()
+        ->assertInertia(static function (AssertableInertia $page) {
+            $page->component('auth/login');
+        });
 });
 
 test('users can authenticate using the login screen', function () {

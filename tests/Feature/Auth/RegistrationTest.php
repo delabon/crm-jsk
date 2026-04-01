@@ -3,11 +3,14 @@
 declare(strict_types=1);
 
 use App\Models\User;
+use Inertia\Testing\AssertableInertia;
 
 test('registration screen can be rendered', function () {
-    $response = $this->get(route('register'));
-
-    $response->assertOk();
+    $this->get(route('register'))
+        ->assertOk()
+        ->assertInertia(static function (AssertableInertia $page) {
+            $page->component('auth/register');
+        });
 });
 
 test('new users can register', function () {
