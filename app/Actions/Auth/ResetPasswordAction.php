@@ -14,7 +14,6 @@ final class ResetPasswordAction
 {
     public function handle(array $data): string
     {
-        // $request->only('email', 'password', 'password_confirmation', 'token'),
         return Password::reset(
             $data,
             function (User $user, string $password) {

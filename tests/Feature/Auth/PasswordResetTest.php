@@ -6,10 +6,6 @@ use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Notification;
 
-beforeEach(function () {
-    $this->markTestSkipped(); // TODO: update after Fortity is removed
-});
-
 test('reset password link screen can be rendered', function () {
     $response = $this->get(route('password.request'));
 
@@ -67,13 +63,14 @@ test('password can be reset with valid token', function () {
 
 test('password cannot be reset with invalid token', function () {
     $user = User::factory()->create();
+    $invalidToken = 'invalid-token';
 
     $response = $this->post(route('password.update'), [
-        'token' => 'invalid-token',
+        'token' => $invalidToken,
         'email' => $user->email,
         'password' => 'newpassword123',
         'password_confirmation' => 'newpassword123',
-    ]);
-
-    $response->assertSessionHasErrors('email');
+    ])
+        ->assertRedirectToRoute('password.reset', ['token' => $invalidToken])
+        ->assertSessionHasErrors('email');
 });

@@ -38,7 +38,9 @@ final class PasswordResetController extends Controller
         $status = $action->handle($request->only('email', 'password', 'password_confirmation', 'token'));
 
         return $status === Password::PasswordReset
-            ? to_route('login')->with('success', 'Your password has been reset.')
-            : to_route('password.reset')->withErrors(['email' => [__($status)]]);
+            ? to_route('login')
+                ->with('success', 'Your password has been reset.')
+            : to_route('password.reset', ['token' => $request->token])
+                ->withErrors(['email' => [__($status)]]);
     }
 }

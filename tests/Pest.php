@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Database\Seeders\RolesAndPermissionsSeeder;
 use Tests\TestCase;
 
 /*
@@ -17,7 +18,10 @@ use Tests\TestCase;
 
 pest()->extend(TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
-    ->in('Feature');
+    ->in('Feature')
+    ->beforeEach(function () {
+        $this->seed(RolesAndPermissionsSeeder::class);
+    });
 
 /*
 |--------------------------------------------------------------------------
