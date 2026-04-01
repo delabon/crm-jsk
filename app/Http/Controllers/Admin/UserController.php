@@ -80,7 +80,7 @@ final class UserController extends Controller
     {
         $id = $action->handle($user);
 
-        return to_route('users.index')
+        return back()
             ->with('success', 'The user #'.$id.' has been deleted.');
     }
 }

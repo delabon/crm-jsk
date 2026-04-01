@@ -7,39 +7,41 @@ use Inertia\Testing\AssertableInertia;
 
 test('non logged in users will be redirected to login page', function () {
     $this
-        ->get(route('users.create'))
+        ->get(route('users.edit', 23123))
         ->assertRedirectToRoute('login');
     $this
-        ->post(route('users.store'))
+        ->patch(route('users.update', 23123))
         ->assertRedirectToRoute('login');
 });
 
-test('super admins can visit the create user page', function () {
+test('super admins can visit the edit user page', function () {
     $admin = User::factory()->create()
         ->removeRole(Role::User->value)
         ->assignRole(Role::SuperAdmin->value);
     $this->actingAs($admin);
 
-    $this->get(route('users.create'))
+    $this->get(route('users.edit', $admin))
         ->assertOk()
         ->assertInertia(static function (AssertableInertia $component) {
-            $component->component('users/store');
+            $component->component('users/edit');
         });
 });
 
-test('non super admins cannot visit the create user page', function () {
+test('non super admins cannot visit the edit user page', function () {
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    $this->get(route('users.create'))
+    $this->get(route('users.edit', $user))
         ->assertForbidden();
 });
 
-test('super admins can create a verified user', function () {
+test('super admins can edit a user', function () {
     $admin = User::factory()->create()
         ->removeRole(Role::User->value)
         ->assignRole(Role::SuperAdmin->value);
     $this->actingAs($admin);
+
+    $user = User::factory()->create();
 
     $newUserDate = [
         'first_name' => 'John',
@@ -50,9 +52,9 @@ test('super admins can create a verified user', function () {
         'role' => Role::User->value,
     ];
 
-    $this->post(route('users.store'), $newUserDate)
+    $this->patch(route('users.update', $user), $newUserDate)
         ->assertRedirectToRoute('users.index')
-        ->assertSessionHas('success', 'The user has been created.');
+        ->assertSessionHas('success', 'The user #'.$user->id.' has been updated.');
 
     $this->assertDatabaseCount('users', 2);
 
@@ -65,21 +67,30 @@ test('super admins can create a verified user', function () {
         ->and(Hash::check($newUserDate['password'], $user->password));
 });
 
-test('non super admins cannot create users', function () {
+test('non super admins cannot edit users', function () {
     $this
         ->actingAs(User::factory()->create())
-        ->post(route('users.store'))
+        ->patch(route('users.update', User::factory()->create()), [
+            'first_name' => 'John',
+            'last_name' => 'doe',
+            'email' => 'john.doe@test.com',
+            'password' => '12345678',
+            'password_confirmation' => '12345678',
+            'role' => Role::User->value,
+        ])
         ->assertForbidden();
 });
 
-it('fails to create a new user when using invalid first name',
+it('fails to edit a user when using invalid first name',
     function (mixed $invalidValue, string $expectedMessage) {
         $admin = User::factory()->create()
             ->removeRole(Role::User->value)
             ->assignRole(Role::SuperAdmin->value);
         $this->actingAs($admin);
 
-        $this->post(route('users.store'), [
+        $user = User::factory()->create();
+
+        $this->patch(route('users.update', $user), [
             'first_name' => $invalidValue,
             'last_name' => 'User',
             'email' => 'test@example.com',
@@ -90,19 +101,23 @@ it('fails to create a new user when using invalid first name',
             ->assertRedirectBack()
             ->assertSessionHasErrors(['first_name' => $expectedMessage]);
 
-        $this->assertDatabaseCount('users', 1);
+        $user->refresh();
+
+        expect($user->first_name)->not()->toEqual($invalidValue);
     }
 )->with('invalid-user-first-name');
 
-it('fails to create a new user when using invalid last name',
+it('fails to edit a user when using invalid last name',
     function (mixed $invalidValue, string $expectedMessage) {
         $admin = User::factory()->create()
             ->removeRole(Role::User->value)
             ->assignRole(Role::SuperAdmin->value);
         $this->actingAs($admin);
 
-        $this->post(route('users.store'), [
-            'first_name' => 'Test',
+        $user = User::factory()->create();
+
+        $this->patch(route('users.update', $user), [
+            'first_name' => 'User',
             'last_name' => $invalidValue,
             'email' => 'test@example.com',
             'role' => Role::User->value,
@@ -112,20 +127,24 @@ it('fails to create a new user when using invalid last name',
             ->assertRedirectBack()
             ->assertSessionHasErrors(['last_name' => $expectedMessage]);
 
-        $this->assertDatabaseCount('users', 1);
+        $user->refresh();
+
+        expect($user->last_name)->not()->toEqual($invalidValue);
     }
 )->with('invalid-user-last-name');
 
-it('fails to create a new user when using invalid email',
+it('fails to edit a user when using invalid email',
     function (mixed $invalidValue, string $expectedMessage) {
         $admin = User::factory()->create()
             ->removeRole(Role::User->value)
             ->assignRole(Role::SuperAdmin->value);
         $this->actingAs($admin);
 
-        $this->post(route('users.store'), [
-            'first_name' => 'Test',
-            'last_name' => 'User',
+        $user = User::factory()->create();
+
+        $this->patch(route('users.update', $user), [
+            'first_name' => 'User',
+            'last_name' => 'Test',
             'email' => $invalidValue,
             'role' => Role::User->value,
             'password' => 'password',
@@ -134,43 +153,25 @@ it('fails to create a new user when using invalid email',
             ->assertRedirectBack()
             ->assertSessionHasErrors(['email' => $expectedMessage]);
 
-        $this->assertDatabaseCount('users', 1);
+        $user->refresh();
+
+        expect($user->email)->not()->toEqual($invalidValue);
     }
 )->with('invalid-user-email');
 
-it('fails to create a new user when using invalid password',
+it('fails to edit a user when using invalid role',
     function (mixed $invalidValue, string $expectedMessage) {
         $admin = User::factory()->create()
             ->removeRole(Role::User->value)
             ->assignRole(Role::SuperAdmin->value);
         $this->actingAs($admin);
 
-        $this->post(route('users.store'), [
-            'first_name' => 'Test',
-            'last_name' => 'User',
-            'email' => 'test.user@test.cc',
-            'role' => Role::User->value,
-            'password' => $invalidValue,
-            'password_confirmation' => 'password',
-        ])
-            ->assertRedirectBack()
-            ->assertSessionHasErrors(['password' => $expectedMessage]);
+        $user = User::factory()->create();
 
-        $this->assertDatabaseCount('users', 1);
-    }
-)->with('invalid-user-password');
-
-it('fails to create a new user when using invalid role',
-    function (mixed $invalidValue, string $expectedMessage) {
-        $admin = User::factory()->create()
-            ->removeRole(Role::User->value)
-            ->assignRole(Role::SuperAdmin->value);
-        $this->actingAs($admin);
-
-        $this->post(route('users.store'), [
-            'first_name' => 'Test',
-            'last_name' => 'User',
-            'email' => 'test.user@test.cc',
+        $this->patch(route('users.update', $user), [
+            'first_name' => 'User',
+            'last_name' => 'Test',
+            'email' => 'test@test.com',
             'role' => $invalidValue,
             'password' => 'password',
             'password_confirmation' => 'password',
@@ -178,6 +179,36 @@ it('fails to create a new user when using invalid role',
             ->assertRedirectBack()
             ->assertSessionHasErrors(['role' => $expectedMessage]);
 
-        $this->assertDatabaseCount('users', 1);
+        $user->refresh();
+
+        expect($user->main_role->value)->not()->toEqual($invalidValue);
     }
 )->with('invalid-user-role');
+
+it('fails to edit the password of the user when using invalid password',
+    function (mixed $invalidValue, string $expectedMessage) {
+        $admin = User::factory()->create()
+            ->removeRole(Role::User->value)
+            ->assignRole(Role::SuperAdmin->value);
+        $this->actingAs($admin);
+
+        $user = User::factory()->create();
+
+        $this->put(route('user-password.update', $user), [
+            'first_name' => 'User',
+            'last_name' => 'Test',
+            'email' => 'test@test.com',
+            'role' => Role::User->value,
+            'password' => $invalidValue,
+            'password_confirmation' => 'password',
+        ])
+            ->assertRedirectBack()
+            ->assertSessionHasErrors(['password' => $expectedMessage]);
+
+        $user->refresh();
+
+        expect(Hash::check($invalidValue, $user->password))->toBeFalse();
+    }
+)->with('invalid-user-password');
+
+
