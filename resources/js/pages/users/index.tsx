@@ -3,6 +3,7 @@ import {CollectionPagination} from "@/components/collection-pagination";
 import DeleteButton from "@/components/delete-button";
 import Filter from "@/components/filter";
 import ListFilters from "@/components/list-filters";
+import ListSearch from "@/components/list-search";
 import {Button} from "@/components/ui/button";
 import {FormField} from "@/components/ui/form-field";
 import {RadioWithItems} from "@/components/ui/radio-with-items";
@@ -18,7 +19,6 @@ import AppLayout from '@/layouts/app-layout';
 import {dashboard} from "@/routes";
 import usersRoute from '@/routes/users';
 import type {BreadcrumbItem, PaginatedCollection, RoleOption, User} from '@/types';
-import ListSearch from "@/components/list-search";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -68,7 +68,7 @@ export default function Index({collection, roles, filters, search}: Props) {
 
     const renderItems = () => {
         if (collection.data.length === 0) {
-            return <div>No users yet.</div>
+            return <div>Nothing here, come back later!</div>
         }
 
         return <>
@@ -126,7 +126,7 @@ export default function Index({collection, roles, filters, search}: Props) {
                 <div className="flex items-center justify-between gap-3 flex-wrap lg:flex-nowrap">
                     <h1 className="text-xl font-bold">Users</h1>
                     <div className="flex flex-wrap items-center gap-3">
-                        <ListSearch action={usersRoute.index().url} initialSearch={search}/>
+                        <ListSearch initialSearch={search}/>
                         <ListFilters action={usersRoute.index().url}>
                             <Filter title="Verified">
                                 <FormField>
