@@ -6,7 +6,6 @@ use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 // --- Login ---
 Route::prefix('/login')->middleware('guest')->name('login')->group(function () {
@@ -17,6 +16,7 @@ Route::prefix('/login')->middleware('guest')->name('login')->group(function () {
         ->name('.store');
 });
 
+// --- Logout ---
 Route::delete('/logout', [LoginController::class, 'destroy'])
     ->middleware(['auth'])
     ->name('logout');
@@ -35,18 +35,14 @@ Route::prefix('/email/verify')->name('verification')->group(function () {
     Route::inertia('/', 'auth/verify-email')
         ->name('.notice');
 
-    Route::get('/{id}/{hash}', function (EmailVerificationRequest $request) {
-        $request->fulfill();
+    Route::post('/email/verify', [EmailVerificationController::class, 'sendLink'])
+        ->middleware(['auth', 'throttle:5,1'])
+        ->name('.send');
 
-        return to_route('login');
-    })
+    Route::get('/{id}/{hash}', [EmailVerificationController::class, 'verify'])
         ->middleware(['auth', 'signed'])
         ->name('.verify');
 });
-
-Route::post('/email/verification-notification', EmailVerificationController::class)
-    ->middleware(['auth', 'throttle:5,1'])
-    ->name('verification.send');
 
 // --- Password Reset ---
 Route::prefix('/forgot-password')->middleware('guest')->name('password')->group(function () {
