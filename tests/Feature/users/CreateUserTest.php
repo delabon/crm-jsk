@@ -62,7 +62,7 @@ test('super admins can create a verified user', function () {
         ->and($user->first_name)->toEqual($newUserDate['first_name'])
         ->and($user->last_name)->toEqual($newUserDate['last_name'])
         ->and($user->main_role->value)->toEqual($newUserDate['role'])
-        ->and(Hash::check($newUserDate['password'], $user->password));
+        ->and(Hash::check($newUserDate['password'], $user->password))->toBeTrue();
 });
 
 test('non super admins cannot create users', function () {

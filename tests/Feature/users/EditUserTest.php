@@ -64,7 +64,7 @@ test('super admins can edit a user', function () {
         ->and($user->first_name)->toEqual($newUserData['first_name'])
         ->and($user->last_name)->toEqual($newUserData['last_name'])
         ->and($user->main_role->value)->toEqual($newUserData['role'])
-        ->and(Hash::check($newUserData['password'], $user->password));
+        ->and(Hash::check($newUserData['password'], $user->password))->toBeTrue();
 });
 
 test('non super admins cannot edit users', function () {
