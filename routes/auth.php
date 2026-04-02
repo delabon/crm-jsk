@@ -62,7 +62,7 @@ Route::prefix('/forgot-password')->middleware('guest')->name('password')->group(
         ->name('.email');
 });
 
-Route::prefix('/email/verify')
+Route::prefix('/reset/password')
     ->middleware('guest')
     ->name('password')
     ->group(function () {
