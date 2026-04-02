@@ -62,7 +62,7 @@ final class User extends Authenticatable implements MustVerifyEmail
 
     public function getFormattedRoleAttribute(): ?string
     {
-        return Role::from($this->roles->first()?->name)->label();
+        return $this->main_role?->label();
     }
 
     public function getRoleNamesAttribute(): ?Collection
