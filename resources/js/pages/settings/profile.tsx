@@ -82,7 +82,7 @@ export default function Profile({
                                         type="email"
                                         id="email"
                                         name="email"
-                                        placeholder="Last name"
+                                        placeholder="Email"
                                         aria-invalid={!!errors['email']}
                                         defaultValue={auth.user.email}
                                         required
