@@ -8,13 +8,16 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Auth\RegisterController;
 
 // --- Login ---
-Route::prefix('/login')->middleware('guest')->name('login')->group(function () {
-    Route::inertia('/', 'auth/login');
+Route::prefix('/login')
+    ->middleware('guest')
+    ->name('login')
+    ->group(function () {
+        Route::inertia('/', 'auth/login');
 
-    Route::post('/', [LoginController::class, 'store'])
-        ->middleware(['throttle:5,1'])
-        ->name('.store');
-});
+        Route::post('/', [LoginController::class, 'store'])
+            ->middleware('throttle:login')
+            ->name('.store');
+    });
 
 // --- Logout ---
 Route::delete('/logout', [LoginController::class, 'destroy'])
@@ -22,27 +25,32 @@ Route::delete('/logout', [LoginController::class, 'destroy'])
     ->name('logout');
 
 // --- Register ---
-Route::prefix('/register')->middleware('guest')->name('register')->group(function () {
-    Route::inertia('/', 'auth/register');
+Route::prefix('/register')
+    ->middleware('guest')
+    ->name('register')
+    ->group(function () {
+        Route::inertia('/', 'auth/register');
 
-    Route::post('/', RegisterController::class)
-        ->middleware(['throttle:5,1'])
-        ->name('.store');
-});
+        Route::post('/', RegisterController::class)
+            ->middleware('throttle:register')
+            ->name('.store');
+    });
 
 // --- Email Verification ---
-Route::prefix('/email/verify')->name('verification')->group(function () {
-    Route::inertia('/', 'auth/verify-email')
-        ->name('.notice');
+Route::prefix('/email/verify')
+    ->name('verification')
+    ->group(function () {
+        Route::inertia('/', 'auth/verify-email')
+            ->name('.notice');
 
-    Route::post('/email/verify', [EmailVerificationController::class, 'sendLink'])
-        ->middleware(['auth', 'throttle:5,1'])
-        ->name('.send');
+        Route::post('/email/verify', [EmailVerificationController::class, 'sendLink'])
+            ->middleware(['auth', 'throttle:email-verification-send'])
+            ->name('.send');
 
-    Route::get('/{id}/{hash}', [EmailVerificationController::class, 'verify'])
-        ->middleware(['auth', 'signed'])
-        ->name('.verify');
-});
+        Route::get('/{id}/{hash}', [EmailVerificationController::class, 'verify'])
+            ->middleware(['auth', 'signed'])
+            ->name('.verify');
+    });
 
 // --- Password Reset ---
 Route::prefix('/forgot-password')->middleware('guest')->name('password')->group(function () {
@@ -50,15 +58,18 @@ Route::prefix('/forgot-password')->middleware('guest')->name('password')->group(
         ->name('.request');
 
     Route::post('/', [PasswordResetController::class, 'sendResetEmail'])
-        ->middleware('throttle:5,1')
+        ->middleware('throttle:password-email')
         ->name('.email');
 });
 
-Route::prefix('/email/verify')->middleware('guest')->name('password')->group(function () {
-    Route::get('/{token}', [PasswordResetController::class, 'resetPasswordForm'])
-        ->name('.reset');
+Route::prefix('/email/verify')
+    ->middleware('guest')
+    ->name('password')
+    ->group(function () {
+        Route::get('/{token}', [PasswordResetController::class, 'resetPasswordForm'])
+            ->name('.reset');
 
-    Route::post('/', [PasswordResetController::class, 'resetPassword'])
-        ->middleware('throttle:5,1')
-        ->name('.update');
-});
+        Route::post('/', [PasswordResetController::class, 'update'])
+            ->middleware('throttle:password-update')
+            ->name('.update');
+    });

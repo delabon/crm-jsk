@@ -114,3 +114,13 @@ test('does not send verification notification if email is verified', function ()
 
     Notification::assertNothingSent();
 });
+
+test('send verification notification is rate limited', function () {
+    $user = User::factory()->unverified()->create();
+
+    exhaustRateLimit('email-verification-send', (string) $user->id);
+
+    $this->actingAs($user)
+        ->post(route('verification.send'))
+        ->assertTooManyRequests();
+});

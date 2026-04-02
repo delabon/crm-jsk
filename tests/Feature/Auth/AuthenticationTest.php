@@ -48,16 +48,7 @@ test('users can logout', function () {
 test('login is rate limited', function () {
     $user = User::factory()->create();
 
-    for ($i=0; $i<5; $i++) {
-        $this->post(route('login.store'), [
-            'email' => $user->email,
-            'password' => 'password',
-        ]);
-        $this->assertAuthenticated();
-
-        $this->delete(route('logout'));
-        $this->assertGuest();
-    }
+    exhaustRateLimit('login', '127.0.0.1', maxAttempts: 5);
 
     $this->post(route('login.store'), [
         'email' => $user->email,

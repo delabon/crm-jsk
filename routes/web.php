@@ -19,54 +19,57 @@ Route::get('/', function () {
 })->name('home');
 
 // --- Dashboard ---
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', DashboardController::class)
-        ->name('dashboard');
+Route::middleware(['auth', 'verified'])
+    ->group(function () {
+        Route::get('dashboard', DashboardController::class)
+            ->name('dashboard');
 
-    // --- Users ---
-    Route::prefix('users')
-        ->middleware('can:users.manage')
-        ->name('users.')
-        ->controller(UserController::class)
-        ->group(function () {
-            Route::get('/', 'index')
-                ->name('index');
-            Route::get('/create', 'create')
-                ->name('create');
-            Route::post('/', 'store')
-                ->middleware('throttle:10,1')
-                ->name('store');
-            Route::delete('/{user}', 'destroy')
-                ->middleware(['throttle:10,1', 'can:delete,user'])
-                ->name('destroy');
-            Route::get('/{user}', 'edit')
-                ->middleware('can:update,user')
-                ->name('edit');
-            Route::patch('/{user}', 'update')
-                ->middleware(['throttle:10,1', 'can:update,user'])
-                ->name('update');
-        });
-});
+        // --- Users ---
+        Route::prefix('users')
+            ->middleware('can:users.manage')
+            ->name('users.')
+            ->controller(UserController::class)
+            ->group(function () {
+                Route::get('/', 'index')
+                    ->name('index');
+                Route::get('/create', 'create')
+                    ->name('create');
+                Route::post('/', 'store')
+                    ->middleware('throttle:users-manage')
+                    ->name('store');
+                Route::delete('/{user}', 'destroy')
+                    ->middleware(['throttle:users-manage', 'can:delete,user'])
+                    ->name('destroy');
+                Route::get('/{user}', 'edit')
+                    ->middleware('can:update,user')
+                    ->name('edit');
+                Route::patch('/{user}', 'update')
+                    ->middleware(['throttle:users-manage', 'can:update,user'])
+                    ->name('update');
+            });
+    });
 
 // --- Profile Settings ---
-Route::middleware(['auth'])->group(function () {
-    Route::redirect('settings', '/settings/profile');
+Route::middleware(['auth'])
+    ->group(function () {
+        Route::redirect('settings', '/settings/profile');
 
-    Route::get('settings/profile', [ProfileController::class, 'edit'])
-        ->name('profile.edit');
-    Route::patch('settings/profile', [ProfileController::class, 'update'])
-        ->name('profile.update');
-    Route::delete('settings/profile', [ProfileController::class, 'destroy'])
-        ->name('profile.destroy');
-});
+        Route::get('settings/profile', [ProfileController::class, 'edit'])
+            ->name('profile.edit');
+        Route::patch('settings/profile', [ProfileController::class, 'update'])
+            ->name('profile.update');
+        Route::delete('settings/profile', [ProfileController::class, 'destroy'])
+            ->name('profile.destroy');
+    });
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::put('settings/password/{user}', [PasswordController::class, 'update'])
-        ->middleware(['throttle:10,1', 'can:update,user'])
-        ->name('user-password.update');
+Route::middleware(['auth', 'verified'])
+    ->group(function () {
+        Route::put('settings/password/{user}', [PasswordController::class, 'update'])
+            ->middleware(['throttle:password-update', 'can:update,user'])
+            ->name('user-password.update');
 
-    Route::inertia('settings/appearance', 'settings/appearance')
-        ->name('appearance.edit');
-});
+        Route::inertia('settings/appearance', 'settings/appearance')
+            ->name('appearance.edit');
+    });
 
 require __DIR__.'/auth.php';

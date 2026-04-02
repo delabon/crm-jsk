@@ -123,18 +123,7 @@ test('user is redirected to dashboard when already logged in', function () {
 });
 
 test('register is rate limited', function () {
-    for ($i=0; $i<5; $i++) {
-        $this->post(route('register.store'), [
-            'first_name' => 'Test',
-            'last_name' => 'User',
-            'email' => 'test'.$i.'@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ]);
-        $this->assertAuthenticated();
-
-        $this->delete(route('logout'));
-    }
+    exhaustRateLimit('register', '127.0.0.1', maxAttempts: 10);
 
     $this->post(route('register.store'), [
         'first_name' => 'Test',
@@ -144,7 +133,7 @@ test('register is rate limited', function () {
         'password_confirmation' => 'password',
     ])
         ->assertTooManyRequests();
-    $this->assertGuest();
 
-    $this->assertDatabaseCount('users', 5);
+    $this->assertGuest();
+    $this->assertDatabaseCount('users', 0);
 });

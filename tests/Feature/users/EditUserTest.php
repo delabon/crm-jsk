@@ -217,40 +217,10 @@ test('edit users is rate limited', function () {
         ->assignRole(Role::SuperAdmin->value);
     $this->actingAs($admin);
 
-    $user = User::factory()->create();
+    exhaustRateLimit('users-manage', (string) $admin->id, maxAttempts: 10);
 
-    $newUserData = [
-        'first_name' => 'John',
-        'last_name' => 'doe',
-        'email' => 'john.doe@test.com',
-        'password' => '12345678',
-        'password_confirmation' => '12345678',
-        'role' => Role::User->value,
-    ];
-
-    for ($i=0; $i<10; $i++) {
-        $this->patch(route('users.update', $user), $newUserData)
-            ->assertRedirectToRoute('users.index')
-            ->assertSessionHas('success', 'The user #'.$user->id.' has been updated.');
-    }
-
-    $this->patch(route('users.update', $user), [
-        'first_name' => 'Jina',
-        'last_name' => 'Notdoe',
-        'email' => 'jina.notdoe@test.com',
-        'password' => 'password',
-        'password_confirmation' => 'password',
-        'role' => Role::Manager->value,
-    ])
+    $this
+        ->actingAs($admin)
+        ->patch(route('users.update', 123), [])
         ->assertTooManyRequests();
-
-    $this->assertDatabaseCount('users', 2);
-
-    $user->refresh();
-
-    expect($user->first_name)->toEqual($newUserData['first_name'])
-        ->and($user->last_name)->toEqual($newUserData['last_name'])
-        ->and($user->email)->toEqual($newUserData['email'])
-        ->and($user->main_role->value)->toEqual($newUserData['role'])
-        ->and(Hash::check($newUserData['password'], $user->password));
 });

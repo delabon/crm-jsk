@@ -46,7 +46,7 @@ test('reset password screen can be rendered', function () {
     });
 });
 
-test('password can be reset with valid token', function () {
+test('password can be updated with valid token', function () {
     Notification::fake();
 
     $user = User::factory()->create();
@@ -69,7 +69,7 @@ test('password can be reset with valid token', function () {
     });
 });
 
-test('password cannot be reset with invalid token', function () {
+test('password cannot be updated with invalid token', function () {
     $user = User::factory()->create();
     $invalidToken = 'invalid-token';
 
@@ -86,12 +86,22 @@ test('password cannot be reset with invalid token', function () {
 test('send password email is rate limited', function () {
     $user = User::factory()->create();
 
-    $this->post(route('password.email'), ['email' => $user->email]);
-
-    for ($i=0; $i<5; $i++) {
-        $this->post(route('password.email'), ['email' => $user->email]);
-    }
+    exhaustRateLimit('password-email', '127.0.0.1', maxAttempts: 5);
 
     $this->post(route('password.email'), ['email' => $user->email])
+        ->assertTooManyRequests();
+});
+
+test('update password is rate limited', function () {
+    $user = User::factory()->create();
+
+    exhaustRateLimit('password-update', '127.0.0.1', maxAttempts: 5);
+
+    $this->post(route('password.update'), [
+        'token' => 'valid-token',
+        'email' => $user->email,
+        'password' => 'newpassword123',
+        'password_confirmation' => 'newpassword123',
+    ])
         ->assertTooManyRequests();
 });

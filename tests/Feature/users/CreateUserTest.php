@@ -188,26 +188,9 @@ test('create users is rate limited', function () {
         ->assignRole(Role::SuperAdmin->value);
     $this->actingAs($admin);
 
-    $newUserDate = [
-        'first_name' => 'John',
-        'last_name' => 'doe',
-        'password' => '12345678',
-        'password_confirmation' => '12345678',
-        'role' => Role::User->value,
-    ];
+    exhaustRateLimit('users-manage', (string) $admin->id, maxAttempts: 10);
 
-    for ($i=0; $i<10; $i++) {
-        $newUserDate['email'] = 'super'.$i.'@test.com';
-
-        $this->post(route('users.store'), $newUserDate)
-            ->assertRedirectToRoute('users.index')
-            ->assertSessionHas('success', 'The user has been created.');
-    }
-
-    $newUserDate['email'] = 'super11098@test.com';
-
-    $this->post(route('users.store'), $newUserDate)
+    $this->actingAs($admin)
+        ->post(route('users.store'), [])
         ->assertTooManyRequests();
-
-    $this->assertDatabaseCount('users', 11);
 });

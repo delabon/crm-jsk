@@ -33,7 +33,7 @@ final class PasswordResetController extends Controller
         ]);
     }
 
-    public function resetPassword(ResetPasswordRequest $request, ResetPasswordAction $action): RedirectResponse
+    public function update(ResetPasswordRequest $request, ResetPasswordAction $action): RedirectResponse
     {
         $status = $action->handle($request->only('email', 'password', 'password_confirmation', 'token'));
 
