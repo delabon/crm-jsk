@@ -43,7 +43,7 @@ Route::prefix('/email/verify')
         Route::inertia('/', 'auth/verify-email')
             ->name('.notice');
 
-        Route::post('/email/verify', [EmailVerificationController::class, 'sendLink'])
+        Route::post('/', [EmailVerificationController::class, 'sendLink'])
             ->middleware(['auth', 'throttle:email-verification-send'])
             ->name('.send');
 
