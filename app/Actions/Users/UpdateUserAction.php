@@ -11,9 +11,10 @@ final class UpdateUserAction
 {
     public function handle(User $user, array $input): User
     {
-        $user->update($input);
-
         $role = Role::from($input['role']);
+        unset($input['role']);
+
+        $user->update($input);
 
         if ($user->main_role !== $role) {
             $user->syncRoles($role->value);
