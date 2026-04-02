@@ -24,19 +24,19 @@ final class DatabaseSeeder extends Seeder
             'first_name' => 'Super',
             'last_name' => 'Admin',
             'email' => 'super.admin@example.com',
-        ])->assignRole(Role::SuperAdmin);
+        ])->syncRoles(Role::SuperAdmin->value);
 
         User::factory()->create([
             'first_name' => 'Manager',
             'last_name' => 'User',
             'email' => 'manager@example.com',
-        ])->assignRole(Role::Manager);
+        ])->syncRoles(Role::Manager->value);
 
         User::factory()->create([
             'first_name' => 'Sales',
             'last_name' => 'Agent',
             'email' => 'sales.agent@example.com',
-        ])->assignRole(Role::SalesAgent);
+        ])->syncRoles(Role::SalesAgent->value);
 
         // User::factory(19)
         //     ->create()
