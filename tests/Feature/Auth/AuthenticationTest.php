@@ -48,7 +48,7 @@ test('users can logout', function () {
 test('login is rate limited', function () {
     $user = User::factory()->create();
 
-    exhaustRateLimit('login', '127.0.0.1', maxAttempts: 5);
+    exhaustRateLimit('login', $user->email.'127.0.0.1', maxAttempts: 5);
 
     $this->post(route('login.store'), [
         'email' => $user->email,

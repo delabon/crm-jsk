@@ -64,7 +64,7 @@ test('super admins can edit a user', function () {
         ->and($user->first_name)->toEqual($newUserData['first_name'])
         ->and($user->last_name)->toEqual($newUserData['last_name'])
         ->and($user->main_role->value)->toEqual($newUserData['role'])
-        ->and(Hash::check($newUserData['password'], $user->password))->toBeTrue();
+        ->and(Hash::check($newUserData['password'], $user->password))->toBeFalse();
 });
 
 test('non super admins cannot edit users', function () {
@@ -195,10 +195,7 @@ it('fails to edit the password of the user when using invalid password',
         $user = User::factory()->create();
 
         $this->put(route('user-password.update', $user), [
-            'first_name' => 'User',
-            'last_name' => 'Test',
-            'email' => 'test@test.com',
-            'role' => Role::User->value,
+            'current_password' => 'password',
             'password' => $invalidValue,
             'password_confirmation' => 'password',
         ])
@@ -210,6 +207,45 @@ it('fails to edit the password of the user when using invalid password',
         expect(Hash::check($invalidValue, $user->password))->toBeFalse();
     }
 )->with('invalid-user-password');
+
+test('super admins can update the password of a user', function () {
+    $admin = User::factory()->create()
+        ->removeRole(Role::User->value)
+        ->assignRole(Role::SuperAdmin->value);
+    $this->actingAs($admin);
+
+    $user = User::factory()->create();
+
+    $this->put(route('user-password.update', $user), [
+        'current_password' => 'password',
+        'password' => '12341234',
+        'password_confirmation' => '12341234',
+    ])
+        ->assertRedirectBack()
+        ->assertSessionHas('success', 'The password has been updated.');
+
+    $user->refresh();
+
+    expect(Hash::check('12341234', $user->password))->toBeTrue();
+});
+
+test('non super admins cannot update the password of a user', function () {
+    $user1 = User::factory()->create();
+    $this->actingAs($user1);
+
+    $user2 = User::factory()->create();
+
+    $this->put(route('user-password.update', $user2), [
+        'current_password' => 'password',
+        'password' => '12341234',
+        'password_confirmation' => '12341234',
+    ])
+        ->assertForbidden();
+
+    $user2->refresh();
+
+    expect(Hash::check('password', $user2->password))->toBeTrue();
+});
 
 test('edit users is rate limited', function () {
     $admin = User::factory()->create()
