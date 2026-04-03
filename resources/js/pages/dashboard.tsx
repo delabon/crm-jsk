@@ -38,10 +38,10 @@ export default function Dashboard({metrics}: Props) {
                             <div className="w-full p-6 flex flex-col gap-3">
                                 <h3 className="text-xl font-bold">Users</h3>
                                 <ul className="flex flex-col gap-2">
-                                    <li><span className="font-semibold">All Users:</span> {userMetrics?.all ?? ''}</li>
-                                    <li><span className="font-semibold">Super Admins:</span> {userMetrics?.super_admin ?? ''}</li>
-                                    <li><span className="font-semibold">Managers:</span> {userMetrics?.manager ?? ''}</li>
-                                    <li><span className="font-semibold">Sales Agents:</span> {userMetrics?.sales_agent ?? ''}</li>
+                                    <li><span className="font-semibold">All Users:</span> {userMetrics?.all ?? '0'}</li>
+                                    <li><span className="font-semibold">Super Admins:</span> {userMetrics?.super_admin ?? '0'}</li>
+                                    <li><span className="font-semibold">Managers:</span> {userMetrics?.manager ?? '0'}</li>
+                                    <li><span className="font-semibold">Sales Agents:</span> {userMetrics?.sales_agent ?? '0'}</li>
                                     <li><span className="font-semibold">Normal Users:</span> {userMetrics?.user ?? '0'}</li>
                                 </ul>
                             </div>
