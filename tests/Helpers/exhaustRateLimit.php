@@ -12,10 +12,3 @@ function exhaustRateLimit(string $limiterName, string $identifier, int $maxAttem
         RateLimiter::hit($key, $decay);
     }
 }
-
-// function clearRateLimit(string $limiterName, string $identifier): void
-// {
-//     $key = md5($limiterName . $identifier);
-//
-//     RateLimiter::clear($key);
-// }
