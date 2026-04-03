@@ -15,7 +15,7 @@ final class EmailVerificationController extends Controller
     {
         $user = $request->user();
 
-        if ($user->email_verified_at) {
+        if ($user->hasVerifiedEmail()) {
             return back()
                 ->with('info', 'The email is already verified!');
         }
