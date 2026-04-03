@@ -18,6 +18,7 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
+use Throwable;
 
 final class UserController extends Controller
 {
@@ -52,6 +53,9 @@ final class UserController extends Controller
         ]);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function store(StoreUserRequest $request, StoreUserAction $action): RedirectResponse
     {
         $action->handle($request->validated(), isVerified: true);
@@ -60,7 +64,7 @@ final class UserController extends Controller
             ->with('success', 'The user has been created.');
     }
 
-    public function edit(User $user)
+    public function edit(User $user): InertiaResponse
     {
         return Inertia::render('users/edit', [
             'user' => new UserResource($user),
@@ -68,6 +72,9 @@ final class UserController extends Controller
         ]);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function update(UpdateUserRequest $request, User $user, UpdateUserAction $action)
     {
         $action->handle($user, $request->validated());
