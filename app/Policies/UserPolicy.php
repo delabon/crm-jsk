@@ -29,6 +29,11 @@ final class UserPolicy
             return false;
         }
 
+        // Bail if last admin trying to delete themselves
+        if ($model->main_role === Role::SuperAdmin && User::query()->superAdmins()->count() === 1) {
+            return false;
+        }
+
         return true;
     }
 

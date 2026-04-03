@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Concerns\Scopes\UserScopes;
 use App\Enums\Role;
 use App\Observers\UserObserver;
 use Database\Factories\UserFactory;
@@ -23,7 +24,8 @@ final class User extends Authenticatable implements MustVerifyEmail
     use HasFactory,
         HasRoles,
         Notifiable,
-        Searchable;
+        Searchable,
+        UserScopes;
 
     private const string DATE_FORMAT = 'M j, Y';
 

@@ -39,6 +39,34 @@ test('non super admins cannot delete users', function () {
     $this->assertDatabaseCount('users', 2);
 });
 
+test('super admins cannot delete other super admins', function () {
+    $admin1 = User::factory()->create()
+        ->removeRole(Role::User->value)
+        ->assignRole(Role::SuperAdmin->value);
+    $this->actingAs($admin1);
+
+    $admin2 = User::factory()->create()
+        ->removeRole(Role::User->value)
+        ->assignRole(Role::SuperAdmin->value);
+
+    $this->delete(route('users.destroy', $admin2))
+        ->assertForbidden();
+
+    $this->assertDatabaseCount('users', 2);
+});
+
+test('last super admin cannot delete themselves', function () {
+    $admin = User::factory()->create()
+        ->removeRole(Role::User->value)
+        ->assignRole(Role::SuperAdmin->value);
+    $this->actingAs($admin);
+
+    $this->delete(route('users.destroy', $admin))
+        ->assertForbidden();
+
+    $this->assertDatabaseCount('users', 1);
+});
+
 test('delete users is rate limited', function () {
     $admin = User::factory()->create()
         ->removeRole(Role::User->value)
