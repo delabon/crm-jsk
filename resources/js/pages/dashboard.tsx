@@ -42,7 +42,7 @@ export default function Dashboard({metrics}: Props) {
                                     <li><span className="font-semibold">Super Admins:</span> {userMetrics?.super_admin ?? ''}</li>
                                     <li><span className="font-semibold">Managers:</span> {userMetrics?.manager ?? ''}</li>
                                     <li><span className="font-semibold">Sales Agents:</span> {userMetrics?.sales_agent ?? ''}</li>
-                                    <li><span className="font-semibold">Normal Users:</span> {userMetrics?.user ?? ''}</li>
+                                    <li><span className="font-semibold">Normal Users:</span> {userMetrics?.user ?? '0'}</li>
                                 </ul>
                             </div>
                         </div>
