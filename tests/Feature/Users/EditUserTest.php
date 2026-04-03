@@ -81,6 +81,20 @@ test('non super admins cannot edit users', function () {
         ->assertForbidden();
 });
 
+test('super admins cannot edit other super admins', function () {
+    $admin1 = User::factory()->create()
+        ->removeRole(Role::User->value)
+        ->assignRole(Role::SuperAdmin->value);
+    $this->actingAs($admin1);
+
+    $admin2 = User::factory()->create()
+        ->removeRole(Role::User->value)
+        ->assignRole(Role::SuperAdmin->value);
+
+    $this->patch(route('users.update', $admin2), [])
+        ->assertForbidden();
+});
+
 it('fails to edit a user when using invalid first name',
     function (mixed $invalidValue, string $expectedMessage) {
         $admin = User::factory()->create()
