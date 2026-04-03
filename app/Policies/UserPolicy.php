@@ -29,16 +29,20 @@ final class UserPolicy
             return false;
         }
 
+        return true;
+    }
+
+    public function delete(User $user, User $model): bool
+    {
+        if (!$this->update($user, $model)) {
+            return false;
+        }
+
         // Bail if last admin trying to delete themselves
         if ($model->main_role === Role::SuperAdmin && User::query()->superAdmins()->count() === 1) {
             return false;
         }
 
         return true;
-    }
-
-    public function delete(User $user, User $model): bool
-    {
-        return $this->update($user, $model);
     }
 }
