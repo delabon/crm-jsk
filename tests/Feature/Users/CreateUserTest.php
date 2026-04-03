@@ -41,7 +41,7 @@ test('super admins can create a verified user', function () {
         ->assignRole(Role::SuperAdmin->value);
     $this->actingAs($admin);
 
-    $newUserDate = [
+    $newUserData = [
         'first_name' => 'John',
         'last_name' => 'doe',
         'email' => 'john.doe@test.com',
@@ -50,19 +50,19 @@ test('super admins can create a verified user', function () {
         'role' => Role::User->value,
     ];
 
-    $this->post(route('users.store'), $newUserDate)
+    $this->post(route('users.store'), $newUserData)
         ->assertRedirectToRoute('users.index')
         ->assertSessionHas('success', 'The user has been created.');
 
     $this->assertDatabaseCount('users', 2);
 
-    $user = User::query()->where('email', $newUserDate['email'])->first();
+    $user = User::query()->where('email', $newUserData['email'])->first();
 
     expect($user->id)->not()->toEqual($admin->id)
-        ->and($user->first_name)->toEqual($newUserDate['first_name'])
-        ->and($user->last_name)->toEqual($newUserDate['last_name'])
-        ->and($user->main_role->value)->toEqual($newUserDate['role'])
-        ->and(Hash::check($newUserDate['password'], $user->password))->toBeTrue();
+        ->and($user->first_name)->toEqual($newUserData['first_name'])
+        ->and($user->last_name)->toEqual($newUserData['last_name'])
+        ->and($user->main_role->value)->toEqual($newUserData['role'])
+        ->and(Hash::check($newUserData['password'], $user->password))->toBeTrue();
 });
 
 test('non super admins cannot create users', function () {
