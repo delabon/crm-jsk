@@ -28,7 +28,6 @@ final class SendPasswordLinkEmailRequest extends FormRequest
             'email' => [
                 'required',
                 'email',
-                'exists:users,email',
             ],
         ];
     }
