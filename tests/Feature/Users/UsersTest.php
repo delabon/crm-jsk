@@ -56,7 +56,7 @@ test('users can be searched', function () {
     ]);
 
     $users[2]->update([
-        'first_name' => 'unique@email.com',
+        'email' => 'unique@email.com',
     ]);
 
     $this->actingAs($users[0])
