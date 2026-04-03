@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Listeners\RolePermissionEventSubscriber;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
@@ -30,6 +32,7 @@ final class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
         $this->configureRateLimits();
+        $this->eventSubscribers();
     }
 
     /**
@@ -79,5 +82,10 @@ final class AppServiceProvider extends ServiceProvider
         RateLimiter::for('users-manage', static function (Request $request) {
             return Limit::perMinute(10)->by($request->user()?->id ?: $request->ip());
         });
+    }
+
+    private function eventSubscribers(): void
+    {
+        Event::subscribe(RolePermissionEventSubscriber::class);
     }
 }
