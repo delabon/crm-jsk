@@ -67,6 +67,7 @@ export default function ListSearch({initialSearch}: Props) {
                 aria-invalid={!!errors['search']}
                 value={search}
                 disabled={processing}
+                aria-label="Search"
             />
             <div className="inline-flex items-center absolute right-0">
                 {(search && search !== '') &&
