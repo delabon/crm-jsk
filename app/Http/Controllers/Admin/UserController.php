@@ -75,7 +75,7 @@ final class UserController extends Controller
     /**
      * @throws Throwable
      */
-    public function update(UpdateUserRequest $request, User $user, UpdateUserAction $action)
+    public function update(UpdateUserRequest $request, User $user, UpdateUserAction $action): RedirectResponse
     {
         $action->handle($user, $request->validated());
 
@@ -83,7 +83,7 @@ final class UserController extends Controller
             ->with('success', 'The user #'.$user->id.' has been updated.');
     }
 
-    public function destroy(User $user, DeleteUserAction $action)
+    public function destroy(User $user, DeleteUserAction $action): RedirectResponse
     {
         $id = $action->handle($user);
 
