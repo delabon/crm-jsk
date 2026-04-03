@@ -71,41 +71,20 @@ test('password can be updated', function () {
 });
 
 it('fails with invalid password',
-    function (array $data, string $expectedMessage) {
+    function (mixed $invalidPassword, string $expectedMessage) {
         $user = User::factory()->create();
 
         $this
             ->actingAs($user)
-            ->put(route('user-password.update', $user), $data)
+            ->put(route('user-password.update', $user), [
+                'current_password' => 'password',
+                'password' => $invalidPassword,
+                'password_confirmation' => 'new-password',
+            ])
             ->assertRedirectBack()
             ->assertSessionHasErrors(['password' => $expectedMessage]);
     }
-)->with([
-    [
-        [
-            'current_password' => 'password',
-            'password' => null,
-            'password_confirmation' => 'new-password',
-        ],
-        'The password field is required.'
-    ],
-    [
-        [
-            'current_password' => 'password',
-            'password' => '1',
-            'password_confirmation' => 'new-password',
-        ],
-        'The password field must be at least 8 characters.'
-    ],
-    [
-        [
-            'current_password' => 'password',
-            'password' => '12345678',
-            'password_confirmation' => 'new-password',
-        ],
-        'The password field confirmation does not match.'
-    ],
-]);
+)->with('invalid-user-password');
 
 test('user can delete their account', function () {
     $user = User::factory()->create();
