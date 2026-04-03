@@ -8,15 +8,17 @@ use App\Actions\Dashboard\GetDashboardMetricsAction;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
+use Throwable;
 
 final class DashboardController extends Controller
 {
+    /**
+     * @throws Throwable
+     */
     public function __invoke(Request $request, GetDashboardMetricsAction $action): InertiaResponse
     {
         return Inertia::render('dashboard', [
-            'metrics' => $action->handle(
-                $request->user()->load(['roles', 'roles.permissions'])
-            ),
+            'metrics' => $action->handle($request->user()),
         ]);
     }
 }
