@@ -49,7 +49,7 @@ test('super admins can edit a user', function () {
         'email' => 'john.doe@test.com',
         'password' => '12345678',
         'password_confirmation' => '12345678',
-        'role' => Role::User->value,
+        'role' => Role::Manager->value,
     ];
 
     $this->patch(route('users.update', $user), $newUserData)
