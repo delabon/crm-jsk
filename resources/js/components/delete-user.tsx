@@ -101,7 +101,6 @@ export default function DeleteUser() {
                                             disabled={processing}
                                             type="submit"
                                             data-test="confirm-delete-user-button"
-                                            asChild
                                         >
                                             Delete account
                                         </Button>
