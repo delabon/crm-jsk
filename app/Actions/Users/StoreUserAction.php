@@ -16,12 +16,13 @@ final class StoreUserAction
     /**
      * Validate and create a newly registered user.
      *
-     * @param array<string, string> $input
+     * @param  array<string, string>  $input
+     *
      * @throws Throwable
      */
     public function handle(array $input, bool $isVerified = false): User
     {
-        return DB::transaction(static function () use ($input, $isVerified){
+        return DB::transaction(static function () use ($input, $isVerified) {
             $data = [
                 'first_name' => $input['first_name'],
                 'last_name' => $input['last_name'],

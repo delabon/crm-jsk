@@ -6,7 +6,6 @@ namespace App\Observers;
 
 use App\Concerns\ClearsUsersMetricsCache;
 use App\Models\User;
-use Illuminate\Support\Facades\Cache;
 
 final class UserObserver
 {

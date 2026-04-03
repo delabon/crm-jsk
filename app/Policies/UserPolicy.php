@@ -34,7 +34,7 @@ final class UserPolicy
 
     public function delete(User $user, User $model): bool
     {
-        if (!$this->update($user, $model)) {
+        if (! $this->update($user, $model)) {
             return false;
         }
 

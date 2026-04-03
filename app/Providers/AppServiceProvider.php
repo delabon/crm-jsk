@@ -60,7 +60,7 @@ final class AppServiceProvider extends ServiceProvider
     private function configureRateLimits(): void
     {
         RateLimiter::for('login', static function (Request $request) {
-            return Limit::perMinute(5)->by(($request->email ?? '') . $request->ip());
+            return Limit::perMinute(5)->by(($request->email ?? '').$request->ip());
         });
 
         RateLimiter::for('register', static function (Request $request) {

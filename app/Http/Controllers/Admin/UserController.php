@@ -42,7 +42,7 @@ final class UserController extends Controller
                 'verified' => $request->verified ?? 'all',
                 'role' => $request->role ?? 'all',
             ],
-            'search' => $request->search
+            'search' => $request->search,
         ]);
     }
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Actions\Dashboard;
 
-use App\Enums\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -31,7 +30,7 @@ final class GetDashboardMetricsAction
      */
     private function userMetrics(User $user): array
     {
-        if (!$user->isSuperAdmin()) {
+        if (! $user->isSuperAdmin()) {
             return [];
         }
 
