@@ -3,23 +3,16 @@ export type User = {
     first_name: string;
     last_name: string;
     email: string;
-    avatar?: string;
-    email_verified_at: string | null;
-    two_factor_enabled?: boolean;
+    main_role: string | null;
+    formatted_role: string | null;
     created_at: string;
-    updated_at: string;
-    [key: string]: unknown;
+    formatted_created_at: string;
+    email_verified_at: string | null;
+    formatted_email_verified_at: string | null;
+    permission_names?: string[];
+    role_names?: string[];
 };
 
 export type Auth = {
     user: User;
-};
-
-export type TwoFactorSetupData = {
-    svg: string;
-    url: string;
-};
-
-export type TwoFactorSecretKey = {
-    secretKey: string;
 };

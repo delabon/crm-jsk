@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import {Link, usePage} from '@inertiajs/react';
 import {
     SidebarGroup,
     SidebarGroupLabel,
@@ -11,6 +11,9 @@ import type { NavItem } from '@/types';
 
 export function NavMain({ items = [] }: { items: NavItem[] }) {
     const { isCurrentUrl } = useCurrentUrl();
+    const { permission_names } = usePage().props.auth.user;
+
+    items = items.filter((item) => item.permission && permission_names?.includes(item.permission ?? ''));
 
     return (
         <SidebarGroup className="px-2 py-0">

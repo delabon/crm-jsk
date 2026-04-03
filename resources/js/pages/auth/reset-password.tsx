@@ -38,6 +38,7 @@ export default function ResetPassword({ token, email }: Props) {
                                 value={email}
                                 className="mt-1 block w-full"
                                 readOnly
+                                disabled={true}
                             />
                             <InputError
                                 message={errors.email}

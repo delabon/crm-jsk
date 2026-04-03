@@ -4,17 +4,30 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Concerns\Scopes\UserScopes;
+use App\Enums\Role;
+use App\Observers\UserObserver;
 use Database\Factories\UserFactory;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Fortify\TwoFactorAuthenticatable;
+use Illuminate\Support\Collection;
+use Laravel\Scout\Searchable;
+use Spatie\Permission\Traits\HasRoles;
 
-final class User extends Authenticatable
+#[ObservedBy([UserObserver::class])]
+final class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, TwoFactorAuthenticatable;
+    use HasFactory,
+        HasRoles,
+        Notifiable,
+        Searchable,
+        UserScopes;
+
+    private const string DATE_FORMAT = 'M j, Y';
 
     /**
      * @var list<string>
@@ -31,8 +44,6 @@ final class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'two_factor_secret',
-        'two_factor_recovery_codes',
         'remember_token',
     ];
 
@@ -42,6 +53,49 @@ final class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
-        'two_factor_confirmed_at' => 'datetime',
     ];
+
+    public function getFormattedCreatedAtAttribute(): ?string
+    {
+        return $this->created_at?->format(self::DATE_FORMAT);
+    }
+
+    public function getFormattedEmailVerifiedAtAttribute(): ?string
+    {
+        return $this->email_verified_at?->format(self::DATE_FORMAT);
+    }
+
+    public function getFormattedRoleAttribute(): ?string
+    {
+        return $this->main_role?->label();
+    }
+
+    public function getRoleNamesAttribute(): ?Collection
+    {
+        return $this->roles?->pluck('name');
+    }
+
+    public function getPermissionNamesAttribute(): ?Collection
+    {
+        return $this->getPermissionsViaRoles()->pluck('name');
+    }
+
+    public function getMainRoleAttribute(): ?Role
+    {
+        return Role::tryFrom($this->roles->first()?->name);
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->main_role === Role::SuperAdmin;
+    }
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'email' => $this->email,
+        ];
+    }
 }

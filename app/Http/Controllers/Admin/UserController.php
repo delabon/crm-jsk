@@ -1,0 +1,93 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Admin;
+
+use App\Actions\Users\DeleteUserAction;
+use App\Actions\Users\GetPaginatedUsersAction;
+use App\Actions\Users\StoreUserAction;
+use App\Actions\Users\UpdateUserAction;
+use App\Enums\Role;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\IndexUserRequest;
+use App\Http\Requests\Admin\StoreUserRequest;
+use App\Http\Requests\Admin\UpdateUserRequest;
+use App\Http\Resources\UserResource;
+use App\Models\User;
+use Illuminate\Http\RedirectResponse;
+use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
+use Throwable;
+
+final class UserController extends Controller
+{
+    private const int PER_PAGE = 20;
+
+    public function index(IndexUserRequest $request, GetPaginatedUsersAction $action): InertiaResponse
+    {
+        return Inertia::render('users/index', [
+            'collection' => UserResource::collection(
+                $action->handle(self::PER_PAGE, $request->validated())
+                    ->appends($request->validated())
+            ),
+            'roles' => [
+                [
+                    'value' => 'all',
+                    'label' => 'All',
+                ],
+                ...Role::options(),
+            ],
+            'filters' => [
+                'verified' => $request->verified ?? 'all',
+                'role' => $request->role ?? 'all',
+            ],
+            'search' => $request->search,
+        ]);
+    }
+
+    public function create(): InertiaResponse
+    {
+        return Inertia::render('users/store', [
+            'roles' => Role::options(),
+        ]);
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function store(StoreUserRequest $request, StoreUserAction $action): RedirectResponse
+    {
+        $action->handle($request->validated(), isVerified: true);
+
+        return to_route('users.index')
+            ->with('success', 'The user has been created.');
+    }
+
+    public function edit(User $user): InertiaResponse
+    {
+        return Inertia::render('users/edit', [
+            'user' => new UserResource($user),
+            'roles' => Role::options(),
+        ]);
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function update(UpdateUserRequest $request, User $user, UpdateUserAction $action): RedirectResponse
+    {
+        $action->handle($user, $request->validated());
+
+        return to_route('users.index')
+            ->with('success', 'The user #'.$user->id.' has been updated.');
+    }
+
+    public function destroy(User $user, DeleteUserAction $action): RedirectResponse
+    {
+        $id = $action->handle($user);
+
+        return back()
+            ->with('success', 'The user #'.$id.' has been deleted.');
+    }
+}

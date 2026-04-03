@@ -33,13 +33,11 @@ React page components should be placed in the `resources/js/pages` directory.
 <!-- Basic React Page Component -->
 ```react
 export default function UsersIndex({ users }) {
-    const userFullName: string = user.first_name + ' ' + user.last_name;
-
     return (
         <div>
             <h1>Users</h1>
             <ul>
-                {users.map(user => <li key={user.id}>{userFullName}</li>)}
+                {users.map(user => <li key={user.id}>{user.name}</li>)}
             </ul>
         </div>
     )

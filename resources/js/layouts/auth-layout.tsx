@@ -1,3 +1,5 @@
+import {Toaster} from "@/components/ui/sonner";
+import {useFlashToast} from "@/hooks/use-flash-toast";
 import AuthLayoutTemplate from '@/layouts/auth/auth-simple-layout';
 
 export default function AuthLayout({
@@ -10,9 +12,14 @@ export default function AuthLayout({
     title: string;
     description: string;
 }) {
+    useFlashToast();
+
     return (
         <AuthLayoutTemplate title={title} description={description} {...props}>
-            {children}
+            <div>
+                <Toaster position="top-right" closeButton/>
+                {children}
+            </div>
         </AuthLayoutTemplate>
     );
 }
