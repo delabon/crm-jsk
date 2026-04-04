@@ -50,7 +50,7 @@ Route::middleware(['auth', 'verified'])
     });
 
 // --- Profile Settings ---
-Route::middleware(['auth'])
+Route::middleware(['auth', 'can:profile.manage'])
     ->group(function () {
         Route::redirect('settings', '/settings/profile');
 
