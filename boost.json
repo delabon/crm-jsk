@@ -4,10 +4,12 @@
         "claude_code"
     ],
     "guidelines": true,
-    "herd_mcp": false,
     "mcp": true,
     "nightwatch_mcp": false,
-    "sail": false,
+    "packages": [
+        "spatie/laravel-permission"
+    ],
+    "sail": true,
     "skills": [
         "laravel-best-practices",
         "configuring-horizon",
@@ -15,6 +17,7 @@
         "wayfinder-development",
         "pest-testing",
         "inertia-react-development",
-        "tailwindcss-development"
+        "tailwindcss-development",
+        "laravel-permission-development"
     ]
 }
