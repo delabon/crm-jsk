@@ -26,10 +26,12 @@ final class UserController extends Controller
 
     public function index(IndexUserRequest $request, GetPaginatedUsersAction $action): InertiaResponse
     {
+        $userFiltersDto = $request->toDto();
+
         return Inertia::render('users/index', [
             'collection' => UserResource::collection(
-                $action->handle(self::PER_PAGE, $request->validated())
-                    ->appends($request->validated())
+                $action->handle(self::PER_PAGE, $userFiltersDto)
+                    ->appends($userFiltersDto->toArray())
             ),
             'roles' => [
                 [

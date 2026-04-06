@@ -8,8 +8,7 @@ use Inertia\Testing\AssertableInertia;
 
 test('super admins can visit the users page', function () {
     $user = User::factory()->create()
-        ->removeRole(Role::User->value)
-        ->assignRole(Role::SuperAdmin->value);
+        ->syncRoles([Role::SuperAdmin->value]);
     $this->actingAs($user);
 
     $this->get(route('users.index'))
@@ -30,8 +29,7 @@ test('non super admins cannot visit the users page', function () {
 test('users can be displayed', function () {
     $users = User::factory(3)->create();
 
-    $users[0]->removeRole(Role::User->value)
-        ->assignRole(Role::SuperAdmin->value);
+    $users[0]->syncRoles([Role::SuperAdmin->value]);
 
     $this->actingAs($users[0])
         ->get(route('users.index'))
@@ -48,8 +46,7 @@ test('users can be displayed', function () {
 test('users can be searched', function () {
     $users = User::factory(3)->create();
 
-    $users[0]->removeRole(Role::User->value)
-        ->assignRole(Role::SuperAdmin->value);
+    $users[0]->syncRoles([Role::SuperAdmin->value]);
 
     $users[1]->update([
         'first_name' => 'unique',
@@ -72,8 +69,7 @@ test('users can be searched', function () {
 
 test('filter users by verified', function () {
     $admin = User::factory()->create()
-        ->removeRole(Role::User->value)
-        ->assignRole(Role::SuperAdmin->value);
+        ->syncRoles([Role::SuperAdmin->value]);
     $user1 = User::factory()->unverified()->create();
     $user2 = User::factory()->create();
 
@@ -89,8 +85,7 @@ test('filter users by verified', function () {
 
 test('filter users by non-verified', function () {
     $admin = User::factory()->create()
-        ->removeRole(Role::User->value)
-        ->assignRole(Role::SuperAdmin->value);
+        ->syncRoles([Role::SuperAdmin->value]);
     $user1 = User::factory()->unverified()->create();
     $user2 = User::factory()->create();
 
@@ -106,11 +101,10 @@ test('filter users by non-verified', function () {
 
 test('filter users by role', function () {
     $admin = User::factory()->create()
-        ->removeRole(Role::User->value)
-        ->assignRole(Role::SuperAdmin->value);
+        ->syncRoles([Role::SuperAdmin->value]);
     $user1 = User::factory()->unverified()->create();
     $user2 = User::factory()->create()
-        ->assignRole(Role::Manager->value);
+        ->syncRoles([Role::Manager->value]);
 
     $this->actingAs($admin)
         ->get(route('users.index', ['role' => 'manager']))
