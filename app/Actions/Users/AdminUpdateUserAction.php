@@ -9,7 +9,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
-final class UpdateUserAction
+final class AdminUpdateUserAction
 {
     /**
      * @throws Throwable

@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Admin;
 use App\Actions\Users\AdminDeleteUserAction;
 use App\Actions\Users\GetPaginatedUsersAction;
 use App\Actions\Users\StoreUserAction;
-use App\Actions\Users\UpdateUserAction;
+use App\Actions\Users\AdminUpdateUserAction;
 use App\Enums\Role;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\IndexUserRequest;
@@ -77,7 +77,7 @@ final class UserController extends Controller
     /**
      * @throws Throwable
      */
-    public function update(UpdateUserRequest $request, User $user, UpdateUserAction $action): RedirectResponse
+    public function update(UpdateUserRequest $request, User $user, AdminUpdateUserAction $action): RedirectResponse
     {
         $action->handle($user, $request->toDto());
 
