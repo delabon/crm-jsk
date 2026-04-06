@@ -14,6 +14,9 @@ final readonly class ResetPasswordDto implements Arrayable
         public string $password,
     ) {}
 
+    /**
+     * @return array<string, string>
+     */
     public function toArray(): array
     {
         return [
