@@ -16,6 +16,7 @@ final class GetDashboardMetricsAction
 
     /**
      * @throws Throwable
+     * @return array<string, array<string, string>>
      */
     public function handle(User $user): array
     {
@@ -27,6 +28,7 @@ final class GetDashboardMetricsAction
 
     /**
      * @throws Throwable
+     * @return array<string, string>
      */
     private function userMetrics(User $user): array
     {
