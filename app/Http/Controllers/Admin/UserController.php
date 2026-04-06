@@ -60,7 +60,7 @@ final class UserController extends Controller
      */
     public function store(StoreUserRequest $request, StoreUserAction $action): RedirectResponse
     {
-        $action->handle($request->validated(), isVerified: true);
+        $action->handle($request->toDto(), isVerified: true);
 
         return to_route('users.index')
             ->with('success', 'The user has been created.');

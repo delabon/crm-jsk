@@ -5,20 +5,20 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Auth;
 
 use App\Actions\Users\StoreUserAction;
-use App\Enums\Role;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
 use Auth;
 use Illuminate\Http\RedirectResponse;
+use Throwable;
 
 final class RegisterController extends Controller
 {
+    /**
+     * @throws Throwable
+     */
     public function __invoke(RegisterRequest $request, StoreUserAction $action): RedirectResponse
     {
-        $data = $request->validated();
-        $data['role'] = Role::User->value;
-
-        $user = $action->handle($data);
+        $user = $action->handle($request->toDto());
 
         Auth::login($user);
 
