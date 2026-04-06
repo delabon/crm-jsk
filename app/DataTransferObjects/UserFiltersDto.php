@@ -6,6 +6,9 @@ namespace App\DataTransferObjects;
 
 use Illuminate\Contracts\Support\Arrayable;
 
+/**
+ * @implements Arrayable<string, string>
+ */
 final readonly class UserFiltersDto implements Arrayable
 {
     public function __construct(
