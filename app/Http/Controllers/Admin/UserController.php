@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
-use App\Actions\Users\DeleteUserAction;
+use App\Actions\Users\AdminDeleteUserAction;
 use App\Actions\Users\GetPaginatedUsersAction;
 use App\Actions\Users\StoreUserAction;
-use App\Actions\Users\UpdateUserAction;
+use App\Actions\Users\AdminUpdateUserAction;
 use App\Enums\Role;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\IndexUserRequest;
@@ -26,10 +26,12 @@ final class UserController extends Controller
 
     public function index(IndexUserRequest $request, GetPaginatedUsersAction $action): InertiaResponse
     {
+        $userFiltersDto = $request->toDto();
+
         return Inertia::render('users/index', [
             'collection' => UserResource::collection(
-                $action->handle(self::PER_PAGE, $request->validated())
-                    ->appends($request->validated())
+                $action->handle(self::PER_PAGE, $userFiltersDto)
+                    ->appends($userFiltersDto->toArray())
             ),
             'roles' => [
                 [
@@ -58,7 +60,7 @@ final class UserController extends Controller
      */
     public function store(StoreUserRequest $request, StoreUserAction $action): RedirectResponse
     {
-        $action->handle($request->validated(), isVerified: true);
+        $action->handle($request->toDto(), isVerified: true);
 
         return to_route('users.index')
             ->with('success', 'The user has been created.');
@@ -75,15 +77,15 @@ final class UserController extends Controller
     /**
      * @throws Throwable
      */
-    public function update(UpdateUserRequest $request, User $user, UpdateUserAction $action): RedirectResponse
+    public function update(UpdateUserRequest $request, User $user, AdminUpdateUserAction $action): RedirectResponse
     {
-        $action->handle($user, $request->validated());
+        $action->handle($user, $request->toDto());
 
         return to_route('users.index')
             ->with('success', 'The user #'.$user->id.' has been updated.');
     }
 
-    public function destroy(User $user, DeleteUserAction $action): RedirectResponse
+    public function destroy(User $user, AdminDeleteUserAction $action): RedirectResponse
     {
         $id = $action->handle($user);
 

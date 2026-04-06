@@ -4,20 +4,24 @@ declare(strict_types=1);
 
 namespace App\Actions\Auth;
 
-use App\Http\Requests\Auth\LoginRequest;
+use App\DataTransferObjects\LoginDto;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 final class AuthAction
 {
-    public function handle(LoginRequest $request): bool
+    public function handle(LoginDto $dto): bool
     {
         $result = Auth::attempt(
-            $request->only('email', 'password'),
-            $request->boolean('remember')
+            [
+                'email' => $dto->email,
+                'password' => $dto->password,
+            ],
+            $dto->remember
         );
 
         if ($result) {
-            $request->session()->regenerate();
+            Session::regenerate();
         }
 
         return $result;

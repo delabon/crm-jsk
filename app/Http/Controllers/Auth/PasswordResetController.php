@@ -35,7 +35,7 @@ final class PasswordResetController extends Controller
 
     public function update(ResetPasswordRequest $request, ResetPasswordAction $action): RedirectResponse
     {
-        $status = $action->handle($request->only('email', 'password', 'password_confirmation', 'token'));
+        $status = $action->handle($request->toDto());
 
         return $status === Password::PasswordReset
             ? to_route('login')

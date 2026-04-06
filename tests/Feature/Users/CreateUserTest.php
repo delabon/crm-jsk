@@ -18,8 +18,8 @@ test('non logged in users will be redirected to login page', function () {
 
 test('super admins can visit the create user page', function () {
     $admin = User::factory()->create()
-        ->removeRole(Role::User->value)
-        ->assignRole(Role::SuperAdmin->value);
+        ->syncRoles([Role::SuperAdmin->value]);
+
     $this->actingAs($admin);
 
     $this->get(route('users.create'))
@@ -39,8 +39,8 @@ test('non super admins cannot visit the create user page', function () {
 
 test('super admins can create a verified user', function () {
     $admin = User::factory()->create()
-        ->removeRole(Role::User->value)
-        ->assignRole(Role::SuperAdmin->value);
+        ->syncRoles([Role::SuperAdmin->value]);
+
     $this->actingAs($admin);
 
     $newUserData = [
@@ -77,8 +77,8 @@ test('non super admins cannot create users', function () {
 it('fails to create a new user when using invalid first name',
     function (mixed $invalidValue, string $expectedMessage) {
         $admin = User::factory()->create()
-            ->removeRole(Role::User->value)
-            ->assignRole(Role::SuperAdmin->value);
+            ->syncRoles([Role::SuperAdmin->value]);
+
         $this->actingAs($admin);
 
         $this->post(route('users.store'), [
@@ -99,8 +99,8 @@ it('fails to create a new user when using invalid first name',
 it('fails to create a new user when using invalid last name',
     function (mixed $invalidValue, string $expectedMessage) {
         $admin = User::factory()->create()
-            ->removeRole(Role::User->value)
-            ->assignRole(Role::SuperAdmin->value);
+            ->syncRoles([Role::SuperAdmin->value]);
+
         $this->actingAs($admin);
 
         $this->post(route('users.store'), [
@@ -121,8 +121,8 @@ it('fails to create a new user when using invalid last name',
 it('fails to create a new user when using invalid email',
     function (mixed $invalidValue, string $expectedMessage) {
         $admin = User::factory()->create()
-            ->removeRole(Role::User->value)
-            ->assignRole(Role::SuperAdmin->value);
+            ->syncRoles([Role::SuperAdmin->value]);
+
         $this->actingAs($admin);
 
         $this->post(route('users.store'), [
@@ -143,8 +143,8 @@ it('fails to create a new user when using invalid email',
 it('fails to create a new user when using invalid password',
     function (mixed $invalidValue, string $expectedMessage) {
         $admin = User::factory()->create()
-            ->removeRole(Role::User->value)
-            ->assignRole(Role::SuperAdmin->value);
+            ->syncRoles([Role::SuperAdmin->value]);
+
         $this->actingAs($admin);
 
         $this->post(route('users.store'), [
@@ -165,8 +165,8 @@ it('fails to create a new user when using invalid password',
 it('fails to create a new user when using invalid role',
     function (mixed $invalidValue, string $expectedMessage) {
         $admin = User::factory()->create()
-            ->removeRole(Role::User->value)
-            ->assignRole(Role::SuperAdmin->value);
+            ->syncRoles([Role::SuperAdmin->value]);
+
         $this->actingAs($admin);
 
         $this->post(route('users.store'), [
@@ -186,8 +186,8 @@ it('fails to create a new user when using invalid role',
 
 test('create users is rate limited', function () {
     $admin = User::factory()->create()
-        ->removeRole(Role::User->value)
-        ->assignRole(Role::SuperAdmin->value);
+        ->syncRoles([Role::SuperAdmin->value]);
+
     $this->actingAs($admin);
 
     exhaustRateLimit('users-manage', (string) $admin->id, maxAttempts: 10);

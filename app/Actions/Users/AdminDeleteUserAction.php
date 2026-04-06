@@ -6,7 +6,7 @@ namespace App\Actions\Users;
 
 use App\Models\User;
 
-final class DeleteUserAction
+final class AdminDeleteUserAction
 {
     public function handle(User $user): int
     {

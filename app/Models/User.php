@@ -70,19 +70,28 @@ final class User extends Authenticatable implements MustVerifyEmail
         return $this->main_role?->label();
     }
 
-    public function getRoleNamesAttribute(): ?Collection
+    /**
+     * @return Collection<int, string>
+     */
+    public function getRoleNamesAttribute(): Collection
     {
-        return $this->roles?->pluck('name');
+        return $this->roles->pluck('name');
     }
 
-    public function getPermissionNamesAttribute(): ?Collection
+    /**
+     * @return Collection<int, string>
+     */
+    public function getPermissionNamesAttribute(): Collection
     {
         return $this->getPermissionsViaRoles()->pluck('name');
     }
 
     public function getMainRoleAttribute(): ?Role
     {
-        return Role::tryFrom($this->roles->first()?->name);
+        /** @var \Spatie\Permission\Models\Role|null $role */
+        $role = $this->roles->first();
+
+        return Role::tryFrom($role?->name);
     }
 
     public function isSuperAdmin(): bool
@@ -90,6 +99,9 @@ final class User extends Authenticatable implements MustVerifyEmail
         return $this->main_role === Role::SuperAdmin;
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function toSearchableArray(): array
     {
         return [

@@ -6,6 +6,8 @@ namespace App\Http\Requests\Auth;
 
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
+use App\DataTransferObjects\StoreUserDto;
+use App\Enums\Role;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -33,5 +35,16 @@ final class RegisterRequest extends FormRequest
             ...$this->profileRules(),
             'password' => $this->passwordRules(),
         ];
+    }
+
+    public function toDto(): StoreUserDto
+    {
+        return new StoreUserDto(
+            firstName: $this->string('first_name')->value(),
+            lastName: $this->string('last_name')->value(),
+            email: $this->string('email')->value(),
+            password: $this->string('password')->value(),
+            role: Role::User,
+        );
     }
 }

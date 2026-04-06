@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Auth;
 
+use App\DataTransferObjects\ResetPasswordDto;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Hash;
@@ -12,10 +13,10 @@ use Illuminate\Support\Str;
 
 final class ResetPasswordAction
 {
-    public function handle(array $data): string
+    public function handle(ResetPasswordDto $dto): string
     {
         return Password::reset(
-            $data,
+            $dto->toArray(),
             function (User $user, string $password) {
                 $user->forceFill([
                     'password' => Hash::make($password),
