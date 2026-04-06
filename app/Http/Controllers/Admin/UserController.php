@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
-use App\Actions\Users\DeleteUserAction;
+use App\Actions\Users\AdminDeleteUserAction;
 use App\Actions\Users\GetPaginatedUsersAction;
 use App\Actions\Users\StoreUserAction;
 use App\Actions\Users\UpdateUserAction;
@@ -85,7 +85,7 @@ final class UserController extends Controller
             ->with('success', 'The user #'.$user->id.' has been updated.');
     }
 
-    public function destroy(User $user, DeleteUserAction $action): RedirectResponse
+    public function destroy(User $user, AdminDeleteUserAction $action): RedirectResponse
     {
         $id = $action->handle($user);
 
