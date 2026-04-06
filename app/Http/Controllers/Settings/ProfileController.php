@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Settings;
 
-use App\Actions\Users\DeleteUserAction;
+use App\Actions\Users\DeleteUserAccountAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\ProfileDeleteRequest;
 use App\Http\Requests\Settings\ProfileUpdateRequest;
@@ -30,7 +30,7 @@ final class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request, ): RedirectResponse
     {
         $dto = $request->toDto();
         $user = $request->user();
@@ -50,7 +50,7 @@ final class ProfileController extends Controller
     /**
      * Delete the user's profile.
      */
-    public function destroy(ProfileDeleteRequest $request, DeleteUserAction $action): RedirectResponse
+    public function destroy(ProfileDeleteRequest $request, DeleteUserAccountAction $action): RedirectResponse
     {
         $action->handle($request->user());
 
