@@ -5,14 +5,18 @@ declare(strict_types=1);
 namespace App\Actions\Users;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 final class DeleteUserAction
 {
-    public function handle(User $user): int
+    public function handle(User $user): void
     {
-        $id = $user->id;
+        Auth::logout();
+
         $user->delete();
 
-        return $id;
+        Session::invalidate();
+        Session::regenerateToken();
     }
 }
