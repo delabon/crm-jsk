@@ -15,7 +15,7 @@ final class LoginController extends Controller
 {
     public function store(LoginRequest $request, AuthAction $action): RedirectResponse
     {
-        if ($action->handle($request)) {
+        if ($action->handle($request->toDto())) {
             return to_route('dashboard');
         }
 

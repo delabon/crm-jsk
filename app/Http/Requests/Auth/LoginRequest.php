@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Auth;
 
+use App\DataTransferObjects\LoginDto;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
@@ -39,5 +40,14 @@ final class LoginRequest extends FormRequest
                 'nullable',
             ],
         ];
+    }
+
+    public function toDto(): LoginDto
+    {
+        return new LoginDto(
+            email: $this->string('email')->value(),
+            password: $this->string('password')->value(),
+            remember: $this->boolean('remember'),
+        );
     }
 }
