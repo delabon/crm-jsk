@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
-final class DeleteUserAccountAction
+final class DeleteProfileAction
 {
     public function handle(User $user): void
     {

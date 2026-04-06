@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Settings;
 
-use App\Actions\Users\DeleteUserAccountAction;
+use App\Actions\Users\DeleteProfileAction;
+use App\Actions\Users\UpdateProfileAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\ProfileDeleteRequest;
 use App\Http\Requests\Settings\ProfileUpdateRequest;
@@ -13,6 +14,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Throwable;
 
 final class ProfileController extends Controller
 {
@@ -30,18 +32,9 @@ final class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request, ): RedirectResponse
+    public function update(ProfileUpdateRequest $request, UpdateProfileAction $action): RedirectResponse
     {
-        $dto = $request->toDto();
-        $user = $request->user();
-
-        $user->fill($dto->toArray());
-
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
-        }
-
-        $user->save();
+        $action->handle($request->user(), $request->toDto());
 
         return to_route('profile.edit')
             ->with('success', 'Your settings has been updated.');
@@ -50,7 +43,7 @@ final class ProfileController extends Controller
     /**
      * Delete the user's profile.
      */
-    public function destroy(ProfileDeleteRequest $request, DeleteUserAccountAction $action): RedirectResponse
+    public function destroy(ProfileDeleteRequest $request, DeleteProfileAction $action): RedirectResponse
     {
         $action->handle($request->user());
 
