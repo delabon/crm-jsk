@@ -26,6 +26,7 @@ final readonly class ResetPasswordDto implements Arrayable
             'email' => $this->email,
             'token' => $this->token,
             'password' => $this->password,
+            // Illuminate\Support\Facades\Password::reset requires the `password_confirmation` param which is already validated in App\Http\Requests\Auth::rules
             'password_confirmation' => $this->password,
         ];
     }
