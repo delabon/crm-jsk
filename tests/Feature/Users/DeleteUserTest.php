@@ -12,8 +12,7 @@ test('non logged in users will be redirected to login page', function () {
 
 test('super admins can delete users', function () {
     $admin = User::factory()->create()
-        ->removeRole(Role::User->value)
-        ->assignRole(Role::SuperAdmin->value);
+        ->syncRoles([Role::SuperAdmin->value]);
     $this->actingAs($admin);
 
     $user = User::factory()->create();
@@ -43,13 +42,11 @@ test('non super admins cannot delete users', function () {
 
 test('super admins cannot delete other super admins', function () {
     $admin1 = User::factory()->create()
-        ->removeRole(Role::User->value)
-        ->assignRole(Role::SuperAdmin->value);
+        ->syncRoles([Role::SuperAdmin->value]);
     $this->actingAs($admin1);
 
     $admin2 = User::factory()->create()
-        ->removeRole(Role::User->value)
-        ->assignRole(Role::SuperAdmin->value);
+        ->syncRoles([Role::SuperAdmin->value]);
 
     $this->delete(route('users.destroy', $admin2))
         ->assertForbidden();
@@ -59,8 +56,7 @@ test('super admins cannot delete other super admins', function () {
 
 test('last super admin cannot delete themselves', function () {
     $admin = User::factory()->create()
-        ->removeRole(Role::User->value)
-        ->assignRole(Role::SuperAdmin->value);
+        ->syncRoles([Role::SuperAdmin->value]);
     $this->actingAs($admin);
 
     $this->delete(route('users.destroy', $admin))
@@ -71,8 +67,7 @@ test('last super admin cannot delete themselves', function () {
 
 test('delete users is rate limited', function () {
     $admin = User::factory()->create()
-        ->removeRole(Role::User->value)
-        ->assignRole(Role::SuperAdmin->value);
+        ->syncRoles([Role::SuperAdmin->value]);
 
     exhaustRateLimit('users-manage', (string) $admin->id, maxAttempts: 10);
 
