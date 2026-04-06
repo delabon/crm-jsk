@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Users;
 
-use App\Enums\Role;
+use App\DataTransferObjects\UpdateUserDto;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Throwable;
@@ -14,16 +14,17 @@ final class UpdateUserAction
     /**
      * @throws Throwable
      */
-    public function handle(User $user, array $input): User
+    public function handle(User $user, UpdateUserDto $dto): User
     {
-        return DB::transaction(static function () use ($user, $input) {
-            $role = Role::from($input['role']);
-            unset($input['role']);
+        return DB::transaction(static function () use ($user, $dto) {
+            $user->update([
+                'first_name' => $dto->firstName,
+                'last_name' => $dto->lastName,
+                'email' => $dto->email,
+            ]);
 
-            $user->update($input);
-
-            if ($user->main_role !== $role) {
-                $user->syncRoles($role->value);
+            if ($user->main_role !== $dto->role) {
+                $user->syncRoles($dto->role->value);
             }
 
             return $user;

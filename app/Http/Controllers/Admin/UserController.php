@@ -79,7 +79,7 @@ final class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user, UpdateUserAction $action): RedirectResponse
     {
-        $action->handle($user, $request->validated());
+        $action->handle($user, $request->toDto());
 
         return to_route('users.index')
             ->with('success', 'The user #'.$user->id.' has been updated.');

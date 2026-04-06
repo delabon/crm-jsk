@@ -6,6 +6,7 @@ namespace App\Http\Requests\Admin;
 
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
+use App\DataTransferObjects\UpdateUserDto;
 use App\Enums\Role;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -41,5 +42,15 @@ final class UpdateUserRequest extends FormRequest
                 Rule::enum(Role::class),
             ],
         ];
+    }
+
+    public function toDto(): UpdateUserDto
+    {
+        return new UpdateUserDto(
+            firstName: $this->string('first_name')->value(),
+            lastName: $this->string('last_name')->value(),
+            email: $this->string('email')->value(),
+            role: $this->enum('role', Role::class)
+        );
     }
 }
