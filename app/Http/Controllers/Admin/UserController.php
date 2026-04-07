@@ -49,7 +49,7 @@ final class UserController extends Controller
 
     public function create(): InertiaResponse
     {
-        return Inertia::render('users/store', [
+        return Inertia::render('users/create', [
             'roles' => Role::options(),
         ]);
     }
