@@ -48,6 +48,7 @@ Already completed. Users table with `manager_id` self-join, Spatie installed, ro
 | Dashboard | `view` |
 | Profile | `manage` |
 | Contacts | `view-any`, `view-own`, `create`, `update`, `delete` |
+| Accounts | `view-any`, `view-own`, `create`, `update`, `delete` |
 | Deals | `view-any`, `view-own`, `create`, `update`, `delete` |
 | Campaigns | `view`, `manage` |
 | Tasks | `manage` |
@@ -64,6 +65,11 @@ Already completed. Users table with `manager_id` self-join, Spatie installed, ro
 | `contacts.create` | ❌ | ✅ | ✅ | ✅ |
 | `contacts.update` | ❌ | ✅ | ✅ | ✅ |
 | `contacts.delete` | ❌ | ❌ | ✅ | ✅ |
+| `accounts.view-own` | ❌ | ✅ | ✅ | ✅ |
+| `accounts.view-any` | ❌ | ❌ | ✅ | ✅ |
+| `accounts.create` | ❌ | ✅ | ✅ | ✅ |
+| `accounts.update` | ❌ | ✅ | ✅ | ✅ |
+| `accounts.delete` | ❌ | ❌ | ✅ | ✅ |
 | `deals.view-own` | ❌ | ✅ | ✅ | ✅ |
 | `deals.view-any` | ❌ | ❌ | ✅ | ✅ |
 | `deals.create` | ❌ | ✅ | ✅ | ✅ |
@@ -122,7 +128,7 @@ addresses: id, addressable_id, addressable_type, name, line1, line2,
 - [ ] `Address` model: `morphTo()`, `belongsTo(Country)`
 - [ ] `Profile` model: `belongsTo(Contact)`, `belongsTo(Country)`
 - [ ] `ContactPolicy`: `view-own` vs `view-any` via Spatie
-- [ ] `AccountPolicy`: `view-own` vs `view-any` via Spatie
+- [ ] `AccountPolicy`: `view-own` vs `view-any` via Spatie, `delete` locked to manager+
 - [ ] `ListContactsAction`, `CreateContactAction`, `UpdateContactAction`, `DeleteContactAction`
 - [ ] `ListAccountsAction`, `CreateAccountAction`, `UpdateAccountAction`, `DeleteAccountAction`
 - [ ] `ContactFactory` + `AccountFactory` with Faker

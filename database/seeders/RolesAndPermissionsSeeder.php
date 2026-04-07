@@ -22,6 +22,13 @@ final class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'dashboard.view']);
         Permission::create(['name' => 'profile.manage']);
 
+        // --- Accounts ---
+        Permission::create(['name' => 'accounts.view-any']);
+        Permission::create(['name' => 'accounts.view-own']);
+        Permission::create(['name' => 'accounts.create']);
+        Permission::create(['name' => 'accounts.update']);
+        Permission::create(['name' => 'accounts.delete']);
+
         // --- Contacts ---
         Permission::create(['name' => 'contacts.view-any']);
         Permission::create(['name' => 'contacts.view-own']);
@@ -59,6 +66,11 @@ final class RolesAndPermissionsSeeder extends Seeder
         $manager->givePermissionTo([
             'dashboard.view',
             'profile.manage',
+            'accounts.view-any',
+            'accounts.view-own',
+            'accounts.create',
+            'accounts.update',
+            'accounts.delete',
             'contacts.view-any',
             'contacts.create',
             'contacts.update',
@@ -78,6 +90,9 @@ final class RolesAndPermissionsSeeder extends Seeder
         $salesAgent->givePermissionTo([
             'dashboard.view',
             'profile.manage',
+            'accounts.view-own',
+            'accounts.create',
+            'accounts.update',
             'contacts.view-own',
             'contacts.create',
             'contacts.update',
