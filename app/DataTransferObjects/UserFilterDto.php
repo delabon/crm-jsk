@@ -9,7 +9,7 @@ use Illuminate\Contracts\Support\Arrayable;
 /**
  * @implements Arrayable<string, string>
  */
-final readonly class UserFiltersDto implements Arrayable
+final readonly class UserFilterDto implements Arrayable
 {
     public function __construct(
         public ?string $search = null,

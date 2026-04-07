@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin\Users;
 
-use App\DataTransferObjects\UserFiltersDto;
+use App\DataTransferObjects\UserFilterDto;
 use App\Enums\Role;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -49,9 +49,9 @@ final class IndexUserRequest extends FormRequest
         return implode(',', $roles);
     }
 
-    public function toDto(): UserFiltersDto
+    public function toDto(): UserFilterDto
     {
-        return new UserFiltersDto(
+        return new UserFilterDto(
             search: $this->string('search')->value(),
             verified: $this->string('verified')->value(),
             role: $this->string('role')->value(),
