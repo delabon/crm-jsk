@@ -98,29 +98,35 @@ A "lead" is a contact with `status = 'lead'`. No separate leads table needed —
 
 ### FK layout
 ```
-accounts: id, user_id (rep who owns this account), name, industry, website
-contacts: id, user_id (rep who owns this contact), account_id (nullable), name, email, phone, status
+accounts: id, user_id, name, industry, website, phone
+contacts: id, user_id, account_id (nullable), name, email, phone, status
 profiles: id, contact_id, country_id, linkedin, avatar, job_title, bio
+
+addresses: id, addressable_id, addressable_type, name, line1, line2,
+           city, state, postal_code, country_id               ← poly
+           (e.g. name = "HQ", "Billing", "Warehouse")
 ```
 
 ### Tasks
 - [ ] `countries` migration (`id`, `name`, `code`)
-- [ ] `accounts` migration (`id`, `user_id`, `name`, `industry`, `website`)
+- [ ] `accounts` migration (`id`, `user_id`, `name`, `industry`, `website`, `phone`)
 - [ ] `contacts` migration (`id`, `user_id`, `account_id` nullable, `name`, `email`, `phone`, `status`)
 - [ ] `profiles` migration (`id`, `contact_id`, `country_id`, `linkedin`, `avatar`, `job_title`, `bio`)
+- [ ] `addresses` migration with `morphs('addressable')`, `name`, `line1`, `line2`, `city`, `state`, `postal_code`, `country_id`
 - [ ] `User` model: `hasMany(Account)`, `hasMany(Contact)`
-- [ ] `Account` model: `belongsTo(User)`, `hasMany(Contact)`
+- [ ] `Account` model: `belongsTo(User)`, `hasMany(Contact)`, `morphMany(Address)`
 - [ ] `Contact` model: `belongsTo(User)`, `belongsTo(Account)` nullable
-- [ ] `Contact` model: `hasOne(Profile)`, `hasMany(Deal)`
+- [ ] `Contact` model: `hasOne(Profile)`, `hasMany(Deal)`, `morphOne(Address)`
 - [ ] `Contact` model: `hasOneThrough(Country via Profile)`
 - [ ] `Contact` model: `morphOne(Note)`, `morphMany(Task)`, `morphToMany(Tag)`
+- [ ] `Address` model: `morphTo()`, `belongsTo(Country)`
 - [ ] `Profile` model: `belongsTo(Contact)`, `belongsTo(Country)`
 - [ ] `ContactPolicy`: `view-own` vs `view-any` via Spatie
 - [ ] `AccountPolicy`: `view-own` vs `view-any` via Spatie
 - [ ] `ListContactsAction`, `CreateContactAction`, `UpdateContactAction`, `DeleteContactAction`
 - [ ] `ListAccountsAction`, `CreateAccountAction`, `UpdateAccountAction`, `DeleteAccountAction`
 - [ ] `ContactFactory` + `AccountFactory` with Faker
-- [ ] `AccountSeeder` + `ContactSeeder` with profiles
+- [ ] `AccountSeeder` + `ContactSeeder` with profiles and addresses
 
 ### Relationships in this phase
 | Type | From | To | Notes |
@@ -131,6 +137,8 @@ profiles: id, contact_id, country_id, linkedin, avatar, job_title, bio
 | Many-to-One | `Contact` | `Account` | nullable — person may have no company |
 | One-to-One | `Contact` | `Profile` | enriched contact data |
 | Has One Through | `Contact` | `Country` | via `Profile.country_id` |
+| Poly One-to-Many | `Account` | `Address` | labeled addresses e.g. HQ, Billing |
+| Poly One-to-One | `Contact` | `Address` | single personal address |
 
 ---
 
@@ -400,10 +408,13 @@ it('manager sees all contacts across team', function () {
 users           id, name, email, password, manager_id (self-join)
   ↳ roles       via Spatie model_has_roles pivot
 
-accounts        id, user_id, name, industry, website
+accounts        id, user_id, name, industry, website, phone
 contacts        id, user_id, account_id (nullable), name, email, phone, status
 profiles        id, contact_id, country_id, linkedin, avatar, job_title, bio
 countries       id, name, code
+addresses       id, name, line1, line2, city, state, postal_code, country_id,
+                addressable_id, addressable_type                ← poly
+                (Account → morphMany, Contact → morphOne)
 
 deals           id, contact_id, user_id, title, value, stage, expected_close
 campaigns       id, name, type, starts_at, ends_at
