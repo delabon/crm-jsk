@@ -1,6 +1,7 @@
 import {Head, Link} from '@inertiajs/react';
 import {CollectionPagination} from "@/components/collection-pagination";
 import DeleteButton from "@/components/delete-button";
+import ListSearch from "@/components/list-search";
 import {Button} from "@/components/ui/button";
 import {
     Table,
@@ -28,9 +29,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 type Props = {
     collection: PaginatedCollection<Account>;
+    search?: string;
 }
 
-export default function Index({collection}: Props) {
+export default function Index({collection, search}: Props) {
     const canManageAccount = () => {
         return true
     };
@@ -97,6 +99,8 @@ export default function Index({collection}: Props) {
                 <div className="flex items-center justify-between gap-3 flex-wrap lg:flex-nowrap">
                     <h1 className="text-xl font-bold">Accounts</h1>
                     <div className="flex flex-wrap items-center gap-3">
+                        <ListSearch initialSearch={search}/>
+
                         <Button
                             asChild
                         >

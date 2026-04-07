@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Actions\Accounts\GetPaginatedAccountAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Accounts\IndexAccountRequest;
 use App\Http\Resources\AccountResource;
 use App\Models\Account;
 use App\Models\User;
@@ -16,14 +17,15 @@ use Inertia\Response as InertiaResponse;
 
 final class AccountController extends Controller
 {
-    public function index(Request $request, GetPaginatedAccountAction $action): InertiaResponse
+    public function index(IndexAccountRequest $request, GetPaginatedAccountAction $action): InertiaResponse
     {
         /** @var User $user */
         $user = $request->user();
-        $accounts = $action->handle(Config::integer('app.dashboard.per_page'), $user);
+        $accounts = $action->handle(Config::integer('app.dashboard.per_page'), $user, $request->toDto());
 
         return Inertia::render('accounts/index', [
             'collection' => AccountResource::collection($accounts),
+            'search' => $request->search,
         ]);
     }
 
