@@ -108,6 +108,11 @@ final class User extends Authenticatable implements MustVerifyEmail
         return $this->main_role === Role::SuperAdmin;
     }
 
+    public function isManager(): bool
+    {
+        return $this->main_role === Role::Manager;
+    }
+
     /**
      * @return array<string, string>
      */
