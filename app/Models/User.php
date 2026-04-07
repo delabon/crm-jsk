@@ -55,6 +55,15 @@ final class User extends Authenticatable implements MustVerifyEmail
         'password' => 'hashed',
     ];
 
+    public function getNameAttribute(): ?string
+    {
+        if (!$this->first_name && !$this->last_name) {
+            return null;
+        }
+
+        return ($this->first_name ?? '') . ' ' . ($this->last_name ?? '');
+    }
+
     public function getFormattedCreatedAtAttribute(): ?string
     {
         return $this->created_at?->format(self::DATE_FORMAT);

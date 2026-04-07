@@ -30,3 +30,13 @@ export type RoleOption = {
     value: string;
     label: string;
 }
+
+export type Account = {
+    id: number;
+    name: string;
+    industry: string;
+    website: string;
+    phone: string;
+    owner: string;
+    formatted_created_at: string;
+};

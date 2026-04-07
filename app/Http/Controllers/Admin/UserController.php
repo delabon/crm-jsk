@@ -16,21 +16,20 @@ use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Config;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 use Throwable;
 
 final class UserController extends Controller
 {
-    private const int PER_PAGE = 20;
-
     public function index(IndexUserRequest $request, GetPaginatedUsersAction $action): InertiaResponse
     {
         $userFiltersDto = $request->toDto();
 
         return Inertia::render('users/index', [
             'collection' => UserResource::collection(
-                $action->handle(self::PER_PAGE, $userFiltersDto)
+                $action->handle(Config::integer('app.dashboard.per_page'), $userFiltersDto)
                     ->appends($userFiltersDto->toArray())
             ),
             'roles' => [

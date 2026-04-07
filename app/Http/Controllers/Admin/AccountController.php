@@ -1,0 +1,59 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Admin;
+
+use App\Actions\Accounts\GetPaginatedAccountAction;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\AccountResource;
+use App\Models\Account;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
+use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
+
+final class AccountController extends Controller
+{
+    public function index(Request $request, GetPaginatedAccountAction $action): InertiaResponse
+    {
+        /** @var User $user */
+        $user = $request->user();
+        $accounts = $action->handle(Config::integer('app.dashboard.per_page'), $user);
+
+        return Inertia::render('accounts/index', [
+            'collection' => AccountResource::collection($accounts),
+        ]);
+    }
+
+    public function create()
+    {
+        //
+    }
+
+    public function store(Request $request)
+    {
+        //
+    }
+
+    public function show(Account $account)
+    {
+        //
+    }
+
+    public function edit(Account $account)
+    {
+        //
+    }
+
+    public function update(Request $request, Account $account)
+    {
+        //
+    }
+
+    public function destroy(Account $account)
+    {
+        //
+    }
+}
