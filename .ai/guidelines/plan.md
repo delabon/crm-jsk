@@ -82,38 +82,55 @@ Already completed. Users table with `manager_id` self-join, Spatie installed, ro
 ## Phase 2 — Accounts & Contacts ⬅️ Up Next
 > Companies · People · Profiles · Countries
 
-Accounts are the companies. Contacts are the people inside them. A contact can exist without an account (freelancer, individual). Status on contact drives the lead → prospect → client funnel.
+A `User` (sales rep) owns many Accounts and many Contacts independently. An Account is a company. A Contact is a person — they may work at an Account, or exist standalone (freelancer, individual). Status on Contact drives the lead → prospect → client funnel.
 
-### Architecture note
+### Ownership model
 ```
-users        → internal, log in, have roles
-accounts     → companies (Acme Corp, Google, etc.)
-contacts     → people, belong to an account, have a status (lead/prospect/client)
+User (sales rep)
+ ├── hasMany Accounts   (companies they manage)
+ └── hasMany Contacts   (people they manage)
+       └── belongsTo Account (nullable — the company they work at)
 ```
+
+The rep owns the contact directly via `contacts.user_id`. The account is just context. This means a rep can manage a contact who works at an account owned by a different rep — which is intentional and realistic.
 
 A "lead" is a contact with `status = 'lead'`. No separate leads table needed — status scopes handle the funnel.
 
+### FK layout
+```
+accounts: id, user_id (rep who owns this account), name, industry, website
+contacts: id, user_id (rep who owns this contact), account_id (nullable), name, email, phone, status
+profiles: id, contact_id, country_id, linkedin, avatar, job_title, bio
+```
+
 ### Tasks
 - [ ] `countries` migration (`id`, `name`, `code`)
-- [ ] `accounts` migration (`id`, `name`, `industry`, `website`, `user_id`)
+- [ ] `accounts` migration (`id`, `user_id`, `name`, `industry`, `website`)
 - [ ] `contacts` migration (`id`, `user_id`, `account_id` nullable, `name`, `email`, `phone`, `status`)
 - [ ] `profiles` migration (`id`, `contact_id`, `country_id`, `linkedin`, `avatar`, `job_title`, `bio`)
-- [ ] `Account` model: `hasMany(Contact)`, `belongsTo(User)`
-- [ ] `Contact` model: `belongsTo(Account)`, `hasOne(Profile)`, `hasMany(Deal)`
+- [ ] `User` model: `hasMany(Account)`, `hasMany(Contact)`
+- [ ] `Account` model: `belongsTo(User)`, `hasMany(Contact)`
+- [ ] `Contact` model: `belongsTo(User)`, `belongsTo(Account)` nullable
+- [ ] `Contact` model: `hasOne(Profile)`, `hasMany(Deal)`
 - [ ] `Contact` model: `hasOneThrough(Country via Profile)`
 - [ ] `Contact` model: `morphOne(Note)`, `morphMany(Task)`, `morphToMany(Tag)`
 - [ ] `Profile` model: `belongsTo(Contact)`, `belongsTo(Country)`
 - [ ] `ContactPolicy`: `view-own` vs `view-any` via Spatie
-- [ ] `AccountPolicy`: managers see all, agents see assigned only
+- [ ] `AccountPolicy`: `view-own` vs `view-any` via Spatie
+- [ ] `ListContactsAction`, `CreateContactAction`, `UpdateContactAction`, `DeleteContactAction`
+- [ ] `ListAccountsAction`, `CreateAccountAction`, `UpdateAccountAction`, `DeleteAccountAction`
 - [ ] `ContactFactory` + `AccountFactory` with Faker
 - [ ] `AccountSeeder` + `ContactSeeder` with profiles
 
 ### Relationships in this phase
-| Type | Relationship |
-|---|---|
-| One-to-One | `Contact` → `Profile` |
-| One-to-Many | `Account` → `Contacts` |
-| Has One Through | `Contact` → `Country` (via `Profile`) |
+| Type | From | To | Notes |
+|---|---|---|---|
+| One-to-Many | `User` | `Account` | rep owns many companies |
+| One-to-Many | `User` | `Contact` | rep owns many people |
+| One-to-Many | `Account` | `Contact` | company has many employees |
+| Many-to-One | `Contact` | `Account` | nullable — person may have no company |
+| One-to-One | `Contact` | `Profile` | enriched contact data |
+| Has One Through | `Contact` | `Country` | via `Profile.country_id` |
 
 ---
 
