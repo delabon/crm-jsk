@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Settings\PasswordController;
@@ -45,6 +46,30 @@ Route::middleware(['auth', 'verified'])
                     ->name('edit');
                 Route::patch('/{user}', 'update')
                     ->middleware(['throttle:users-manage', 'can:update,user'])
+                    ->name('update');
+            });
+
+        // --- Accounts ---
+        Route::prefix('accounts')
+            ->middleware('can:accounts.view-own')
+            ->name('accounts.')
+            ->controller(AccountController::class)
+            ->group(function () {
+                Route::get('/', 'index')
+                    ->name('index');
+                Route::get('/create', 'create')
+                    ->name('create');
+                Route::post('/', 'store')
+                    ->middleware('throttle:accounts-manage')
+                    ->name('store');
+                Route::delete('/{account}', 'destroy')
+                    ->middleware(['throttle:accounts-manage', 'can:delete,account'])
+                    ->name('destroy');
+                Route::get('/{account}', 'edit')
+                    ->middleware('can:update,account')
+                    ->name('edit');
+                Route::patch('/{account}', 'update')
+                    ->middleware(['throttle:accounts-manage', 'can:update,account'])
                     ->name('update');
             });
     });
