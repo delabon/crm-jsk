@@ -8,6 +8,7 @@ use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
 use App\DataTransferObjects\UpdateUserDto;
 use App\Enums\Role;
+use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -28,10 +29,11 @@ final class UpdateUserRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array<mixed>|string>
+     * @return array<string, array<mixed>>
      */
     public function rules(): array
     {
+        /** @var User|null $user */
         $user = $this->route('user');
 
         return [

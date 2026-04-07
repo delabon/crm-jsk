@@ -49,7 +49,7 @@ final class GetDashboardMetricsAction
 
                 $usersByRoleCount['all'] = $usersByRoleCount->sum();
 
-                return $usersByRoleCount->map(static fn ($item) => Number::forHumans($item))
+                return $usersByRoleCount->map(static fn ($item) => (string) Number::forHumans($item))
                     ->all();
             }
         );
