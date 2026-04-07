@@ -18,6 +18,7 @@ final class Account extends Model
     private const string DATE_FORMAT = 'M j, Y';
 
     protected $fillable = [
+        'user_id',
         'name',
         'industry',
         'website',
