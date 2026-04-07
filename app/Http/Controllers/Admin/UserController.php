@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Actions\Users\AdminDeleteUserAction;
+use App\Actions\Users\AdminUpdateUserAction;
 use App\Actions\Users\GetPaginatedUsersAction;
 use App\Actions\Users\StoreUserAction;
-use App\Actions\Users\AdminUpdateUserAction;
 use App\Enums\Role;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\IndexUserRequest;
-use App\Http\Requests\Admin\StoreUserRequest;
-use App\Http\Requests\Admin\UpdateUserRequest;
+use App\Http\Requests\Admin\Users\IndexUserRequest;
+use App\Http\Requests\Admin\Users\StoreUserRequest;
+use App\Http\Requests\Admin\Users\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
