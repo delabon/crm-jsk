@@ -93,7 +93,7 @@ export default function Index({collection, search}: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Users" />
+            <Head title="Accounts" />
 
             <div className="space-y-4 p-6">
                 <div className="flex items-center justify-between gap-3 flex-wrap lg:flex-nowrap">
