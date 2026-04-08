@@ -61,7 +61,7 @@ final class AccountController extends Controller
             ->with('success', 'The account #'.$account->id.' has been updated.');
     }
 
-    public function destroy(Account $account, DeleteAccountAction $action)
+    public function destroy(Account $account, DeleteAccountAction $action): RedirectResponse
     {
         $id = $account->id;
         $action->handle($account);
