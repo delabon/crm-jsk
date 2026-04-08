@@ -8,8 +8,8 @@ use App\Actions\Accounts\GetPaginatedAccountAction;
 use App\Actions\Accounts\StoreAccountAction;
 use App\Actions\Accounts\UpdateAccountAction;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\Accounts\IndexAccountRequest;
 use App\Http\Requests\Admin\Accounts\AccountFormRequest;
+use App\Http\Requests\Admin\Accounts\IndexAccountRequest;
 use App\Http\Resources\AccountResource;
 use App\Models\Account;
 use App\Models\User;
@@ -52,7 +52,7 @@ final class AccountController extends Controller
         ]);
     }
 
-    public function update(AccountFormRequest $request, Account $account, UpdateAccountAction $action)
+    public function update(AccountFormRequest $request, Account $account, UpdateAccountAction $action): RedirectResponse
     {
         $action->handle($account, $request->toDto());
 

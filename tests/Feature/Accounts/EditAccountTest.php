@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // Test: fails with invalid data
 // Test: edit accounts is rate limited
 
