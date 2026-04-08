@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Actions\Accounts;
 
-use App\DataTransferObjects\StoreAccountDto;
+use App\DataTransferObjects\AccountFormDto;
 use App\Models\Account;
 use App\Models\User;
 
 final class StoreAccountAction
 {
-    public function handle(User $user, StoreAccountDto $dto): Account
+    public function handle(User $user, AccountFormDto $dto): Account
     {
         /** @var Account $account */
         $account = $user->accounts()

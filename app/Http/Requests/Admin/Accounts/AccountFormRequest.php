@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin\Accounts;
 
-use App\DataTransferObjects\StoreAccountDto;
+use App\DataTransferObjects\AccountFormDto;
 use Illuminate\Foundation\Http\FormRequest;
 
 final class AccountFormRequest extends FormRequest
@@ -49,9 +49,9 @@ final class AccountFormRequest extends FormRequest
         ];
     }
 
-    public function toDto(): StoreAccountDto
+    public function toDto(): AccountFormDto
     {
-        return new StoreAccountDto(
+        return new AccountFormDto(
             name: $this->string('name')->value(),
             industry: $this->string('industry')->value(),
             website: $this->string('website')->value(),

@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Actions\Accounts\GetPaginatedAccountAction;
 use App\Actions\Accounts\StoreAccountAction;
+use App\Actions\Accounts\UpdateAccountAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Accounts\IndexAccountRequest;
 use App\Http\Requests\Admin\Accounts\AccountFormRequest;
@@ -51,9 +52,9 @@ final class AccountController extends Controller
         ]);
     }
 
-    public function update(AccountFormRequest $request, Account $account)
+    public function update(AccountFormRequest $request, Account $account, UpdateAccountAction $action)
     {
-        $account->update($request->validated());
+        $action->handle($account, $request->toDto());
 
         return back()
             ->with('success', 'The account #'.$account->id.' has been updated.');
