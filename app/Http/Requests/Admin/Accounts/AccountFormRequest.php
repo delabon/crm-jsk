@@ -7,7 +7,7 @@ namespace App\Http\Requests\Admin\Accounts;
 use App\DataTransferObjects\StoreAccountDto;
 use Illuminate\Foundation\Http\FormRequest;
 
-final class StoreAccountRequest extends FormRequest
+final class AccountFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

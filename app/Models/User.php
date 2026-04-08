@@ -122,6 +122,11 @@ final class User extends Authenticatable implements MustVerifyEmail
         return $this->main_role === Role::Manager;
     }
 
+    public function isSalesAgent(): bool
+    {
+        return $this->main_role === Role::SalesAgent;
+    }
+
     /**
      * @return array<string, string>
      */

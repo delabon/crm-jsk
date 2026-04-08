@@ -3,7 +3,7 @@ import AppLayout from '@/layouts/app-layout';
 import AccountForm from "@/pages/accounts/account-form";
 import {dashboard} from "@/routes";
 import accountRoutes from '@/routes/accounts';
-import type {BreadcrumbItem} from '@/types';
+import type {Account, BreadcrumbItem} from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -15,24 +15,28 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: accountRoutes.index(),
     },
     {
-        title: 'Create Account',
+        title: 'Edit Account',
         href: '#',
     },
 ];
 
-export default function Create() {
-    const formProps = accountRoutes.store.form();
+type Props = {
+    account: Account;
+};
+
+export default function Edit({account}: Props) {
+    const formProps = accountRoutes.update.form(account);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Create Account" />
+            <Head title="Edit Account" />
 
             <div className="space-y-4 p-6 max-w-xl">
                 <h1 className="text-xl font-bold">
-                    Create account
+                    Edit account
                 </h1>
 
-                <AccountForm action={formProps.action} method={formProps.method}/>
+                <AccountForm action={formProps.action} method={formProps.method} account={account}/>
             </div>
         </AppLayout>
     );
