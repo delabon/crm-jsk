@@ -3,6 +3,7 @@ import {Button} from "@/components/ui/button";
 import {FormField} from "@/components/ui/form-field";
 import {Input} from "@/components/ui/input";
 import {Spinner} from "@/components/ui/spinner";
+import { Textarea } from "@/components/ui/textarea"
 import type {Account} from "@/types";
 
 type Props = {
@@ -22,6 +23,16 @@ export default function AccountForm({action, method, account}: Props) {
                         placeholder="Name"
                         aria-invalid={!!errors['name']}
                         defaultValue={account?.name}
+                    />
+                </FormField>
+
+                <FormField label="Description" htmlFor="description" error={errors['description'] ?? null}>
+                    <Textarea
+                        id="description"
+                        name="description"
+                        placeholder="Description"
+                        aria-invalid={!!errors['description']}
+                        defaultValue={account?.description}
                     />
                 </FormField>
 

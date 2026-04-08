@@ -20,6 +20,7 @@ final class Account extends Model
     protected $fillable = [
         'user_id',
         'name',
+        'description',
         'industry',
         'website',
         'phone',

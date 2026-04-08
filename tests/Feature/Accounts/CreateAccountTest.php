@@ -47,6 +47,7 @@ test('an admin can create an account', function () {
 
     $newAccountData = [
         'name' => 'AcmE CorP',
+        'description' => 'Some acme corp description',
         'industry' => 'Finance',
         'website' => 'https://acme.test',
         'phone' => '123-1245-123',
@@ -64,7 +65,7 @@ test('an admin can create an account', function () {
 
     expect($account->user_id)->toBe($admin->id)
         ->and($account->name)->toBe($newAccountData['name'])
-        ->and($account->industry)->toBe($newAccountData['industry'])
+        ->and($account->description)->toBe($newAccountData['description'])
         ->and($account->industry)->toBe($newAccountData['industry'])
         ->and($account->website)->toBe($newAccountData['website'])
         ->and($account->phone)->toBe($newAccountData['phone']);
@@ -95,7 +96,6 @@ test('a manager can create an account', function () {
     expect($account->user_id)->toBe($manager->id)
         ->and($account->name)->toBe($newAccountData['name'])
         ->and($account->industry)->toBe($newAccountData['industry'])
-        ->and($account->industry)->toBe($newAccountData['industry'])
         ->and($account->website)->toBe($newAccountData['website'])
         ->and($account->phone)->toBe($newAccountData['phone']);
 });
@@ -124,7 +124,6 @@ test('a sales agent can create an account', function () {
 
     expect($account->user_id)->toBe($salesAgent->id)
         ->and($account->name)->toBe($newAccountData['name'])
-        ->and($account->industry)->toBe($newAccountData['industry'])
         ->and($account->industry)->toBe($newAccountData['industry'])
         ->and($account->website)->toBe($newAccountData['website'])
         ->and($account->phone)->toBe($newAccountData['phone']);

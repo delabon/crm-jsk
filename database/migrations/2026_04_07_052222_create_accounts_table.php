@@ -21,6 +21,7 @@ return new class extends Migration
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
             $table->string('name');
+            $table->text('description')->nullable();
             $table->string('industry');
             $table->string('website');
             $table->string('phone', 30);

@@ -16,12 +16,14 @@ final readonly class AccountFormDto implements Arrayable
         public string $industry,
         public string $website,
         public string $phone,
+        public ?string $description = null
     ) {}
 
     public function toArray(): array
     {
         return [
             'name' => $this->name,
+            'description' => $this->description,
             'industry' => $this->industry,
             'website' => $this->website,
             'phone' => $this->phone,

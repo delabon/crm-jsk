@@ -34,6 +34,7 @@ export type RoleOption = {
 export type Account = {
     id: number;
     name: string;
+    description?: string;
     industry: string;
     website: string;
     phone: string;

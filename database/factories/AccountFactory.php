@@ -26,6 +26,7 @@ final class AccountFactory extends Factory
         return [
             'user_id' => User::factory(),
             'name' => $name,
+            'description' => fake()->text(),
             'industry' => fake()->randomElement([
                 'Technology',
                 'Healthcare',

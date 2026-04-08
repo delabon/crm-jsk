@@ -23,6 +23,7 @@ final class AccountResource extends JsonResource
         return [
             'id' => $this->resource->id,
             'name' => $this->resource->name,
+            'description' => $this->resource->description,
             'industry' => $this->resource->industry,
             'website' => $this->resource->website,
             'phone' => $this->resource->phone,

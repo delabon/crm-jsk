@@ -30,6 +30,11 @@ final class AccountFormRequest extends FormRequest
                 'string',
                 'max:255',
             ],
+            'description' => [
+                'nullable',
+                'string',
+                'max:1000',
+            ],
             'industry' => [
                 'required',
                 'string',
@@ -56,6 +61,7 @@ final class AccountFormRequest extends FormRequest
             industry: $this->string('industry')->value(),
             website: $this->string('website')->value(),
             phone: $this->string('phone')->value(),
+            description: $this->string('description')->value(),
         );
     }
 }

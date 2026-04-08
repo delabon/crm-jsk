@@ -69,6 +69,7 @@ it('admins can edit their accounts and others', function () {
 
     $accountNewData = [
         'name' => 'Name updated by admin',
+        'description' => 'Description updated by admin',
         'industry' => 'Name updated by admin',
         'website' => 'https://admin-updated.cc',
         'phone' => 'Phone updated by admin',
@@ -84,6 +85,7 @@ it('admins can edit their accounts and others', function () {
 
     expect($accounts[0]->user_id)->toBe($admin->id)
         ->and($accounts[0]->name)->toBe($accountNewData['name'])
+        ->and($accounts[0]->description)->toBe($accountNewData['description'])
         ->and($accounts[0]->industry)->toBe($accountNewData['industry'])
         ->and($accounts[0]->website)->toBe($accountNewData['website'])
         ->and($accounts[0]->phone)->toBe($accountNewData['phone']);
@@ -98,6 +100,7 @@ it('admins can edit their accounts and others', function () {
 
     expect($accounts[1]->user_id)->not()->toBe($admin->id)
         ->and($accounts[1]->name)->toBe($accountNewData['name'])
+        ->and($accounts[1]->description)->toBe($accountNewData['description'])
         ->and($accounts[1]->industry)->toBe($accountNewData['industry'])
         ->and($accounts[1]->website)->toBe($accountNewData['website'])
         ->and($accounts[1]->phone)->toBe($accountNewData['phone']);
