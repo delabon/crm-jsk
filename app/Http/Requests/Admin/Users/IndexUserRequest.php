@@ -41,14 +41,6 @@ final class IndexUserRequest extends FormRequest
         ];
     }
 
-    private function allowedRoles(): string
-    {
-        $roles = array_column(Role::options(), 'value');
-        array_unshift($roles, 'all');
-
-        return implode(',', $roles);
-    }
-
     public function toDto(): UserFilterDto
     {
         return new UserFilterDto(
@@ -56,5 +48,13 @@ final class IndexUserRequest extends FormRequest
             verified: $this->string('verified')->value(),
             role: $this->string('role')->value(),
         );
+    }
+
+    private function allowedRoles(): string
+    {
+        $roles = array_column(Role::options(), 'value');
+        array_unshift($roles, 'all');
+
+        return implode(',', $roles);
     }
 }

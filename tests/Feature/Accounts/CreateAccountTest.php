@@ -1,18 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Enums\Role;
 use App\Models\Account;
 use App\Models\User;
 use Inertia\Testing\AssertableInertia;
 
-it("redirects non-authenticated users to the login page", function () {
+it('redirects non-authenticated users to the login page', function () {
     $this->get(route('accounts.create'))
         ->assertRedirectToRoute('login');
     $this->get(route('accounts.store'))
         ->assertRedirectToRoute('login');
 });
 
-it("returns a forbidden response when the authenticated user lacks the required permissions", function () {
+it('returns a forbidden response when the authenticated user lacks the required permissions', function () {
     $user = User::factory()
         ->create();
 
@@ -25,7 +27,7 @@ it("returns a forbidden response when the authenticated user lacks the required 
         ->assertForbidden();
 });
 
-it("renders the create account page successfully", function () {
+it('renders the create account page successfully', function () {
     $admin = User::factory()
         ->create()
         ->syncRoles([Role::SuperAdmin->value]);
@@ -38,7 +40,7 @@ it("renders the create account page successfully", function () {
         });
 });
 
-test("an admin can create an account", function () {
+test('an admin can create an account', function () {
     $admin = User::factory()
         ->create()
         ->syncRoles([Role::SuperAdmin->value]);
@@ -68,7 +70,7 @@ test("an admin can create an account", function () {
         ->and($account->phone)->toBe($newAccountData['phone']);
 });
 
-test("a manager can create an account", function () {
+test('a manager can create an account', function () {
     $manager = User::factory()
         ->create()
         ->syncRoles([Role::Manager->value]);
@@ -98,7 +100,7 @@ test("a manager can create an account", function () {
         ->and($account->phone)->toBe($newAccountData['phone']);
 });
 
-test("a sales agent can create an account", function () {
+test('a sales agent can create an account', function () {
     $salesAgent = User::factory()
         ->create()
         ->syncRoles([Role::SalesAgent->value]);
@@ -128,7 +130,7 @@ test("a sales agent can create an account", function () {
         ->and($account->phone)->toBe($newAccountData['phone']);
 });
 
-it("fails with invalid name", function (mixed $invalidValue, string $expectedMessage) {
+it('fails with invalid name', function (mixed $invalidValue, string $expectedMessage) {
     $salesAgent = User::factory()
         ->create()
         ->syncRoles([Role::SalesAgent->value]);
@@ -143,13 +145,13 @@ it("fails with invalid name", function (mixed $invalidValue, string $expectedMes
         ]))
         ->assertRedirectBack()
         ->assertSessionHasErrors([
-            'name' => $expectedMessage
+            'name' => $expectedMessage,
         ]);
 
     $this->assertDatabaseCount('accounts', 0);
-})->with("invalid-account-name");
+})->with('invalid-account-name');
 
-it("fails with invalid industry", function (mixed $invalidValue, string $expectedMessage) {
+it('fails with invalid industry', function (mixed $invalidValue, string $expectedMessage) {
     $salesAgent = User::factory()
         ->create()
         ->syncRoles([Role::SalesAgent->value]);
@@ -164,13 +166,13 @@ it("fails with invalid industry", function (mixed $invalidValue, string $expecte
         ]))
         ->assertRedirectBack()
         ->assertSessionHasErrors([
-            'industry' => $expectedMessage
+            'industry' => $expectedMessage,
         ]);
 
     $this->assertDatabaseCount('accounts', 0);
-})->with("invalid-account-industry");
+})->with('invalid-account-industry');
 
-it("fails with invalid website", function (mixed $invalidValue, string $expectedMessage) {
+it('fails with invalid website', function (mixed $invalidValue, string $expectedMessage) {
     $salesAgent = User::factory()
         ->create()
         ->syncRoles([Role::SalesAgent->value]);
@@ -185,13 +187,13 @@ it("fails with invalid website", function (mixed $invalidValue, string $expected
         ]))
         ->assertRedirectBack()
         ->assertSessionHasErrors([
-            'website' => $expectedMessage
+            'website' => $expectedMessage,
         ]);
 
     $this->assertDatabaseCount('accounts', 0);
-})->with("invalid-account-website");
+})->with('invalid-account-website');
 
-it("fails with invalid phone", function (mixed $invalidValue, string $expectedMessage) {
+it('fails with invalid phone', function (mixed $invalidValue, string $expectedMessage) {
     $salesAgent = User::factory()
         ->create()
         ->syncRoles([Role::SalesAgent->value]);
@@ -206,13 +208,13 @@ it("fails with invalid phone", function (mixed $invalidValue, string $expectedMe
         ]))
         ->assertRedirectBack()
         ->assertSessionHasErrors([
-            'phone' => $expectedMessage
+            'phone' => $expectedMessage,
         ]);
 
     $this->assertDatabaseCount('accounts', 0);
-})->with("invalid-account-phone");
+})->with('invalid-account-phone');
 
-test("create accounts is rate limited", function () {
+test('create accounts is rate limited', function () {
     $admin = User::factory()
         ->create()
         ->syncRoles([Role::SuperAdmin->value]);

@@ -6,8 +6,8 @@ namespace App\Actions\Users;
 
 use App\DataTransferObjects\UserFilterDto;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 
 final class GetPaginatedUsersAction
 {

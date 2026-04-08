@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Enums\Role;
 use App\Models\Account;
 use App\Models\User;
 use Inertia\Testing\AssertableInertia;
 
-it("redirects to login page when not authenticated", function () {
+it('redirects to login page when not authenticated', function () {
     $this->get(route('accounts.index'))
         ->assertRedirectToRoute('login');
 });
@@ -19,7 +21,7 @@ it("it returns a forbidden response when user doesn't have required permissions"
         ->assertForbidden();
 });
 
-test("users with right permissions can visit the accounts page", function () {
+test('users with right permissions can visit the accounts page', function () {
     $user = User::factory()
         ->create()
         ->syncRoles([Role::SuperAdmin->value]);
@@ -32,7 +34,7 @@ test("users with right permissions can visit the accounts page", function () {
         });
 });
 
-test("super admins and managers can view all accounts", function () {
+test('super admins and managers can view all accounts', function () {
     Account::factory(3)->create();
     $admin = User::factory()
         ->create()
@@ -58,7 +60,7 @@ test("super admins and managers can view all accounts", function () {
         });
 });
 
-test("sales agents can view only accounts they created", function () {
+test('sales agents can view only accounts they created', function () {
     $accounts = Account::factory(3)->create();
     $salesAgent = User::factory()
         ->create()
@@ -77,7 +79,7 @@ test("sales agents can view only accounts they created", function () {
         });
 });
 
-test("sales agents can search only their accounts", function () {
+test('sales agents can search only their accounts', function () {
     $searchTerm = 'noquerylike';
     $accounts = Account::factory(3)->create();
     $accounts[0]->update([
@@ -115,7 +117,7 @@ test("sales agents can search only their accounts", function () {
         });
 });
 
-test("super admins and managers can search all accounts", function () {
+test('super admins and managers can search all accounts', function () {
     $searchTerm = 'noquerylike';
     $accounts = Account::factory(3)->create();
     $salesAgent = User::factory()

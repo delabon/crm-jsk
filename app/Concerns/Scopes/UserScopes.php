@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 trait UserScopes
 {
     /**
-     * @param Builder<User> $builder
+     * @param  Builder<User>  $builder
      */
     #[Scope]
     protected function superAdmins(Builder $builder): void

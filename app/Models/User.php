@@ -56,6 +56,9 @@ final class User extends Authenticatable implements MustVerifyEmail
         'password' => 'hashed',
     ];
 
+    /**
+     * @return HasMany<Account, $this>
+     */
     public function accounts(): HasMany
     {
         return $this->hasMany(Account::class);
@@ -63,11 +66,11 @@ final class User extends Authenticatable implements MustVerifyEmail
 
     public function getNameAttribute(): ?string
     {
-        if (!$this->first_name && !$this->last_name) {
+        if (! $this->first_name && ! $this->last_name) {
             return null;
         }
 
-        return ($this->first_name ?? '') . ' ' . ($this->last_name ?? '');
+        return ($this->first_name ?? '').' '.($this->last_name ?? '');
     }
 
     public function getFormattedCreatedAtAttribute(): ?string

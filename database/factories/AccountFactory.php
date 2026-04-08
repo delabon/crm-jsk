@@ -21,7 +21,7 @@ final class AccountFactory extends Factory
     public function definition(): array
     {
         $name = fake()->company();
-        $website = strtolower(preg_replace("/[^a-z]/i", "-", $name).'.cc');
+        $website = mb_strtolower(preg_replace('/[^a-z]/i', '-', $name).'.cc');
 
         return [
             'user_id' => User::factory(),

@@ -15,8 +15,9 @@ final class GetDashboardMetricsAction
     private const int CACHE_DAYS = 15;
 
     /**
-     * @throws Throwable
      * @return array<string, array<string, string>>
+     *
+     * @throws Throwable
      */
     public function handle(User $user): array
     {
@@ -27,8 +28,9 @@ final class GetDashboardMetricsAction
     }
 
     /**
-     * @throws Throwable
      * @return array<string, string>
+     *
+     * @throws Throwable
      */
     private function userMetrics(User $user): array
     {

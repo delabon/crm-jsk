@@ -25,6 +25,9 @@ final class Account extends Model
         'phone',
     ];
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -35,6 +38,9 @@ final class Account extends Model
         return $this->created_at?->format(self::DATE_FORMAT);
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function toSearchableArray(): array
     {
         return [

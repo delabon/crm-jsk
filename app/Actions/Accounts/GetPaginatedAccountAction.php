@@ -20,7 +20,7 @@ final class GetPaginatedAccountAction
         return Account::search($dto->search ?? '')
             ->query(static function (Builder $query) use ($user) {
                 $query->when(
-                    !$user->isSuperAdmin() && !$user->isManager(),
+                    ! $user->isSuperAdmin() && ! $user->isManager(),
                     static fn (Builder $sq) => $sq->whereHas('user', static fn (Builder $ssq) => $ssq->where('id', $user->id))
                 );
             })

@@ -76,7 +76,7 @@ test('filter users by verified', function () {
     $this->actingAs($admin)
         ->get(route('users.index', ['verified' => 'yes']))
         ->assertOk()
-        ->assertInertia(static function (AssertableInertia $page) use ($admin, $user2) {
+        ->assertInertia(static function (AssertableInertia $page) use ($user2) {
             $page->component('users/index')
                 ->has('collection.data', 2)
                 ->where('collection.data.0.first_name', $user2->first_name);

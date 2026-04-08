@@ -12,7 +12,10 @@ final class StoreAccountAction
 {
     public function handle(User $user, StoreAccountDto $dto): Account
     {
-        return $user->accounts()
+        /** @var Account $account */
+        $account = $user->accounts()
             ->create($dto->toArray());
+
+        return $account;
     }
 }
