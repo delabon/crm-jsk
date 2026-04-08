@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\Accounts\DeleteAccountAction;
 use App\Actions\Accounts\GetPaginatedAccountAction;
 use App\Actions\Accounts\StoreAccountAction;
 use App\Actions\Accounts\UpdateAccountAction;
@@ -58,5 +59,14 @@ final class AccountController extends Controller
 
         return to_route('accounts.index')
             ->with('success', 'The account #'.$account->id.' has been updated.');
+    }
+
+    public function destroy(Account $account, DeleteAccountAction $action)
+    {
+        $id = $account->id;
+        $action->handle($account);
+
+        return back()
+            ->with('success', 'The account #'.$id.' has been deleted.');
     }
 }

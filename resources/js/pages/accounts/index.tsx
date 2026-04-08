@@ -33,10 +33,6 @@ type Props = {
 }
 
 export default function Index({collection, search}: Props) {
-    const canManageAccount = () => {
-        return true
-    };
-
     const renderItems = () => {
         if (collection.data.length === 0) {
             return <div>Nothing here, come back later!</div>
@@ -68,18 +64,12 @@ export default function Index({collection, search}: Props) {
                             <TableCell>{account.formatted_created_at}</TableCell>
                             <TableCell>
                                 <div className="inline-flex gap-2">
-                                    {(
-                                        canManageAccount()
-                                        &&
-                                        <>
-                                            <Button asChild variant="default">
-                                                <Link href={accountRoute.edit(account.id).url}>Edit</Link>
-                                            </Button>
-                                            <DeleteButton
-                                                {...accountRoute.destroy.form(account.id)}
-                                            />
-                                        </>
-                                    )}
+                                    <Button asChild variant="default">
+                                        <Link href={accountRoute.edit(account.id).url}>Edit</Link>
+                                    </Button>
+                                    <DeleteButton
+                                        {...accountRoute.destroy.form(account.id)}
+                                    />
                                 </div>
                             </TableCell>
                         </TableRow>

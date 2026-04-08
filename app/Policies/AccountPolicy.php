@@ -15,4 +15,9 @@ final class AccountPolicy
             || $user->isManager()
             || ($user->isSalesAgent() && $user->id === $account->user_id);
     }
+
+    public function delete(User $user, Account $account): bool
+    {
+        return $user->isSuperAdmin() || $user->isManager();
+    }
 }
