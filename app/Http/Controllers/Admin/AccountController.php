@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Actions\Accounts\GetPaginatedAccountAction;
+use App\Actions\Accounts\StoreAccountAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Accounts\IndexAccountRequest;
 use App\Http\Requests\Admin\Accounts\StoreAccountRequest;
@@ -36,11 +37,9 @@ final class AccountController extends Controller
         return Inertia::render('accounts/create');
     }
 
-    public function store(StoreAccountRequest $request): RedirectResponse
+    public function store(StoreAccountRequest $request, StoreAccountAction $action): RedirectResponse
     {
-        $request->user()
-            ->accounts()
-            ->create($request->all()); // TODO: validate this, it is dangerous
+        $action->handle($request->user(), $request->toDto());
 
         return back()
             ->with('success', 'The account has been created.');

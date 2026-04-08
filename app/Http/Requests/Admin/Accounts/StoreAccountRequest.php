@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Admin\Accounts;
 
+use App\DataTransferObjects\StoreAccountDto;
 use Illuminate\Foundation\Http\FormRequest;
 
 final class StoreAccountRequest extends FormRequest
@@ -46,5 +47,15 @@ final class StoreAccountRequest extends FormRequest
                 'max:30',
             ],
         ];
+    }
+
+    public function toDto(): StoreAccountDto
+    {
+        return new StoreAccountDto(
+            name: $this->string('name')->value(),
+            industry: $this->string('industry')->value(),
+            website: $this->string('website')->value(),
+            phone: $this->string('phone')->value(),
+        );
     }
 }
