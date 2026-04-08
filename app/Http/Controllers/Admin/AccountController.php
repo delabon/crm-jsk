@@ -41,7 +41,7 @@ final class AccountController extends Controller
     {
         $action->handle($request->user(), $request->toDto());
 
-        return back()
+        return to_route('accounts.index')
             ->with('success', 'The account has been created.');
     }
 
@@ -56,7 +56,7 @@ final class AccountController extends Controller
     {
         $action->handle($account, $request->toDto());
 
-        return back()
+        return to_route('accounts.index')
             ->with('success', 'The account #'.$account->id.' has been updated.');
     }
 }

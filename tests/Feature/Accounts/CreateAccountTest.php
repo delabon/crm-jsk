@@ -55,7 +55,7 @@ test('an admin can create an account', function () {
     $this->actingAs($admin)
         ->fromRoute('accounts.create')
         ->post(route('accounts.store', $newAccountData))
-        ->assertRedirectBack()
+        ->assertRedirectToRoute('accounts.index')
         ->assertSessionHas('success', 'The account has been created.');
 
     $this->assertDatabaseCount('accounts', 1);
@@ -85,7 +85,7 @@ test('a manager can create an account', function () {
     $this->actingAs($manager)
         ->fromRoute('accounts.create')
         ->post(route('accounts.store', $newAccountData))
-        ->assertRedirectBack()
+        ->assertRedirectToRoute('accounts.index')
         ->assertSessionHas('success', 'The account has been created.');
 
     $this->assertDatabaseCount('accounts', 1);
@@ -115,7 +115,7 @@ test('a sales agent can create an account', function () {
     $this->actingAs($salesAgent)
         ->fromRoute('accounts.create')
         ->post(route('accounts.store', $newAccountData))
-        ->assertRedirectBack()
+        ->assertRedirectToRoute('accounts.index')
         ->assertSessionHas('success', 'The account has been created.');
 
     $this->assertDatabaseCount('accounts', 1);

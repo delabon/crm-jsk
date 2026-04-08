@@ -75,7 +75,7 @@ it('admins can edit their accounts and others', function () {
     // can edit their account
     $this->actingAs($admin)
         ->patch(route('accounts.update', ['account' => $accounts[0]]), $accountNewData)
-        ->assertRedirectBack()
+        ->assertRedirectToRoute('accounts.index')
         ->assertSessionHas('success', 'The account #'.$accounts[0]->id.' has been updated.');
 
     $accounts[0]->refresh();
@@ -89,7 +89,7 @@ it('admins can edit their accounts and others', function () {
     // can edit others accounts
     $this->actingAs($admin)
         ->patch(route('accounts.update', ['account' => $accounts[1]]), $accountNewData)
-        ->assertRedirectBack()
+        ->assertRedirectToRoute('accounts.index')
         ->assertSessionHas('success', 'The account #'.$accounts[1]->id.' has been updated.');
 
     $accounts[1]->refresh();
@@ -126,7 +126,7 @@ it('managers can edit their accounts and others', function () {
     // can edit their account
     $this->actingAs($manager)
         ->patch(route('accounts.update', ['account' => $accounts[0]]), $accountNewData)
-        ->assertRedirectBack()
+        ->assertRedirectToRoute('accounts.index')
         ->assertSessionHas('success', 'The account #'.$accounts[0]->id.' has been updated.');
 
     $accounts[0]->refresh();
@@ -140,7 +140,7 @@ it('managers can edit their accounts and others', function () {
     // can edit others accounts
     $this->actingAs($manager)
         ->patch(route('accounts.update', ['account' => $accounts[1]]), $accountNewData)
-        ->assertRedirectBack()
+        ->assertRedirectToRoute('accounts.index')
         ->assertSessionHas('success', 'The account #'.$accounts[1]->id.' has been updated.');
 
     $accounts[1]->refresh();
@@ -173,7 +173,7 @@ it('sales agents can edit their accounts', function () {
 
     $this->actingAs($salesAgent)
         ->patch(route('accounts.update', ['account' => $account]), $accountNewData)
-        ->assertRedirectBack()
+        ->assertRedirectToRoute('accounts.index')
         ->assertSessionHas('success', 'The account #'.$account->id.' has been updated.');
 
     $account->refresh();
