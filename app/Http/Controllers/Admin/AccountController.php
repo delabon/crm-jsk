@@ -7,9 +7,11 @@ namespace App\Http\Controllers\Admin;
 use App\Actions\Accounts\GetPaginatedAccountAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Accounts\IndexAccountRequest;
+use App\Http\Requests\Admin\Accounts\StoreAccountRequest;
 use App\Http\Resources\AccountResource;
 use App\Models\Account;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Inertia\Inertia;
@@ -29,14 +31,19 @@ final class AccountController extends Controller
         ]);
     }
 
-    public function create()
+    public function create(): InertiaResponse
     {
-        //
+        return Inertia::render('accounts/create');
     }
 
-    public function store(Request $request)
+    public function store(StoreAccountRequest $request): RedirectResponse
     {
-        //
+        $request->user()
+            ->accounts()
+            ->create($request->all()); // TODO: validate this, it is dangerous
+
+        return back()
+            ->with('success', 'The account has been created.');
     }
 
     public function show(Account $account)

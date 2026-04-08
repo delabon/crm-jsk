@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('industry');
             $table->string('website');
-            $table->string('phone');
+            $table->string('phone', 30);
             $table->timestamps();
         });
     }
