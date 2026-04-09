@@ -70,7 +70,9 @@ export default function Index({ collection, search }: Props) {
                                 <TableCell>{account.industry}</TableCell>
                                 <TableCell>{account.phone}</TableCell>
                                 <TableCell>{account.website}</TableCell>
-                                <TableCell>{account.owner}</TableCell>
+                                <TableCell>
+                                    {account.owner?.name ?? '—'}
+                                </TableCell>
                                 <TableCell>
                                     {account.formatted_created_at}
                                 </TableCell>

@@ -31,6 +31,14 @@ export type RoleOption = {
     label: string;
 };
 
+export type UserBrief = {
+    id: number;
+    first_name: string;
+    last_name: string;
+    name: string | null;
+    formatted_role: string | null;
+};
+
 export type Account = {
     id: number;
     name: string;
@@ -38,22 +46,6 @@ export type Account = {
     industry: string;
     website: string;
     phone: string;
-    owner: string;
-    formatted_created_at: string;
-};
-
-export type AccountOwner = {
-    name: string;
-    formatted_role: string | null;
-};
-
-export type AccountDetail = {
-    id: number;
-    name: string;
-    description?: string;
-    industry: string;
-    website: string;
-    phone: string;
-    owner_detail: AccountOwner;
+    owner?: UserBrief;
     formatted_created_at: string;
 };

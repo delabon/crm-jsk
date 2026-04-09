@@ -34,7 +34,7 @@ test('super admin can view any account show page', function () {
             $page->component('accounts/show')
                 ->where('account.id', $account->id)
                 ->where('account.name', $account->name)
-                ->has('account.owner_detail')
+                ->has('account.owner')
                 ->has('can')
                 ->where('can.update', true)
                 ->where('can.delete', true);
@@ -51,7 +51,7 @@ test('manager can view any account show page', function () {
         ->assertInertia(static function (AssertableInertia $page) use ($account) {
             $page->component('accounts/show')
                 ->where('account.id', $account->id)
-                ->has('account.owner_detail');
+                ->has('account.owner');
         });
 });
 
@@ -65,7 +65,7 @@ test('sales agent can view their own account show page', function () {
         ->assertInertia(static function (AssertableInertia $page) use ($account) {
             $page->component('accounts/show')
                 ->where('account.id', $account->id)
-                ->has('account.owner_detail')
+                ->has('account.owner')
                 ->where('can.update', true)
                 ->where('can.delete', false);
         });

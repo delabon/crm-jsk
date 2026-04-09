@@ -19,10 +19,10 @@ import { useInitials } from '@/hooks/use-initials';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import accountRoute from '@/routes/accounts';
-import type { AccountDetail, BreadcrumbItem } from '@/types';
+import type { Account, BreadcrumbItem } from '@/types';
 
 type Props = {
-    account: AccountDetail;
+    account: Account;
     can: {
         update: boolean;
         delete: boolean;
@@ -31,7 +31,7 @@ type Props = {
 
 export default function Show({ account, can }: Props) {
     const getInitials = useInitials();
-    const owner = account.owner_detail;
+    const owner = account.owner;
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Dashboard', href: dashboard() },
@@ -202,30 +202,32 @@ export default function Show({ account, can }: Props) {
                     </div>
 
                     <div className="space-y-6">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Owner</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="flex items-center gap-3">
-                                    <Avatar className="h-10 w-10">
-                                        <AvatarFallback className="bg-neutral-200 text-sm text-black dark:bg-neutral-700 dark:text-white">
-                                            {getInitials(owner.name ?? '')}
-                                        </AvatarFallback>
-                                    </Avatar>
-                                    <div>
-                                        <p className="text-sm font-medium">
-                                            {owner.name}
-                                        </p>
-                                        {owner.formatted_role && (
-                                            <p className="text-xs text-muted-foreground">
-                                                {owner.formatted_role}
+                        {owner && (
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Owner</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="flex items-center gap-3">
+                                        <Avatar className="h-10 w-10">
+                                            <AvatarFallback className="bg-neutral-200 text-sm text-black dark:bg-neutral-700 dark:text-white">
+                                                {getInitials(owner.name ?? '')}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <div>
+                                            <p className="text-sm font-medium">
+                                                {owner.name}
                                             </p>
-                                        )}
+                                            {owner.formatted_role && (
+                                                <p className="text-xs text-muted-foreground">
+                                                    {owner.formatted_role}
+                                                </p>
+                                            )}
+                                        </div>
                                     </div>
-                                </div>
-                            </CardContent>
-                        </Card>
+                                </CardContent>
+                            </Card>
+                        )}
                     </div>
                 </div>
             </div>
