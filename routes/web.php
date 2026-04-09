@@ -58,9 +58,10 @@ Route::middleware(['auth', 'verified'])
                 Route::get('/', 'index')
                     ->name('index');
                 Route::get('/create', 'create')
+                    ->middleware('can:accounts.create')
                     ->name('create');
                 Route::post('/', 'store')
-                    ->middleware('throttle:accounts-manage')
+                    ->middleware(['throttle:accounts-manage', 'can:accounts.create'])
                     ->name('store');
                 Route::get('/{account}', 'show')
                     ->middleware('can:view,account')
