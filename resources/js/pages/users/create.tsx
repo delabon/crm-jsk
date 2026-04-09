@@ -14,7 +14,7 @@ type Props = {
     roles: RoleOption[];
 };
 
-export default function UserForm({roles}: Props) {
+export default function Create({roles}: Props) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Dashboard',

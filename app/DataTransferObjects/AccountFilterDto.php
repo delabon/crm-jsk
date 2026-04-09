@@ -9,12 +9,10 @@ use Illuminate\Contracts\Support\Arrayable;
 /**
  * @implements Arrayable<string, string>
  */
-final readonly class UserFiltersDto implements Arrayable
+final readonly class AccountFilterDto implements Arrayable
 {
     public function __construct(
-        public ?string $search = null,
-        public ?string $verified = null,
-        public ?string $role = null
+        public ?string $search = null
     ) {}
 
     /**
@@ -24,8 +22,6 @@ final readonly class UserFiltersDto implements Arrayable
     {
         return [
             'search' => $this->search,
-            'verified' => $this->verified,
-            'role' => $this->role,
         ];
     }
 }

@@ -9,7 +9,7 @@ export type PaginatedCollection<T> = {
         last: string;
         prev: string | null;
         next: string | null;
-    },
+    };
     meta: {
         current_page: number;
         from: number;
@@ -23,10 +23,29 @@ export type PaginatedCollection<T> = {
             label: string;
             active: boolean;
         }[];
-    }
+    };
 };
 
 export type RoleOption = {
     value: string;
     label: string;
-}
+};
+
+export type UserBrief = {
+    id: number;
+    first_name: string;
+    last_name: string;
+    name: string | null;
+    formatted_role: string | null;
+};
+
+export type Account = {
+    id: number;
+    name: string;
+    description?: string;
+    industry: string;
+    website: string;
+    phone: string;
+    owner?: UserBrief;
+    formatted_created_at: string;
+};

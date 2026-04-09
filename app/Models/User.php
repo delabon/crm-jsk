@@ -11,6 +11,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
@@ -55,6 +56,23 @@ final class User extends Authenticatable implements MustVerifyEmail
         'password' => 'hashed',
     ];
 
+    /**
+     * @return HasMany<Account, $this>
+     */
+    public function accounts(): HasMany
+    {
+        return $this->hasMany(Account::class);
+    }
+
+    public function getNameAttribute(): ?string
+    {
+        if (! $this->first_name && ! $this->last_name) {
+            return null;
+        }
+
+        return ($this->first_name ?? '').' '.($this->last_name ?? '');
+    }
+
     public function getFormattedCreatedAtAttribute(): ?string
     {
         return $this->created_at?->format(self::DATE_FORMAT);
@@ -97,6 +115,16 @@ final class User extends Authenticatable implements MustVerifyEmail
     public function isSuperAdmin(): bool
     {
         return $this->main_role === Role::SuperAdmin;
+    }
+
+    public function isManager(): bool
+    {
+        return $this->main_role === Role::Manager;
+    }
+
+    public function isSalesAgent(): bool
+    {
+        return $this->main_role === Role::SalesAgent;
     }
 
     /**

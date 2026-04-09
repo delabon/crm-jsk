@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Actions\Users;
 
-use App\DataTransferObjects\UserFiltersDto;
+use App\DataTransferObjects\UserFilterDto;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 
 final class GetPaginatedUsersAction
 {
     /**
      * @return LengthAwarePaginator<int, User>
      */
-    public function handle(int $perPage, UserFiltersDto $dto): LengthAwarePaginator
+    public function handle(int $perPage, UserFilterDto $dto): LengthAwarePaginator
     {
         return User::search($dto->search ?? '')
             ->query(static function (Builder $query) use ($dto) {

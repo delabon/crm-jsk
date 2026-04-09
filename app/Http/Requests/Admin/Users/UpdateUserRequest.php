@@ -2,18 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\Admin;
+namespace App\Http\Requests\Admin\Users;
 
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
-use App\DataTransferObjects\StoreUserDto;
+use App\DataTransferObjects\UpdateUserDto;
 use App\Enums\Role;
 use App\Models\User;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-final class StoreUserRequest extends FormRequest
+final class UpdateUserRequest extends FormRequest
 {
     use PasswordValidationRules,
         ProfileValidationRules;
@@ -43,18 +42,16 @@ final class StoreUserRequest extends FormRequest
                 'string',
                 Rule::enum(Role::class),
             ],
-            'password' => $this->passwordRules(),
         ];
     }
 
-    public function toDto(): StoreUserDto
+    public function toDto(): UpdateUserDto
     {
-        return new StoreUserDto(
+        return new UpdateUserDto(
             firstName: $this->string('first_name')->value(),
             lastName: $this->string('last_name')->value(),
             email: $this->string('email')->value(),
-            password: $this->string('password')->value(),
-            role: $this->enum('role', Role::class),
+            role: $this->enum('role', Role::class)
         );
     }
 }

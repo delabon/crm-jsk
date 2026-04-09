@@ -125,4 +125,7 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'dashboard' => [
+        'per_page' => env('APP_DASHBOARD_PER_PAGE', 15),
+    ],
 ];

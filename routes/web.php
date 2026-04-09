@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
+use App\Models\Account;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -38,14 +40,47 @@ Route::middleware(['auth', 'verified'])
                     ->middleware('throttle:users-manage')
                     ->name('store');
                 Route::delete('/{user}', 'destroy')
-                    ->middleware(['throttle:users-manage', 'can:delete,user'])
+                    ->middleware('throttle:users-manage')
+                    ->can('delete', 'user')
                     ->name('destroy');
                 Route::get('/{user}', 'edit')
-                    ->middleware('can:update,user')
+                    ->can('update', 'user')
                     ->name('edit');
                 Route::patch('/{user}', 'update')
-                    ->middleware(['throttle:users-manage', 'can:update,user'])
+                    ->middleware('throttle:users-manage')
+                    ->can('update', 'user')
                     ->name('update');
+            });
+
+        // --- Accounts ---
+        Route::prefix('accounts')
+            ->name('accounts.')
+            ->controller(AccountController::class)
+            ->group(function () {
+                Route::get('/', 'index')
+                    ->can('view-any', [Account::class])
+                    ->name('index');
+                Route::get('/create', 'create')
+                    ->can('create', [Account::class])
+                    ->name('create');
+                Route::post('/', 'store')
+                    ->middleware(['throttle:accounts-manage'])
+                    ->can('create', [Account::class])
+                    ->name('store');
+                Route::get('/{account}', 'show')
+                    ->can('view', 'account')
+                    ->name('show');
+                Route::get('/{account}/edit', 'edit')
+                    ->can('update', 'account')
+                    ->name('edit');
+                Route::patch('/{account}', 'update')
+                    ->middleware('throttle:accounts-manage')
+                    ->can('update', 'account')
+                    ->name('update');
+                Route::delete('/{account}', 'destroy')
+                    ->middleware('throttle:accounts-manage')
+                    ->can('delete', 'account')
+                    ->name('destroy');
             });
     });
 
