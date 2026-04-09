@@ -12,7 +12,7 @@ it('redirects to login page when not authenticated', function () {
         ->assertRedirectToRoute('login');
 });
 
-it("it returns a forbidden response when user doesn't have required permissions", function () {
+it("returns a forbidden response when user doesn't have required permissions", function () {
     $user = User::factory()
         ->create();
 
