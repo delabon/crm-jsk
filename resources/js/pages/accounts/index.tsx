@@ -55,7 +55,7 @@ export default function Index({ collection, search }: Props) {
                     </TableHeader>
                     <TableBody>
                         {collection.data.map((account: Account) => (
-                            <TableRow key={`users-${account.id}`}>
+                            <TableRow key={`accounts-${account.id}`}>
                                 <TableCell className="font-medium">
                                     {account.id}
                                 </TableCell>
