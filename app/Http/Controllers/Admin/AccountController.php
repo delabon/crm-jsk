@@ -26,7 +26,10 @@ final class AccountController extends Controller
     {
         /** @var User $user */
         $user = $request->user();
-        $accounts = $action->handle(Config::integer('app.dashboard.per_page'), $user, $request->toDto());
+        $dto = $request->toDto();
+
+        $accounts = $action->handle(Config::integer('app.dashboard.per_page'), $user, $dto)
+            ->appends($dto->toArray());
 
         return Inertia::render('accounts/index', [
             'collection' => AccountResource::collection($accounts),
