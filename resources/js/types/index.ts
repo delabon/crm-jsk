@@ -9,7 +9,7 @@ export type PaginatedCollection<T> = {
         last: string;
         prev: string | null;
         next: string | null;
-    },
+    };
     meta: {
         current_page: number;
         from: number;
@@ -23,13 +23,13 @@ export type PaginatedCollection<T> = {
             label: string;
             active: boolean;
         }[];
-    }
+    };
 };
 
 export type RoleOption = {
     value: string;
     label: string;
-}
+};
 
 export type Account = {
     id: number;
@@ -39,5 +39,21 @@ export type Account = {
     website: string;
     phone: string;
     owner: string;
+    formatted_created_at: string;
+};
+
+export type AccountOwner = {
+    name: string;
+    formatted_role: string | null;
+};
+
+export type AccountDetail = {
+    id: number;
+    name: string;
+    description?: string;
+    industry: string;
+    website: string;
+    phone: string;
+    owner_detail: AccountOwner;
     formatted_created_at: string;
 };

@@ -62,15 +62,18 @@ Route::middleware(['auth', 'verified'])
                 Route::post('/', 'store')
                     ->middleware('throttle:accounts-manage')
                     ->name('store');
-                Route::delete('/{account}', 'destroy')
-                    ->middleware(['throttle:accounts-manage', 'can:delete,account'])
-                    ->name('destroy');
-                Route::get('/{account}', 'edit')
+                Route::get('/{account}', 'show')
+                    ->middleware('can:view,account')
+                    ->name('show');
+                Route::get('/{account}/edit', 'edit')
                     ->middleware('can:update,account')
                     ->name('edit');
                 Route::patch('/{account}', 'update')
                     ->middleware(['throttle:accounts-manage', 'can:update,account'])
                     ->name('update');
+                Route::delete('/{account}', 'destroy')
+                    ->middleware(['throttle:accounts-manage', 'can:delete,account'])
+                    ->name('destroy');
             });
     });
 

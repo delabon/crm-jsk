@@ -9,11 +9,16 @@ use App\Models\User;
 
 final class AccountPolicy
 {
-    public function update(User $user, Account $account): bool
+    public function view(User $user, Account $account): bool
     {
         return $user->isSuperAdmin()
             || $user->isManager()
             || ($user->isSalesAgent() && $user->id === $account->user_id);
+    }
+
+    public function update(User $user, Account $account): bool
+    {
+        return $this->view($user, $account);
     }
 
     public function delete(User $user, Account $account): bool

@@ -6,9 +6,10 @@ type Props = {
     action: string;
     method: "get" | "post" | "put" | "patch" | "delete" | undefined;
     message?: string;
+    size?: "default" | "sm" | "lg" | "icon" | undefined;
 }
 
-export default function DeleteButton ({action, method, message}: Props) {
+export default function DeleteButton ({action, method, message, size}: Props) {
     return <Form
         action={action}
         method={method}
@@ -18,6 +19,7 @@ export default function DeleteButton ({action, method, message}: Props) {
             <Button
                 variant="destructive"
                 type="submit"
+                size={size}
                 disabled={processing}
             >
                 {processing && <Spinner data-icon="inline-start" />}

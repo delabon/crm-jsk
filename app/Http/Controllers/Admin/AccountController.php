@@ -15,6 +15,7 @@ use App\Http\Resources\AccountResource;
 use App\Models\Account;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
@@ -46,8 +47,26 @@ final class AccountController extends Controller
             ->with('success', 'The account has been created.');
     }
 
+    public function show(Request $request, Account $account): InertiaResponse
+    {
+        $account->load('user');
+
+        /** @var User $user */
+        $user = $request->user();
+
+        return Inertia::render('accounts/show', [
+            'account' => new AccountResource($account),
+            'can' => [
+                'update' => $user->can('update', $account),
+                'delete' => $user->can('delete', $account),
+            ],
+        ]);
+    }
+
     public function edit(Account $account): InertiaResponse
     {
+        $account->load('user');
+
         return Inertia::render('accounts/edit', [
             'account' => new AccountResource($account),
         ]);

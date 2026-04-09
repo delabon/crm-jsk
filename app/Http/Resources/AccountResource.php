@@ -28,6 +28,13 @@ final class AccountResource extends JsonResource
             'website' => $this->resource->website,
             'phone' => $this->resource->phone,
             'owner' => $this->resource->user->name,
+            'owner_detail' => $this->when(
+                $this->resource->relationLoaded('user'),
+                fn (): array => [
+                    'name' => $this->resource->user->name,
+                    'formatted_role' => $this->resource->user->formatted_role,
+                ],
+            ),
             'formatted_created_at' => $this->resource->formatted_created_at,
         ];
     }
