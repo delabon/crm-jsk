@@ -2,9 +2,6 @@
 
 declare(strict_types=1);
 
-// Test: fails with invalid data
-// Test: edit accounts is rate limited
-
 use App\Enums\Role;
 use App\Models\Account;
 use App\Models\User;

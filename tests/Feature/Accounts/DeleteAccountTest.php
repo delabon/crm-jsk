@@ -1,8 +1,5 @@
 <?php
 
-// Test: sales agents cannot delete any account
-// Test: delete accounts is rate limited
-
 use App\Enums\Role;
 use App\Models\Account;
 use App\Models\User;
