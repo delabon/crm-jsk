@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
+use App\Models\Account;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -51,29 +52,32 @@ Route::middleware(['auth', 'verified'])
 
         // --- Accounts ---
         Route::prefix('accounts')
-            ->middleware('can:accounts.view-own')
             ->name('accounts.')
             ->controller(AccountController::class)
             ->group(function () {
                 Route::get('/', 'index')
+                    ->can('view-any', [Account::class])
                     ->name('index');
                 Route::get('/create', 'create')
-                    ->middleware('can:accounts.create')
+                    ->can('create', [Account::class])
                     ->name('create');
                 Route::post('/', 'store')
-                    ->middleware(['throttle:accounts-manage', 'can:accounts.create'])
+                    ->middleware(['throttle:accounts-manage'])
+                    ->can('create', [Account::class])
                     ->name('store');
                 Route::get('/{account}', 'show')
-                    ->middleware('can:view,account')
+                    ->can('view', 'account')
                     ->name('show');
                 Route::get('/{account}/edit', 'edit')
-                    ->middleware('can:update,account')
+                    ->can('update', 'account')
                     ->name('edit');
                 Route::patch('/{account}', 'update')
-                    ->middleware(['throttle:accounts-manage', 'can:update,account'])
+                    ->middleware('throttle:accounts-manage')
+                    ->can('update', 'account')
                     ->name('update');
                 Route::delete('/{account}', 'destroy')
-                    ->middleware(['throttle:accounts-manage', 'can:delete,account'])
+                    ->middleware('throttle:accounts-manage')
+                    ->can('delete', 'account')
                     ->name('destroy');
             });
     });

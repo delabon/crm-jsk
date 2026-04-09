@@ -9,11 +9,21 @@ use App\Models\User;
 
 final class AccountPolicy
 {
+    public function viewAny(User $user): bool
+    {
+        return $user->can('accounts.view-any')
+            || $user->can('accounts.view-own');
+    }
+
     public function view(User $user, Account $account): bool
     {
-        return $user->isSuperAdmin()
-            || $user->isManager()
-            || ($user->isSalesAgent() && $user->id === $account->user_id);
+        return $user->can('accounts.view-any')
+            || ($user->can('accounts.view-own') && $user->id === $account->user_id);
+    }
+
+    public function create(User $user): bool
+    {
+        return $user->can('accounts.create');
     }
 
     public function update(User $user, Account $account): bool
@@ -23,6 +33,6 @@ final class AccountPolicy
 
     public function delete(User $user, Account $account): bool
     {
-        return $user->isSuperAdmin() || $user->isManager();
+        return $user->can('accounts.delete');
     }
 }

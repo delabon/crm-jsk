@@ -55,7 +55,7 @@ test('an admin can create an account', function () {
 
     $this->actingAs($admin)
         ->fromRoute('accounts.create')
-        ->post(route('accounts.store', $newAccountData))
+        ->post(route('accounts.store'), $newAccountData)
         ->assertRedirectToRoute('accounts.index')
         ->assertSessionHas('success', 'The account has been created.');
 
@@ -85,7 +85,7 @@ test('a manager can create an account', function () {
 
     $this->actingAs($manager)
         ->fromRoute('accounts.create')
-        ->post(route('accounts.store', $newAccountData))
+        ->post(route('accounts.store'), $newAccountData)
         ->assertRedirectToRoute('accounts.index')
         ->assertSessionHas('success', 'The account has been created.');
 
@@ -114,7 +114,7 @@ test('a sales agent can create an account', function () {
 
     $this->actingAs($salesAgent)
         ->fromRoute('accounts.create')
-        ->post(route('accounts.store', $newAccountData))
+        ->post(route('accounts.store'), $newAccountData)
         ->assertRedirectToRoute('accounts.index')
         ->assertSessionHas('success', 'The account has been created.');
 
@@ -222,12 +222,12 @@ test('create accounts is rate limited', function () {
 
     $this->actingAs($admin)
         ->fromRoute('accounts.create')
-        ->post(route('accounts.store', [
+        ->post(route('accounts.store'), [
             'name' => 'AcmE CorP',
             'industry' => 'Finance',
             'website' => 'https://acme.test',
             'phone' => '123-1245-123',
-        ]))
+        ])
         ->assertTooManyRequests();
 
     $this->assertDatabaseCount('accounts', 0);

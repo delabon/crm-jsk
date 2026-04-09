@@ -120,23 +120,41 @@ test('sales agents can search only their accounts', function () {
 test('super admins and managers can search all accounts', function () {
     $searchTerm = 'noquerylike';
     $accounts = Account::factory(3)->create();
-    $salesAgent = User::factory()
+    $admin = User::factory()
         ->create()
-        ->syncRoles([Role::SalesAgent->value]);
+        ->syncRoles([Role::SuperAdmin->value]);
+    $manager = User::factory()
+        ->create()
+        ->syncRoles([Role::Manager->value]);
     $accounts[0]->update([
         'name' => $searchTerm,
     ]);
+    $accounts[0]->update([
+        'name' => $searchTerm,
+        'user_id' => $admin->id,
+    ]);
     $accounts[1]->update([
         'name' => $searchTerm,
-        'user_id' => $salesAgent->id,
+        'user_id' => $manager->id,
     ]);
 
-    $this->actingAs($salesAgent)
+    $this->actingAs($admin)
         ->get(route('accounts.index', ['search' => $searchTerm]))
         ->assertOk()
         ->assertInertia(static function (AssertableInertia $page) use ($accounts) {
             $page->component('accounts/index')
-                ->has('collection.data', 1)
-                ->where('collection.data.0.id', $accounts[1]->id);
+                ->has('collection.data', 2)
+                ->where('collection.data.0.id', $accounts[1]->id)
+                ->where('collection.data.1.id', $accounts[0]->id);
+        });
+
+    $this->actingAs($manager)
+        ->get(route('accounts.index', ['search' => $searchTerm]))
+        ->assertOk()
+        ->assertInertia(static function (AssertableInertia $page) use ($accounts) {
+            $page->component('accounts/index')
+                ->has('collection.data', 2)
+                ->where('collection.data.0.id', $accounts[1]->id)
+                ->where('collection.data.1.id', $accounts[0]->id);
         });
 });
