@@ -40,13 +40,15 @@ Route::middleware(['auth', 'verified'])
                     ->middleware('throttle:users-manage')
                     ->name('store');
                 Route::delete('/{user}', 'destroy')
-                    ->middleware(['throttle:users-manage', 'can:delete,user'])
+                    ->middleware('throttle:users-manage')
+                    ->can('delete', 'user')
                     ->name('destroy');
                 Route::get('/{user}', 'edit')
-                    ->middleware('can:update,user')
+                    ->can('update', 'user')
                     ->name('edit');
                 Route::patch('/{user}', 'update')
-                    ->middleware(['throttle:users-manage', 'can:update,user'])
+                    ->middleware('throttle:users-manage')
+                    ->can('update', 'user')
                     ->name('update');
             });
 
