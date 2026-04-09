@@ -21,9 +21,9 @@ final class GetPaginatedAccountAction
             ->query(static function (Builder $query) use ($user) {
                 $query->with('user')
                     ->when(
-                    ! $user->isSuperAdmin() && ! $user->isManager(),
-                    static fn (Builder $sq) => $sq->where('accounts.user_id', $user->id)
-                );
+                        ! $user->isSuperAdmin() && ! $user->isManager(),
+                        static fn (Builder $sq) => $sq->where('accounts.user_id', $user->id)
+                    );
             })
             ->paginate($perPage);
     }
