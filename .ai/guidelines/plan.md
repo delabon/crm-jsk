@@ -105,7 +105,7 @@ A "lead" is a contact with `status = 'lead'`. No separate leads table needed —
 ### FK layout
 ```
 accounts: id, user_id, name, industry, website, phone
-contacts: id, user_id, account_id (nullable), name, email, phone, status
+contacts: id, user_id, account_id (nullable), first_name, last_name, email (nullable), phone, status
 profiles: id, contact_id, country_id, linkedin, avatar, job_title, bio
 
 addresses: id, addressable_id, addressable_type, name, line1, line2,
@@ -116,7 +116,7 @@ addresses: id, addressable_id, addressable_type, name, line1, line2,
 ### Tasks
 - [ ] `countries` migration (`id`, `name`, `code`)
 - [ ] `accounts` migration (`id`, `user_id`, `name`, `industry`, `website`, `phone`)
-- [ ] `contacts` migration (`id`, `user_id`, `account_id` nullable, `name`, `email`, `phone`, `status`)
+- [ ] `contacts` migration (`id`, `user_id`, `account_id` nullable, `first_name`, `last_name`, `email` nullable, `phone`, `status`)
 - [ ] `profiles` migration (`id`, `contact_id`, `country_id`, `linkedin`, `avatar`, `job_title`, `bio`)
 - [ ] `addresses` migration with `morphs('addressable')`, `name`, `line1`, `line2`, `city`, `state`, `postal_code`, `country_id`
 - [ ] `User` model: `hasMany(Account)`, `hasMany(Contact)`
@@ -415,7 +415,7 @@ users           id, name, email, password, manager_id (self-join)
   ↳ roles       via Spatie model_has_roles pivot
 
 accounts        id, user_id, name, industry, website, phone
-contacts        id, user_id, account_id (nullable), name, email, phone, status
+contacts        id, user_id, account_id (nullable), first_name, last_name, email (nullable), phone, status
 profiles        id, contact_id, country_id, linkedin, avatar, job_title, bio
 countries       id, name, code
 addresses       id, name, line1, line2, city, state, postal_code, country_id,
