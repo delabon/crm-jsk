@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Dashboard;
 
+use App\Models\Account;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +24,7 @@ final class GetDashboardMetricsAction
     {
         return [
             'users' => $this->userMetrics($user),
-            // 'contacts' => $this->contactMetrics($user),
+            'accounts' => $this->accountMetrics($user),
         ];
     }
 
@@ -54,6 +55,19 @@ final class GetDashboardMetricsAction
                 return $usersByRoleCount->map(static fn ($item) => (string) Number::forHumans($item))
                     ->all();
             }
+        );
+    }
+
+    private function accountMetrics(User $user): array
+    {
+        return Cache::remember(
+            'account_metrics_' . $user->id,
+            now()->addDays(self::CACHE_DAYS),
+            static fn (): array => [
+                'all' => $user->isSuperAdmin() || $user->isManager()
+                    ? Account::query()->count()
+                    : $user->accounts()->count()
+            ]
         );
     }
 }

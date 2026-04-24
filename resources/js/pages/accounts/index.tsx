@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import {Head, Link, usePage} from '@inertiajs/react';
 import { CollectionPagination } from '@/components/collection-pagination';
 import DeleteButton from '@/components/delete-button';
 import ListSearch from '@/components/list-search';
@@ -15,6 +15,7 @@ import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import accountRoute from '@/routes/accounts';
 import type { BreadcrumbItem, PaginatedCollection, Account } from '@/types';
+import type { User } from '@/types/auth';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -33,7 +34,9 @@ type Props = {
 };
 
 export default function Index({ collection, search }: Props) {
-    const renderItems = () => {
+    const {user} = usePage().props.auth;
+
+    const renderItems = (user: User) => {
         if (collection.data.length === 0) {
             return <div>Nothing here, come back later!</div>;
         }
@@ -89,11 +92,13 @@ export default function Index({ collection, search }: Props) {
                                                 Edit
                                             </Link>
                                         </Button>
-                                        <DeleteButton
-                                            {...accountRoute.destroy.form(
-                                                account.id,
-                                            )}
-                                        />
+                                        {user.permission_names?.includes('accounts.delete') &&
+                                            <DeleteButton
+                                                {...accountRoute.destroy.form(
+                                                    account.id,
+                                                )}
+                                            />
+                                        }
                                     </div>
                                 </TableCell>
                             </TableRow>
@@ -124,7 +129,7 @@ export default function Index({ collection, search }: Props) {
                     </div>
                 </div>
 
-                {renderItems()}
+                {renderItems(user)}
             </div>
         </AppLayout>
     );
