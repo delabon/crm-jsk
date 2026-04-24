@@ -47,7 +47,7 @@ final class GetDashboardMetricsAction
     {
         $stats = [
             'my_accounts' => Cache::remember(
-                'dashboard:my_accounts:' . $user->id,
+                'dashboard:my_accounts:'.$user->id,
                 now()->addDays(self::CACHE_DAYS),
                 static fn (): int => $user->accounts()->count(),
             ),
