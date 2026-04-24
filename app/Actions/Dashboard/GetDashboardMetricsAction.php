@@ -4,70 +4,120 @@ declare(strict_types=1);
 
 namespace App\Actions\Dashboard;
 
+use App\Enums\Role;
+use App\Http\Resources\AccountResource;
 use App\Models\Account;
 use App\Models\User;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Number;
 use Throwable;
 
 final class GetDashboardMetricsAction
 {
-    private const int CACHE_DAYS = 15;
+    private const int CACHE_MINUTES = 30;
 
     /**
-     * @return array<string, array<string, string>>
+     * @return array<string, mixed>
      *
      * @throws Throwable
      */
     public function handle(User $user): array
     {
-        return [
-            'users' => $this->userMetrics($user),
-            'accounts' => $this->accountMetrics($user),
+        $metrics = [
+            'stats' => $this->buildStats($user),
+            'recent_accounts' => $this->recentAccounts($user),
         ];
+
+        $roleDistribution = $this->roleDistribution($user);
+        if ($roleDistribution !== null) {
+            $metrics['role_distribution'] = $roleDistribution;
+        }
+
+        return $metrics;
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string, int>
      *
      * @throws Throwable
      */
-    private function userMetrics(User $user): array
+    private function buildStats(User $user): array
+    {
+        $stats = [
+            'my_accounts' => $user->accounts()->count(),
+        ];
+
+        if ($user->isSuperAdmin() || $user->isManager()) {
+            $stats['total_accounts'] = Account::query()->count();
+        }
+
+        if ($user->isSuperAdmin()) {
+            $stats['total_users'] = Cache::remember(
+                'dashboard:total_users',
+                now()->addMinutes(self::CACHE_MINUTES),
+                static fn (): int => User::query()->count(),
+            );
+        }
+
+        $stats['accounts_this_month'] = Cache::remember(
+            "dashboard:accounts_this_month:{$user->id}",
+            now()->addMinutes(self::CACHE_MINUTES),
+            static fn (): int => $user->isSuperAdmin() || $user->isManager()
+                ? Account::query()
+                    ->where('created_at', '>=', now()->startOfMonth())
+                    ->count()
+                : $user->accounts()
+                    ->where('created_at', '>=', now()->startOfMonth())
+                    ->count(),
+        );
+
+        return $stats;
+    }
+
+    /**
+     * @throws Throwable
+     */
+    private function recentAccounts(User $user): AnonymousResourceCollection
+    {
+        $query = $user->isSuperAdmin() || $user->isManager()
+            ? Account::query()
+            : $user->accounts();
+
+        $accounts = $query
+            ->with('user')
+            ->latest()
+            ->limit(5)
+            ->get();
+
+        return AccountResource::collection($accounts);
+    }
+
+    /**
+     * @return array<int, array{role: string, count: int}>|null
+     */
+    private function roleDistribution(User $user): ?array
     {
         if (! $user->isSuperAdmin()) {
-            return [];
+            return null;
         }
 
         return Cache::remember(
-            'users_metrics',
-            now()->addDays(self::CACHE_DAYS),
-            static function () {
-                $usersByRoleCount = DB::table('model_has_roles')
-                    ->select('name', DB::raw('COUNT(*) as count'))
+            'dashboard:role_distribution',
+            now()->addMinutes(self::CACHE_MINUTES),
+            static function (): array {
+                $rows = DB::table('model_has_roles')
+                    ->select('roles.name as role', DB::raw('COUNT(*) as count'))
                     ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
                     ->where('model_type', User::class)
                     ->groupBy('roles.name')
-                    ->pluck('count', 'name');
+                    ->get();
 
-                $usersByRoleCount['all'] = $usersByRoleCount->sum();
-
-                return $usersByRoleCount->map(static fn ($item) => (string) Number::forHumans($item))
-                    ->all();
-            }
-        );
-    }
-
-    private function accountMetrics(User $user): array
-    {
-        return Cache::remember(
-            'account_metrics_' . $user->id,
-            now()->addDays(self::CACHE_DAYS),
-            static fn (): array => [
-                'all' => $user->isSuperAdmin() || $user->isManager()
-                    ? Account::query()->count()
-                    : $user->accounts()->count()
-            ]
+                return $rows->map(static fn (object $row): array => [
+                    'role' => Role::from($row->role)->label(),
+                    'count' => (int) $row->count,
+                ])->all();
+            },
         );
     }
 }
