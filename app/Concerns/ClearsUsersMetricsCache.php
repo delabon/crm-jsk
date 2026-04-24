@@ -10,6 +10,7 @@ trait ClearsUsersMetricsCache
 {
     public function clearUsersMetricsCache(): void
     {
-        Cache::forget('users_metrics');
+        Cache::forget('dashboard:total_users');
+        Cache::forget('dashboard:role_distribution');
     }
 }

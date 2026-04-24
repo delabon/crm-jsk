@@ -10,9 +10,12 @@ import {
     CalendarDays,
     Globe,
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React from "react";
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import {
     Table,
     TableBody,
@@ -21,15 +24,12 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Separator } from '@/components/ui/separator';
 import { useInitials } from '@/hooks/use-initials';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import accounts from '@/routes/accounts';
 import users from '@/routes/users';
 import type { Account, BreadcrumbItem } from '@/types';
-import type { User } from '@/types/auth';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -70,8 +70,15 @@ type Props = {
 
 function getGreeting(): string {
     const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 17) return 'Good afternoon';
+
+    if (hour < 12) {
+        return 'Good morning';
+    }
+
+    if (hour < 17) {
+        return 'Good afternoon';
+    }
+
     return 'Good evening';
 }
 
@@ -84,10 +91,7 @@ function formatDate(): string {
     });
 }
 
-function getStatCards(
-    stats: Props['metrics']['stats'],
-    user: User,
-): StatCardConfig[] {
+function getStatCards(stats: Props['metrics']['stats']): StatCardConfig[] {
     const cards: StatCardConfig[] = [
         {
             key: 'my_accounts',
@@ -102,7 +106,7 @@ function getStatCards(
             key: 'accounts_this_month',
             label: 'New This Month',
             value: stats.accounts_this_month,
-            description: 'Accounts created since 1st',
+            description: 'Accounts created this month',
             icon: TrendingUp,
             color: 'text-emerald-600 dark:text-emerald-400',
             bgColor: 'bg-emerald-50 dark:bg-emerald-950/50',
@@ -150,7 +154,10 @@ function getRoleBadgeVariant(
 }
 
 function formatRoleLabel(role: string | null): string {
-    if (!role) return '';
+    if (!role) {
+        return '';
+    }
+
     return role.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
@@ -165,7 +172,7 @@ export default function Dashboard({ metrics }: Props) {
     const { user } = usePage().props.auth;
     const getInitials = useInitials();
     const { stats, recent_accounts, role_distribution } = metrics;
-    const statCards = getStatCards(stats, user);
+    const statCards = getStatCards(stats);
     const permissions = user.permission_names ?? [];
 
     return (
@@ -323,20 +330,11 @@ export default function Dashboard({ metrics }: Props) {
                                                                 <div className="flex items-center gap-2">
                                                                     <Avatar className="h-6 w-6">
                                                                         <AvatarFallback className="bg-neutral-200 text-[10px] text-black dark:bg-neutral-700 dark:text-white">
-                                                                            {getInitials(
-                                                                                account
-                                                                                    .owner
-                                                                                    .name ??
-                                                                                    '',
-                                                                            )}
+                                                                            {getInitials(account.owner.name ?? '')}
                                                                         </AvatarFallback>
                                                                     </Avatar>
                                                                     <span className="text-sm">
-                                                                        {
-                                                                            account
-                                                                                .owner
-                                                                                .name
-                                                                        }
+                                                                        {account.owner.name}
                                                                     </span>
                                                                 </div>
                                                             ) : (

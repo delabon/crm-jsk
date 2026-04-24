@@ -127,6 +127,17 @@ final class User extends Authenticatable implements MustVerifyEmail
         return $this->main_role === Role::SalesAgent;
     }
 
+
+    public function canViewAnyAccount(): bool
+    {
+        return $this->can('accounts.view-any');
+    }
+
+    public function canManageUsers(): bool
+    {
+        return $this->can('users.manage');
+    }
+
     /**
      * @return array<string, string>
      */

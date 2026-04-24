@@ -15,7 +15,7 @@ use Throwable;
 
 final class GetDashboardMetricsAction
 {
-    private const int CACHE_MINUTES = 30;
+    private const int CACHE_DAYS = 15;
 
     /**
      * @return array<string, mixed>
@@ -30,6 +30,7 @@ final class GetDashboardMetricsAction
         ];
 
         $roleDistribution = $this->roleDistribution($user);
+
         if ($roleDistribution !== null) {
             $metrics['role_distribution'] = $roleDistribution;
         }
@@ -45,25 +46,33 @@ final class GetDashboardMetricsAction
     private function buildStats(User $user): array
     {
         $stats = [
-            'my_accounts' => $user->accounts()->count(),
+            'my_accounts' => Cache::remember(
+                'dashboard:my_accounts:' . $user->id,
+                now()->addDays(self::CACHE_DAYS),
+                static fn (): int => $user->accounts()->count(),
+            ),
         ];
 
-        if ($user->isSuperAdmin() || $user->isManager()) {
-            $stats['total_accounts'] = Account::query()->count();
+        if ($user->canViewAnyAccount()) {
+            $stats['total_accounts'] = Cache::remember(
+                'dashboard:total_accounts',
+                now()->addDays(self::CACHE_DAYS),
+                static fn (): int => Account::query()->count(),
+            );
         }
 
-        if ($user->isSuperAdmin()) {
+        if ($user->canManageUsers()) {
             $stats['total_users'] = Cache::remember(
                 'dashboard:total_users',
-                now()->addMinutes(self::CACHE_MINUTES),
+                now()->addDays(self::CACHE_DAYS),
                 static fn (): int => User::query()->count(),
             );
         }
 
         $stats['accounts_this_month'] = Cache::remember(
             "dashboard:accounts_this_month:{$user->id}",
-            now()->addMinutes(self::CACHE_MINUTES),
-            static fn (): int => $user->isSuperAdmin() || $user->isManager()
+            now()->addDays(self::CACHE_DAYS),
+            static fn (): int => $user->canViewAnyAccount()
                 ? Account::query()
                     ->where('created_at', '>=', now()->startOfMonth())
                     ->count()
@@ -80,12 +89,11 @@ final class GetDashboardMetricsAction
      */
     private function recentAccounts(User $user): AnonymousResourceCollection
     {
-        $query = $user->isSuperAdmin() || $user->isManager()
+        $query = $user->canViewAnyAccount()
             ? Account::query()
             : $user->accounts();
 
-        $accounts = $query
-            ->with('user')
+        $accounts = $query->with('user')
             ->latest()
             ->limit(5)
             ->get();
@@ -98,13 +106,13 @@ final class GetDashboardMetricsAction
      */
     private function roleDistribution(User $user): ?array
     {
-        if (! $user->isSuperAdmin()) {
+        if (! $user->canManageUsers()) {
             return null;
         }
 
         return Cache::remember(
             'dashboard:role_distribution',
-            now()->addMinutes(self::CACHE_MINUTES),
+            now()->addDays(self::CACHE_DAYS),
             static function (): array {
                 $rows = DB::table('model_has_roles')
                     ->select('roles.name as role', DB::raw('COUNT(*) as count'))
