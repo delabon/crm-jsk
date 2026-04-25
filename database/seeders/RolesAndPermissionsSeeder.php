@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Enums\Role as RoleEnum;
+use App\Enums\UserRole as RoleEnum;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;

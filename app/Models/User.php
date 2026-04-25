@@ -6,7 +6,7 @@ namespace App\Models;
 
 use App\Concerns\FormatsDate;
 use App\Concerns\Scopes\UserScopes;
-use App\Enums\Role;
+use App\Enums\UserRole;
 use App\Observers\UserObserver;
 use Carbon\CarbonImmutable;
 use Database\Factories\UserFactory;
@@ -110,27 +110,27 @@ final class User extends Authenticatable implements MustVerifyEmail
         return $this->getPermissionsViaRoles()->pluck('name');
     }
 
-    public function getMainRoleAttribute(): ?Role
+    public function getMainRoleAttribute(): ?UserRole
     {
         /** @var \Spatie\Permission\Models\Role|null $role */
         $role = $this->roles->first();
 
-        return Role::tryFrom($role?->name);
+        return UserRole::tryFrom($role?->name);
     }
 
     public function isSuperAdmin(): bool
     {
-        return $this->main_role === Role::SuperAdmin;
+        return $this->main_role === UserRole::SuperAdmin;
     }
 
     public function isManager(): bool
     {
-        return $this->main_role === Role::Manager;
+        return $this->main_role === UserRole::Manager;
     }
 
     public function isSalesAgent(): bool
     {
-        return $this->main_role === Role::SalesAgent;
+        return $this->main_role === UserRole::SalesAgent;
     }
 
     public function canViewAnyAccount(): bool

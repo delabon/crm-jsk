@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\Role;
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Testing\AssertableInertia;
@@ -18,7 +18,7 @@ test('non logged in users will be redirected to login page', function () {
 
 test('super admins can visit the create user page', function () {
     $admin = User::factory()->create()
-        ->syncRoles([Role::SuperAdmin->value]);
+        ->syncRoles([UserRole::SuperAdmin->value]);
 
     $this->actingAs($admin);
 
@@ -39,7 +39,7 @@ test('non super admins cannot visit the create user page', function () {
 
 test('super admins can create a verified user', function () {
     $admin = User::factory()->create()
-        ->syncRoles([Role::SuperAdmin->value]);
+        ->syncRoles([UserRole::SuperAdmin->value]);
 
     $this->actingAs($admin);
 
@@ -49,7 +49,7 @@ test('super admins can create a verified user', function () {
         'email' => 'john.doe@test.com',
         'password' => '12345678',
         'password_confirmation' => '12345678',
-        'role' => Role::User->value,
+        'role' => UserRole::User->value,
     ];
 
     $this->post(route('users.store'), $newUserData)
@@ -77,7 +77,7 @@ test('non super admins cannot create users', function () {
 it('fails to create a new user when using invalid first name',
     function (mixed $invalidValue, string $expectedMessage) {
         $admin = User::factory()->create()
-            ->syncRoles([Role::SuperAdmin->value]);
+            ->syncRoles([UserRole::SuperAdmin->value]);
 
         $this->actingAs($admin);
 
@@ -85,7 +85,7 @@ it('fails to create a new user when using invalid first name',
             'first_name' => $invalidValue,
             'last_name' => 'User',
             'email' => 'test@example.com',
-            'role' => Role::User->value,
+            'role' => UserRole::User->value,
             'password' => 'password',
             'password_confirmation' => 'password',
         ])
@@ -99,7 +99,7 @@ it('fails to create a new user when using invalid first name',
 it('fails to create a new user when using invalid last name',
     function (mixed $invalidValue, string $expectedMessage) {
         $admin = User::factory()->create()
-            ->syncRoles([Role::SuperAdmin->value]);
+            ->syncRoles([UserRole::SuperAdmin->value]);
 
         $this->actingAs($admin);
 
@@ -107,7 +107,7 @@ it('fails to create a new user when using invalid last name',
             'first_name' => 'Test',
             'last_name' => $invalidValue,
             'email' => 'test@example.com',
-            'role' => Role::User->value,
+            'role' => UserRole::User->value,
             'password' => 'password',
             'password_confirmation' => 'password',
         ])
@@ -121,7 +121,7 @@ it('fails to create a new user when using invalid last name',
 it('fails to create a new user when using invalid email',
     function (mixed $invalidValue, string $expectedMessage) {
         $admin = User::factory()->create()
-            ->syncRoles([Role::SuperAdmin->value]);
+            ->syncRoles([UserRole::SuperAdmin->value]);
 
         $this->actingAs($admin);
 
@@ -129,7 +129,7 @@ it('fails to create a new user when using invalid email',
             'first_name' => 'Test',
             'last_name' => 'User',
             'email' => $invalidValue,
-            'role' => Role::User->value,
+            'role' => UserRole::User->value,
             'password' => 'password',
             'password_confirmation' => 'password',
         ])
@@ -143,7 +143,7 @@ it('fails to create a new user when using invalid email',
 it('fails to create a new user when using invalid password',
     function (mixed $invalidValue, string $expectedMessage) {
         $admin = User::factory()->create()
-            ->syncRoles([Role::SuperAdmin->value]);
+            ->syncRoles([UserRole::SuperAdmin->value]);
 
         $this->actingAs($admin);
 
@@ -151,7 +151,7 @@ it('fails to create a new user when using invalid password',
             'first_name' => 'Test',
             'last_name' => 'User',
             'email' => 'test.user@test.cc',
-            'role' => Role::User->value,
+            'role' => UserRole::User->value,
             'password' => $invalidValue,
             'password_confirmation' => 'password',
         ])
@@ -165,7 +165,7 @@ it('fails to create a new user when using invalid password',
 it('fails to create a new user when using invalid role',
     function (mixed $invalidValue, string $expectedMessage) {
         $admin = User::factory()->create()
-            ->syncRoles([Role::SuperAdmin->value]);
+            ->syncRoles([UserRole::SuperAdmin->value]);
 
         $this->actingAs($admin);
 
@@ -186,7 +186,7 @@ it('fails to create a new user when using invalid role',
 
 test('create users is rate limited', function () {
     $admin = User::factory()->create()
-        ->syncRoles([Role::SuperAdmin->value]);
+        ->syncRoles([UserRole::SuperAdmin->value]);
 
     $this->actingAs($admin);
 

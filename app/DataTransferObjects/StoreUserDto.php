@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataTransferObjects;
 
-use App\Enums\Role;
+use App\Enums\UserRole;
 
 final readonly class StoreUserDto
 {
@@ -13,6 +13,6 @@ final readonly class StoreUserDto
         public string $lastName,
         public string $email,
         public string $password,
-        public Role $role,
+        public UserRole $role,
     ) {}
 }

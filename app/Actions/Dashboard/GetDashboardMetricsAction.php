@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Dashboard;
 
-use App\Enums\Role;
+use App\Enums\UserRole;
 use App\Http\Resources\AccountResource;
 use App\Models\Account;
 use App\Models\User;
@@ -122,7 +122,7 @@ final class GetDashboardMetricsAction
                     ->get();
 
                 return $rows->map(static fn (object $row): array => [
-                    'role' => Role::from($row->role)->label(),
+                    'role' => UserRole::from($row->role)->label(),
                     'count' => (int) $row->count,
                 ])->all();
             },

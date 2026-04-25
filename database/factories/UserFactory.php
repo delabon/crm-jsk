@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Enums\Role;
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -53,7 +53,7 @@ final class UserFactory extends Factory
     public function configure(): static
     {
         return $this->afterCreating(function (User $user) {
-            $user->assignRole(Role::User->value);
+            $user->assignRole(UserRole::User->value);
         });
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\Role;
+use App\Enums\UserRole;
 use App\Models\Account;
 use App\Models\User;
 use Inertia\Testing\AssertableInertia;
@@ -24,7 +24,7 @@ it("returns a forbidden response when user doesn't have required permissions", f
 test('users with right permissions can visit the accounts page', function () {
     $user = User::factory()
         ->create()
-        ->syncRoles([Role::SuperAdmin->value]);
+        ->syncRoles([UserRole::SuperAdmin->value]);
 
     $this->actingAs($user)
         ->get(route('accounts.index'))
@@ -38,10 +38,10 @@ test('super admins and managers can view all accounts', function () {
     Account::factory(3)->create();
     $admin = User::factory()
         ->create()
-        ->syncRoles([Role::SuperAdmin->value]);
+        ->syncRoles([UserRole::SuperAdmin->value]);
     $manager = User::factory()
         ->create()
-        ->syncRoles([Role::Manager->value]);
+        ->syncRoles([UserRole::Manager->value]);
 
     $this->actingAs($admin)
         ->get(route('accounts.index'))
@@ -64,7 +64,7 @@ test('sales agents can view only accounts they created', function () {
     $accounts = Account::factory(3)->create();
     $salesAgent = User::factory()
         ->create()
-        ->syncRoles([Role::SalesAgent->value]);
+        ->syncRoles([UserRole::SalesAgent->value]);
     $accounts[0]->update([
         'user_id' => $salesAgent->id,
     ]);
@@ -91,10 +91,10 @@ test('sales agents can search only their accounts', function () {
 
     $admin = User::factory()
         ->create()
-        ->syncRoles([Role::SuperAdmin->value]);
+        ->syncRoles([UserRole::SuperAdmin->value]);
     $manager = User::factory()
         ->create()
-        ->syncRoles([Role::Manager->value]);
+        ->syncRoles([UserRole::Manager->value]);
 
     $this->actingAs($admin)
         ->get(route('accounts.index', ['search' => $searchTerm]))
@@ -122,10 +122,10 @@ test('super admins and managers can search all accounts', function () {
     $accounts = Account::factory(3)->create();
     $admin = User::factory()
         ->create()
-        ->syncRoles([Role::SuperAdmin->value]);
+        ->syncRoles([UserRole::SuperAdmin->value]);
     $manager = User::factory()
         ->create()
-        ->syncRoles([Role::Manager->value]);
+        ->syncRoles([UserRole::Manager->value]);
     $accounts[0]->update([
         'name' => $searchTerm,
     ]);

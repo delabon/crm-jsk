@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\Role;
+use App\Enums\UserRole;
 use App\Models\Account;
 use App\Models\User;
 use Inertia\Testing\AssertableInertia;
@@ -36,7 +36,7 @@ it('returns a forbidden response when the authenticated user lacks the required 
 it('renders the edit account page successfully', function () {
     $admin = User::factory()
         ->create()
-        ->syncRoles([Role::SuperAdmin->value]);
+        ->syncRoles([UserRole::SuperAdmin->value]);
 
     $account = Account::factory()
         ->create();
@@ -52,7 +52,7 @@ it('renders the edit account page successfully', function () {
 it('admins can edit their accounts and others', function () {
     $admin = User::factory()
         ->create()
-        ->syncRoles([Role::SuperAdmin->value]);
+        ->syncRoles([UserRole::SuperAdmin->value]);
 
     $accounts = Account::factory(2)
         ->create();
@@ -106,7 +106,7 @@ it('admins can edit their accounts and others', function () {
 it('managers can edit their accounts and others', function () {
     $manager = User::factory()
         ->create()
-        ->syncRoles([Role::Manager->value]);
+        ->syncRoles([UserRole::Manager->value]);
 
     $accounts = Account::factory(2)
         ->create();
@@ -157,7 +157,7 @@ it('managers can edit their accounts and others', function () {
 it('sales agents can edit their accounts', function () {
     $salesAgent = User::factory()
         ->create()
-        ->syncRoles([Role::SalesAgent->value]);
+        ->syncRoles([UserRole::SalesAgent->value]);
 
     $account = Account::factory()
         ->create();
@@ -190,7 +190,7 @@ it('sales agents can edit their accounts', function () {
 it('sales agents cannot edit others accounts', function () {
     $salesAgent = User::factory()
         ->create()
-        ->syncRoles([Role::SalesAgent->value]);
+        ->syncRoles([UserRole::SalesAgent->value]);
 
     $account = Account::factory()
         ->create();
@@ -218,7 +218,7 @@ it('sales agents cannot edit others accounts', function () {
 it('fails with invalid name', function (mixed $invalidValue, string $expectedMessage) {
     $salesAgent = User::factory()
         ->create()
-        ->syncRoles([Role::SalesAgent->value]);
+        ->syncRoles([UserRole::SalesAgent->value]);
 
     $account = Account::factory()
         ->create();
@@ -254,7 +254,7 @@ it('fails with invalid name', function (mixed $invalidValue, string $expectedMes
 it('fails with invalid industry', function (mixed $invalidValue, string $expectedMessage) {
     $salesAgent = User::factory()
         ->create()
-        ->syncRoles([Role::SalesAgent->value]);
+        ->syncRoles([UserRole::SalesAgent->value]);
 
     $account = Account::factory()
         ->create();
@@ -290,7 +290,7 @@ it('fails with invalid industry', function (mixed $invalidValue, string $expecte
 it('fails with invalid website', function (mixed $invalidValue, string $expectedMessage) {
     $salesAgent = User::factory()
         ->create()
-        ->syncRoles([Role::SalesAgent->value]);
+        ->syncRoles([UserRole::SalesAgent->value]);
 
     $account = Account::factory()
         ->create();
@@ -326,7 +326,7 @@ it('fails with invalid website', function (mixed $invalidValue, string $expected
 it('fails with invalid phone', function (mixed $invalidValue, string $expectedMessage) {
     $salesAgent = User::factory()
         ->create()
-        ->syncRoles([Role::SalesAgent->value]);
+        ->syncRoles([UserRole::SalesAgent->value]);
 
     $account = Account::factory()
         ->create();
@@ -362,7 +362,7 @@ it('fails with invalid phone', function (mixed $invalidValue, string $expectedMe
 test('edit accounts is rate limited', function () {
     $admin = User::factory()
         ->create()
-        ->syncRoles([Role::SuperAdmin->value]);
+        ->syncRoles([UserRole::SuperAdmin->value]);
 
     exhaustRateLimit('accounts-manage', (string) $admin->id, 10);
 
