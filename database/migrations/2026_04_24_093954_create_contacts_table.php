@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('phone');
             $table->string('email')->unique()->nullable();
-            $table->string('status')->default(ContactStatus::Lead);
+            $table->string('status')->index()->default(ContactStatus::Lead);
             $table->timestamps();
         });
     }

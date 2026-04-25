@@ -1,7 +1,11 @@
 import {Head, Link, usePage} from '@inertiajs/react';
 import { CollectionPagination } from '@/components/collection-pagination';
+import Filter from "@/components/filter";
+import ListFilters from "@/components/list-filters";
 import ListSearch from '@/components/list-search';
 import { Button } from '@/components/ui/button';
+import {FormField} from "@/components/ui/form-field";
+import {RadioWithItems} from "@/components/ui/radio-with-items";
 import {
     Table,
     TableBody,
@@ -13,7 +17,7 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import contactRoute from '@/routes/contacts';
-import type {BreadcrumbItem, PaginatedCollection, Contact} from '@/types';
+import type {BreadcrumbItem, PaginatedCollection, Contact, SelectOption} from '@/types';
 import type { User } from '@/types/auth';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -27,12 +31,18 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+type Filters = {
+    status?: string;
+};
+
 type Props = {
     collection: PaginatedCollection<Contact>;
     search?: string;
+    statuses: SelectOption[];
+    filters: Filters;
 };
 
-export default function Index({ collection, search }: Props) {
+export default function Index({ collection, search, filters, statuses }: Props) {
     const {user} = usePage().props.auth;
 
     const renderItems = (user: User) => {
@@ -115,7 +125,17 @@ export default function Index({ collection, search }: Props) {
                     <h1 className="text-xl font-bold">Contacts</h1>
                     <div className="flex flex-wrap items-center gap-3">
                         <ListSearch initialSearch={search} />
-
+                        <ListFilters action={contactRoute.index().url}>
+                            <Filter title="Status">
+                                <FormField>
+                                    <RadioWithItems
+                                        name="status"
+                                        defaultValue={filters.status ?? 'all'}
+                                        items={statuses}
+                                    />
+                                </FormField>
+                            </Filter>
+                        </ListFilters>
                         <Button asChild>
                             <Link >
                                 Create Contact

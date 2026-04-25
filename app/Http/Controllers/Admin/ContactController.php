@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Actions\Contacts\GetPaginatedContactAction;
+use App\Enums\ContactStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Contacts\IndexContactRequest;
 use App\Http\Resources\ContactResource;
@@ -19,15 +20,27 @@ final class ContactController extends Controller
     {
         /** @var User $user */
         $user = $request->user();
+        $contactFilterDto = $request->toDto();
 
         $contacts = $action->handle(
             Config::integer('app.dashboard.per_page'),
             $user,
-            $request->toDto()
-        );
+            $contactFilterDto
+        )->appends(array_filter($contactFilterDto->toArray()));
 
         return Inertia::render('contacts/index', [
             'collection' => ContactResource::collection($contacts),
+            'statuses' => [
+                [
+                    'value' => 'all',
+                    'label' => 'All',
+                ],
+                ...ContactStatus::options(),
+            ],
+            'filters' => [
+                'status' => $request->status ?? 'all',
+            ],
+            'search' => $request->search,
         ]);
     }
 }

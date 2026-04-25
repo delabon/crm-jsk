@@ -10,11 +10,11 @@ import AppLayout from '@/layouts/app-layout';
 import {dashboard} from "@/routes";
 import UserPasswordRoute from "@/routes/user-password";
 import users from '@/routes/users';
-import type {BreadcrumbItem, RoleOption, User} from '@/types';
+import type {BreadcrumbItem, SelectOption, User} from '@/types';
 
 type Props = {
     user: User;
-    roles: RoleOption[];
+    roles: SelectOption[];
 };
 
 export default function UserForm({user, roles}: Props) {

@@ -17,9 +17,9 @@ enum Role: string
     public static function options(): array
     {
         return collect(self::cases())
-            ->map(static fn (self $role) => [
-                'value' => $role->value,
-                'label' => $role->label(),
+            ->map(static fn (self $case) => [
+                'value' => $case->value,
+                'label' => $case->label(),
             ])
             ->all();
     }

@@ -8,10 +8,10 @@ import {Spinner} from "@/components/ui/spinner";
 import AppLayout from '@/layouts/app-layout';
 import {dashboard} from "@/routes";
 import users from '@/routes/users';
-import type {BreadcrumbItem, RoleOption} from '@/types';
+import type {BreadcrumbItem, SelectOption} from '@/types';
 
 type Props = {
-    roles: RoleOption[];
+    roles: SelectOption[];
 };
 
 export default function Create({roles}: Props) {

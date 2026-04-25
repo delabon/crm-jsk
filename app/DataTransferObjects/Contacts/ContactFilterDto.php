@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataTransferObjects\Contacts;
 
+use App\Enums\ContactStatus;
 use Illuminate\Contracts\Support\Arrayable;
 
 /**
@@ -12,7 +13,8 @@ use Illuminate\Contracts\Support\Arrayable;
 final readonly class ContactFilterDto implements Arrayable
 {
     public function __construct(
-        public ?string $search = null
+        public ?string $search = null,
+        public ?ContactStatus $status = null
     ) {}
 
     /**
@@ -22,6 +24,7 @@ final readonly class ContactFilterDto implements Arrayable
     {
         return [
             'search' => $this->search,
+            'status' => $this->status?->value,
         ];
     }
 }

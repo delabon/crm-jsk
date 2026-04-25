@@ -27,11 +27,11 @@ final class UserController extends Controller
     {
         $userFiltersDto = $request->toDto();
 
+        $users = $action->handle(Config::integer('app.dashboard.per_page'), $userFiltersDto)
+            ->appends(array_filter($userFiltersDto->toArray()));
+
         return Inertia::render('users/index', [
-            'collection' => UserResource::collection(
-                $action->handle(Config::integer('app.dashboard.per_page'), $userFiltersDto)
-                    ->appends($userFiltersDto->toArray())
-            ),
+            'collection' => UserResource::collection($users),
             'roles' => [
                 [
                     'value' => 'all',

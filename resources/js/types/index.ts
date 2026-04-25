@@ -26,7 +26,7 @@ export type PaginatedCollection<T> = {
     };
 };
 
-export type RoleOption = {
+export type SelectOption = {
     value: string;
     label: string;
 };

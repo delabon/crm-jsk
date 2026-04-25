@@ -18,4 +18,17 @@ enum ContactStatus: string
             self::Client => 'Client',
         };
     }
+
+    /**
+     * @return array<int, array<string, string>>
+     */
+    public static function options(): array
+    {
+        return collect(self::cases())
+            ->map(static fn (self $case) => [
+                'value' => $case->value,
+                'label' => $case->label(),
+            ])
+            ->all();
+    }
 }
