@@ -49,3 +49,14 @@ export type Account = {
     owner?: UserBrief;
     formatted_created_at: string;
 };
+
+export type Contact = {
+    id: number;
+    first_name: string;
+    last_name: string;
+    status: string;
+    email?: string;
+    phone: string;
+    owner?: UserBrief;
+    formatted_created_at: string;
+};

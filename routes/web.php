@@ -3,11 +3,13 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Models\Account;
+use App\Models\Contact;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -81,6 +83,16 @@ Route::middleware(['auth', 'verified'])
                     ->middleware('throttle:accounts-manage')
                     ->can('delete', 'account')
                     ->name('destroy');
+            });
+
+        // --- Contacts ---
+        Route::prefix('contacts')
+            ->name('contacts.')
+            ->controller(ContactController::class)
+            ->group(function () {
+                Route::get('/', 'index')
+                    ->can('view-any', [Contact::class])
+                    ->name('index');
             });
     });
 

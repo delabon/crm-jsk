@@ -1,6 +1,5 @@
 import {Head, Link, usePage} from '@inertiajs/react';
 import { CollectionPagination } from '@/components/collection-pagination';
-import DeleteButton from '@/components/delete-button';
 import ListSearch from '@/components/list-search';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,8 +12,8 @@ import {
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
-import accountRoute from '@/routes/accounts';
-import type { BreadcrumbItem, PaginatedCollection, Account } from '@/types';
+import contactRoute from '@/routes/contacts';
+import type {BreadcrumbItem, PaginatedCollection, Contact} from '@/types';
 import type { User } from '@/types/auth';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -23,13 +22,13 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: dashboard(),
     },
     {
-        title: 'Accounts',
-        href: accountRoute.index(),
+        title: 'Contacts',
+        href: contactRoute.index(),
     },
 ];
 
 type Props = {
-    collection: PaginatedCollection<Account>;
+    collection: PaginatedCollection<Contact>;
     search?: string;
 };
 
@@ -48,56 +47,52 @@ export default function Index({ collection, search }: Props) {
                         <TableRow>
                             <TableHead className="w-25">ID</TableHead>
                             <TableHead>Name</TableHead>
-                            <TableHead>Industry</TableHead>
+                            <TableHead>Status</TableHead>
                             <TableHead>Phone</TableHead>
-                            <TableHead>Website</TableHead>
+                            <TableHead>Email</TableHead>
                             <TableHead>Owner</TableHead>
                             <TableHead>Created At</TableHead>
                             <TableHead>Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {collection.data.map((account: Account) => (
-                            <TableRow key={`accounts-${account.id}`}>
+                        {collection.data.map((contact: Contact) => (
+                            <TableRow key={`contacts-${contact.id}`}>
                                 <TableCell className="font-medium">
-                                    {account.id}
+                                    {contact.id}
                                 </TableCell>
                                 <TableCell>
                                     <Link
-                                        href={accountRoute.show(account.id).url}
+                                        // href={contactRoute.show(contact.id).url}
                                         className="font-medium text-primary hover:underline"
                                     >
-                                        {account.name}
+                                        {contact.first_name} {contact.last_name}
                                     </Link>
                                 </TableCell>
-                                <TableCell>{account.industry}</TableCell>
-                                <TableCell>{account.phone}</TableCell>
-                                <TableCell>{account.website}</TableCell>
+                                <TableCell>{contact.status}</TableCell>
+                                <TableCell>{contact.phone}</TableCell>
+                                <TableCell>{contact.email}</TableCell>
                                 <TableCell>
-                                    {account.owner?.name ?? '—'}
+                                    {contact.owner?.name ?? '—'}
                                 </TableCell>
                                 <TableCell>
-                                    {account.formatted_created_at}
+                                    {contact.formatted_created_at}
                                 </TableCell>
                                 <TableCell>
                                     <div className="inline-flex gap-2">
                                         <Button asChild variant="default">
                                             <Link
-                                                href={
-                                                    accountRoute.edit(
-                                                        account.id,
-                                                    ).url
-                                                }
+                                                // href={
+                                                //     contactRoute.edit(
+                                                //         contact.id,
+                                                //     ).url
+                                                // }
                                             >
                                                 Edit
                                             </Link>
                                         </Button>
-                                        {user.permission_names?.includes('accounts.delete') &&
-                                            <DeleteButton
-                                                {...accountRoute.destroy.form(
-                                                    account.id,
-                                                )}
-                                            />
+                                        {user.permission_names?.includes('contacts.delete') &&
+                                            <>Delete Button</>
                                         }
                                     </div>
                                 </TableCell>
@@ -113,17 +108,17 @@ export default function Index({ collection, search }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Accounts" />
+            <Head title="Contacts" />
 
             <div className="space-y-4 p-6">
                 <div className="flex flex-wrap items-center justify-between gap-3 lg:flex-nowrap">
-                    <h1 className="text-xl font-bold">Accounts</h1>
+                    <h1 className="text-xl font-bold">Contacts</h1>
                     <div className="flex flex-wrap items-center gap-3">
                         <ListSearch initialSearch={search} />
 
                         <Button asChild>
-                            <Link href={accountRoute.create()}>
-                                Create Account
+                            <Link >
+                                Create Contact
                             </Link>
                         </Button>
                     </div>
