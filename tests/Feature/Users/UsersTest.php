@@ -115,3 +115,32 @@ test('filter users by role', function () {
                 ->where('collection.data.0.first_name', $user2->first_name);
         });
 });
+
+test('pagination', function () {
+    Config::set('app.dashboard.per_page', 2);
+
+    $admin = User::factory()
+        ->create()
+        ->syncRoles([UserRole::SuperAdmin->value]);
+
+    $users = User::factory(2)->create();
+
+    $this->actingAs($admin)
+        ->get(route('users.index'))
+        ->assertInertia(static function (AssertableInertia $page) use ($users) {
+            $page->component('users/index')
+                ->has('collection.data', 2)
+                ->where('collection.data.0.id', $users[1]->id)
+                ->where('collection.data.1.id', $users[0]->id);
+        });
+
+    $this->actingAs($admin)
+        ->get(route('users.index', [
+            'page' => 2,
+        ]))
+        ->assertInertia(static function (AssertableInertia $page) use ($admin) {
+            $page->component('users/index')
+                ->has('collection.data', 1)
+                ->where('collection.data.0.id', $admin->id);
+        });
+});

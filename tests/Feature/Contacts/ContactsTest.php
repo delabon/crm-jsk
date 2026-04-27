@@ -1,5 +1,7 @@
 <?php
 
+// todo: pagination tests for users, contacts, accounts
+
 declare(strict_types=1);
 
 use App\Enums\ContactStatus;
@@ -7,6 +9,7 @@ use App\Enums\UserRole;
 use App\Models\Contact;
 use App\Models\User;
 use Inertia\Testing\AssertableInertia;
+use Illuminate\Support\Facades\Config;
 
 it('redirects to login page when not authenticated', function () {
     $this->get(route('contacts.index'))
@@ -221,5 +224,34 @@ test('sales agent can filter only their contacts by status', function () {
             $page->component('contacts/index')
                 ->has('collection.data', 1)
                 ->where('collection.data.0.id', $contacts[1]->id);
+        });
+});
+
+test('pagination', function () {
+    Config::set('app.dashboard.per_page', 2);
+
+    $admin = User::factory()
+        ->create()
+        ->syncRoles([UserRole::SuperAdmin->value]);
+
+    $contacts = Contact::factory(3)->create();
+
+    $this->actingAs($admin)
+        ->get(route('contacts.index'))
+        ->assertInertia(static function (AssertableInertia $page) use ($contacts) {
+            $page->component('contacts/index')
+                ->has('collection.data', 2)
+                ->where('collection.data.0.id', $contacts[2]->id)
+                ->where('collection.data.1.id', $contacts[1]->id);
+        });
+
+    $this->actingAs($admin)
+        ->get(route('contacts.index', [
+            'page' => 2,
+        ]))
+        ->assertInertia(static function (AssertableInertia $page) use ($contacts) {
+            $page->component('contacts/index')
+                ->has('collection.data', 1)
+                ->where('collection.data.0.id', $contacts[0]->id);
         });
 });

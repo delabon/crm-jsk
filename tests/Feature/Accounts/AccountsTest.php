@@ -158,3 +158,32 @@ test('super admins and managers can search all accounts', function () {
                 ->where('collection.data.1.id', $accounts[0]->id);
         });
 });
+
+test('pagination', function () {
+    Config::set('app.dashboard.per_page', 2);
+
+    $admin = User::factory()
+        ->create()
+        ->syncRoles([UserRole::SuperAdmin->value]);
+
+    $accounts = Account::factory(3)->create();
+
+    $this->actingAs($admin)
+        ->get(route('accounts.index'))
+        ->assertInertia(static function (AssertableInertia $page) use ($accounts) {
+            $page->component('accounts/index')
+                ->has('collection.data', 2)
+                ->where('collection.data.0.id', $accounts[2]->id)
+                ->where('collection.data.1.id', $accounts[1]->id);
+        });
+
+    $this->actingAs($admin)
+        ->get(route('accounts.index', [
+            'page' => 2,
+        ]))
+        ->assertInertia(static function (AssertableInertia $page) use ($accounts) {
+            $page->component('accounts/index')
+                ->has('collection.data', 1)
+                ->where('collection.data.0.id', $accounts[0]->id);
+        });
+});
