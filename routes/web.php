@@ -93,6 +93,13 @@ Route::middleware(['auth', 'verified'])
                 Route::get('/', 'index')
                     ->can('view-any', [Contact::class])
                     ->name('index');
+                Route::get('/create', 'create')
+                    ->can('create', [Contact::class])
+                    ->name('create');
+                Route::post('/', 'store')
+                    ->middleware(['throttle:contacts-manage'])
+                    ->can('create', [Contact::class])
+                    ->name('store');
             });
     });
 

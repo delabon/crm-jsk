@@ -1,7 +1,5 @@
 <?php
 
-// todo: pagination tests for users, contacts, accounts
-
 declare(strict_types=1);
 
 use App\Enums\ContactStatus;

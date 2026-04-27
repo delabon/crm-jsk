@@ -137,7 +137,7 @@ export default function Index({ collection, search, filters, statuses }: Props) 
                             </Filter>
                         </ListFilters>
                         <Button asChild>
-                            <Link >
+                            <Link href={contactRoute.create().url}>
                                 Create Contact
                             </Link>
                         </Button>

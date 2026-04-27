@@ -13,4 +13,9 @@ final class ContactPolicy
         return $user->can('contacts.view-any')
             || $user->can('contacts.view-own');
     }
+
+    public function create(User $user): bool
+    {
+        return $user->can('contacts.create');
+    }
 }
