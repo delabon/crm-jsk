@@ -7,6 +7,7 @@ namespace App\Actions\Dashboard;
 use App\Enums\UserRole;
 use App\Http\Resources\AccountResource;
 use App\Models\Account;
+use App\Models\Contact;
 use App\Models\User;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Cache;
@@ -45,41 +46,11 @@ final class GetDashboardMetricsAction
      */
     private function buildStats(User $user): array
     {
-        $stats = [
-            'my_accounts' => Cache::remember(
-                'dashboard:my_accounts:'.$user->id,
-                now()->addDays(self::CACHE_DAYS),
-                static fn (): int => $user->accounts()->count(),
-            ),
-        ];
+        $stats = [];
 
-        if ($user->canViewAnyAccount()) {
-            $stats['total_accounts'] = Cache::remember(
-                'dashboard:total_accounts',
-                now()->addDays(self::CACHE_DAYS),
-                static fn (): int => Account::query()->count(),
-            );
-        }
-
-        if ($user->canManageUsers()) {
-            $stats['total_users'] = Cache::remember(
-                'dashboard:total_users',
-                now()->addDays(self::CACHE_DAYS),
-                static fn (): int => User::query()->count(),
-            );
-        }
-
-        $stats['accounts_this_month'] = Cache::remember(
-            "dashboard:accounts_this_month:{$user->id}",
-            now()->addDays(self::CACHE_DAYS),
-            static fn (): int => $user->canViewAnyAccount()
-                ? Account::query()
-                    ->where('created_at', '>=', now()->startOfMonth())
-                    ->count()
-                : $user->accounts()
-                    ->where('created_at', '>=', now()->startOfMonth())
-                    ->count(),
-        );
+        $this->buildAccountStats($stats, $user);
+        $this->buildContactStats($stats, $user);
+        $this->buildUserStats($stats, $user);
 
         return $stats;
     }
@@ -127,5 +98,74 @@ final class GetDashboardMetricsAction
                 ])->all();
             },
         );
+    }
+
+    private function buildAccountStats(array &$stats, User $user): void
+    {
+        $stats['my_accounts'] = Cache::remember(
+            'dashboard:my_accounts:'.$user->id,
+            now()->addDays(self::CACHE_DAYS),
+            static fn (): int => $user->accounts()->count(),
+        );
+
+        if ($user->canViewAnyAccount()) {
+            $stats['total_accounts'] = Cache::remember(
+                'dashboard:total_accounts',
+                now()->addDays(self::CACHE_DAYS),
+                static fn (): int => Account::query()->count(),
+            );
+        }
+
+        $stats['accounts_this_month'] = Cache::remember(
+            "dashboard:accounts_this_month:{$user->id}",
+            now()->addDays(self::CACHE_DAYS),
+            static fn (): int => $user->canViewAnyAccount()
+                ? Account::query()
+                    ->where('created_at', '>=', now()->startOfMonth())
+                    ->count()
+                : $user->accounts()
+                    ->where('created_at', '>=', now()->startOfMonth())
+                    ->count(),
+        );
+    }
+
+    private function buildContactStats(array &$stats, User $user): void
+    {
+        $stats['my_contacts'] = Cache::remember(
+            'dashboard:my_contacts:'.$user->id,
+            now()->addDays(self::CACHE_DAYS),
+            static fn (): int => $user->contacts()->count(),
+        );
+
+        if ($user->canViewAnyContact()) {
+            $stats['total_contacts'] = Cache::remember(
+                'dashboard:total_contacts',
+                now()->addDays(self::CACHE_DAYS),
+                static fn (): int => Contact::query()->count(),
+            );
+        }
+
+        $stats['contacts_this_month'] = Cache::remember(
+            "dashboard:contacts_this_month:{$user->id}",
+            now()->addDays(self::CACHE_DAYS),
+            static fn (): int => $user->canViewAnyContact()
+                ? Contact::query()
+                    ->where('created_at', '>=', now()->startOfMonth())
+                    ->count()
+                : $user->contacts()
+                    ->where('created_at', '>=', now()->startOfMonth())
+                    ->count(),
+        );
+    }
+
+    private function buildUserStats(array &$stats, User $user): void
+    {
+        if ($user->canManageUsers()) {
+            $stats['total_users'] = Cache::remember(
+                'dashboard:total_users',
+                now()->addDays(self::CACHE_DAYS),
+                static fn (): int => User::query()->count(),
+            );
+        }
     }
 }

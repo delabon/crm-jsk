@@ -4,11 +4,12 @@ import {
     Plus,
     TrendingUp,
     UserPlus,
-    Users,
     UserCog,
     ArrowRight,
     CalendarDays,
-    Globe,
+    GlobeIcon,
+    UsersIcon,
+    BookUserIcon,
 } from 'lucide-react';
 import React from "react";
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -27,8 +28,9 @@ import {
 import { useInitials } from '@/hooks/use-initials';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
-import accounts from '@/routes/accounts';
-import users from '@/routes/users';
+import accountRoutes from '@/routes/accounts';
+import userRoutes from '@/routes/users';
+import contactRoutes from '@/routes/contacts';
 import type { Account, BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -48,6 +50,12 @@ type StatCardConfig = {
     bgColor: string;
 };
 
+type StatCards = {
+    accounts: StatCardConfig[];
+    contacts: StatCardConfig[];
+    users: StatCardConfig[];
+};
+
 type RoleDistribution = {
     role: string;
     count: number;
@@ -58,8 +66,13 @@ type Props = {
         stats: {
             my_accounts: number;
             total_accounts?: number;
-            total_users?: number;
             accounts_this_month: number;
+
+            my_contacts: number;
+            total_contacts?: number;
+            contacts_this_month: number;
+
+            total_users?: number;
         };
         recent_accounts: {
             data: Account[];
@@ -91,53 +104,89 @@ function formatDate(): string {
     });
 }
 
-function getStatCards(stats: Props['metrics']['stats']): StatCardConfig[] {
-    const cards: StatCardConfig[] = [
-        {
-            key: 'my_accounts',
-            label: 'My Accounts',
-            value: stats.my_accounts,
-            description: 'Accounts assigned to you',
-            icon: Building2,
-            color: 'text-blue-600 dark:text-blue-400',
-            bgColor: 'bg-blue-50 dark:bg-blue-950/50',
-        },
-        {
-            key: 'accounts_this_month',
-            label: 'New This Month',
-            value: stats.accounts_this_month,
-            description: 'Accounts created this month',
-            icon: TrendingUp,
-            color: 'text-emerald-600 dark:text-emerald-400',
-            bgColor: 'bg-emerald-50 dark:bg-emerald-950/50',
-        },
-    ];
+function getStatCards(stats: Props['metrics']['stats']): StatCards {
+    const statCards = {
+        accounts: [
+            {
+                key: 'my_accounts',
+                label: 'My Accounts',
+                value: stats.my_accounts,
+                description: 'Accounts assigned to you',
+                icon: Building2,
+                color: 'text-blue-600 dark:text-blue-400',
+                bgColor: 'bg-blue-50 dark:bg-blue-950/50',
+            },
+            {
+                key: 'accounts_this_month',
+                label: 'New This Month',
+                value: stats.accounts_this_month,
+                description: 'Accounts created this month',
+                icon: TrendingUp,
+                color: 'text-emerald-600 dark:text-emerald-400',
+                bgColor: 'bg-emerald-50 dark:bg-emerald-950/50',
+            }
+        ],
+        contacts: [
+            {
+                key: 'my_contacts',
+                label: 'My Contacts',
+                value: stats.my_contacts,
+                description: 'Your contacts',
+                icon: BookUserIcon,
+                color: 'text-blue-600 dark:text-blue-400',
+                bgColor: 'bg-blue-50 dark:bg-blue-950/50',
+            },
+            {
+                key: 'contacts_this_month',
+                label: 'New This Month',
+                value: stats.contacts_this_month,
+                description: 'Contacts created this month',
+                icon: TrendingUp,
+                color: 'text-emerald-600 dark:text-emerald-400',
+                bgColor: 'bg-emerald-50 dark:bg-emerald-950/50',
+            }
+        ],
+        users: [],
+    };
 
     if (stats.total_accounts !== undefined) {
-        cards.push({
+        statCards.accounts.push({
             key: 'total_accounts',
             label: 'Total Accounts',
             value: stats.total_accounts,
             description: 'Across all team members',
-            icon: Globe,
+            icon: GlobeIcon,
+            color: 'text-purple-600 dark:text-purple-400',
+            bgColor: 'bg-purple-50 dark:bg-purple-950/50',
+        });
+    }
+
+    if (stats.total_contacts !== undefined) {
+        statCards.contacts.push({
+            key: 'total_contacts',
+            label: 'Total Contacts',
+            value: stats.total_contacts,
+            description: 'Across all team members',
+            icon: GlobeIcon,
             color: 'text-purple-600 dark:text-purple-400',
             bgColor: 'bg-purple-50 dark:bg-purple-950/50',
         });
     }
 
     if (stats.total_users !== undefined) {
-        cards.push({
+        // @ts-ignore
+        statCards.users.push({
             key: 'total_users',
             label: 'Total Users',
             value: stats.total_users,
             description: 'All system users',
-            icon: Users,
+            icon: UsersIcon,
             color: 'text-amber-600 dark:text-amber-400',
             bgColor: 'bg-amber-50 dark:bg-amber-950/50',
         });
     }
 
-    return cards;
+    return statCards;
 }
 
 function getRoleBadgeVariant(
@@ -195,34 +244,34 @@ export default function Dashboard({ metrics }: Props) {
                     </p>
                 </div>
 
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                    {statCards.map((card) => (
-                        <Card key={card.key} className="relative overflow-hidden">
-                            <CardContent className="p-5">
-                                <div className="flex items-start justify-between">
-                                    <div className="space-y-1">
-                                        <p className="text-sm font-medium text-muted-foreground">
-                                            {card.label}
-                                        </p>
-                                        <p className="text-3xl font-bold tracking-tight">
-                                            {card.value.toLocaleString()}
-                                        </p>
+                {Object.values(statCards).map((cards, index) => (
+                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" key={`card-${index}`}>
+                        {cards.map((card) => (
+                            <Card key={card.key} className="relative overflow-hidden">
+                                <CardContent className="p-5">
+                                    <div className="flex items-start justify-between">
+                                        <div className="space-y-1">
+                                            <p className="text-sm font-medium text-muted-foreground">
+                                                {card.label}
+                                            </p>
+                                            <p className="text-3xl font-bold tracking-tight">
+                                                {card.value?.toLocaleString()}
+                                            </p>
+                                        </div>
+                                        <div className={`rounded-lg p-2.5 ${card.bgColor}`}>
+                                            <card.icon
+                                                className={`h-5 w-5 ${card.color}`}
+                                            />
+                                        </div>
                                     </div>
-                                    <div
-                                        className={`rounded-lg p-2.5 ${card.bgColor}`}
-                                    >
-                                        <card.icon
-                                            className={`h-5 w-5 ${card.color}`}
-                                        />
-                                    </div>
-                                </div>
-                                <p className="mt-2 text-xs text-muted-foreground">
-                                    {card.description}
-                                </p>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div>
+                                    <p className="mt-2 text-xs text-muted-foreground">
+                                        {card.description}
+                                    </p>
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+                ))}
 
                 {permissions.length > 0 && (
                     <div className="flex flex-wrap items-center gap-2">
@@ -231,15 +280,23 @@ export default function Dashboard({ metrics }: Props) {
                         </span>
                         {permissions.includes('accounts.create') && (
                             <Button variant="outline" size="sm" asChild>
-                                <Link href={accounts.create()}>
+                                <Link href={accountRoutes.create()}>
                                     <Plus className="mr-1.5 h-3.5 w-3.5" />
                                     New Account
                                 </Link>
                             </Button>
                         )}
+                        {permissions.includes('contacts.create') && (
+                            <Button variant="outline" size="sm" asChild>
+                                <Link href={contactRoutes.index()}>
+                                    <Plus className="mr-1.5 h-3.5 w-3.5" />
+                                    New Contact
+                                </Link>
+                            </Button>
+                        )}
                         {permissions.includes('users.manage') && (
                             <Button variant="outline" size="sm" asChild>
-                                <Link href={users.create()}>
+                                <Link href={userRoutes.create()}>
                                     <UserPlus className="mr-1.5 h-3.5 w-3.5" />
                                     New User
                                 </Link>
@@ -264,7 +321,7 @@ export default function Dashboard({ metrics }: Props) {
                                         size="sm"
                                         asChild
                                     >
-                                        <Link href={accounts.index()}>
+                                        <Link href={accountRoutes.index()}>
                                             View all
                                             <ArrowRight className="ml-1 h-3.5 w-3.5" />
                                         </Link>
@@ -306,7 +363,7 @@ export default function Dashboard({ metrics }: Props) {
                                                     >
                                                         <TableCell>
                                                             <Link
-                                                                href={accounts.show(
+                                                                href={accountRoutes.show(
                                                                     account.id,
                                                                 )}
                                                                 className="font-medium text-primary hover:underline"
