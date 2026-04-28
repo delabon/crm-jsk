@@ -65,6 +65,7 @@ export default function ContactForm({action, method, contact, statuses}: Props) 
                         items={statuses}
                         placeholder="Select status"
                         aria-invalid={!!errors['status']}
+                        defaultValue={contact?.status ?? ''}
                     />
                 </FormField>
 

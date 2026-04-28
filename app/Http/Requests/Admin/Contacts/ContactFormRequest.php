@@ -10,7 +10,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-final class StoreContactRequest extends FormRequest
+final class ContactFormRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,6 +27,8 @@ final class StoreContactRequest extends FormRequest
      */
     public function rules(): array
     {
+        $contact = $this->route('contact');
+
         return [
             'first_name' => [
                 'required',
@@ -48,7 +50,9 @@ final class StoreContactRequest extends FormRequest
                 'string',
                 'email',
                 'max:255',
-                'unique:contacts,email',
+                $contact
+                    ? Rule::unique('contacts', 'email')->ignore($contact->id)
+                    : Rule::unique('contacts', 'email')
             ],
             'status' => [
                 'required',

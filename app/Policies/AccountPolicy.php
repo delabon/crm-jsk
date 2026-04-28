@@ -28,7 +28,11 @@ final class AccountPolicy
 
     public function update(User $user, Account $account): bool
     {
-        return $this->view($user, $account);
+        if (! $user->can('accounts.update')) {
+            return false;
+        }
+
+        return $account->user_id === $user->id || $user->can('accounts.delete');
     }
 
     public function delete(User $user, Account $account): bool

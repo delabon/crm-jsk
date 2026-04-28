@@ -6,11 +6,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Actions\Contacts\GetPaginatedContactAction;
 use App\Actions\Contacts\StoreContactAction;
+use App\Actions\Contacts\UpdateContactAction;
 use App\Enums\ContactStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Contacts\ContactFormRequest;
 use App\Http\Requests\Admin\Contacts\IndexContactRequest;
-use App\Http\Requests\Admin\Contacts\StoreContactRequest;
 use App\Http\Resources\ContactResource;
+use App\Models\Contact;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Config;
@@ -54,11 +56,27 @@ final class ContactController extends Controller
         ]);
     }
 
-    public function store(StoreContactRequest $request, StoreContactAction $action): RedirectResponse
+    public function store(ContactFormRequest $request, StoreContactAction $action): RedirectResponse
     {
         $action->handle($request->user(), $request->toDto());
 
         return to_route('contacts.index')
             ->with('success', 'The contact has been created.');
+    }
+
+    public function edit(Contact $contact): InertiaResponse
+    {
+        return Inertia::render('contacts/edit', [
+            'contact' => new ContactResource($contact),
+            'statuses' => ContactStatus::options(),
+        ]);
+    }
+
+    public function update(ContactFormRequest $request, Contact $contact, UpdateContactAction $action): RedirectResponse
+    {
+        $action->handle($contact, $request->toDto());
+
+        return to_route('contacts.index')
+            ->with('success', 'The contact #'.$contact->id.' has been updated.');
     }
 }

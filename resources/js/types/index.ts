@@ -55,6 +55,7 @@ export type Contact = {
     first_name: string;
     last_name: string;
     status: string;
+    status_label: string;
     email?: string;
     phone: string;
     owner?: UserBrief;

@@ -131,7 +131,7 @@ test('email must be unique', function () {
         ->post(route('contacts.store'), $contactData)
         ->assertRedirectBack()
         ->assertSessionHasErrors([
-            'email' => 'The email has already been taken.'
+            'email' => 'The email has already been taken.',
         ]);
 
     $this->assertDatabaseCount('contacts', 1);
@@ -156,7 +156,7 @@ it('fails with invalid first name', function (mixed $invalidValue, string $expec
             'first_name' => $expectedMessage,
         ]);
 
-    $this->assertDatabaseCount('accounts', 0);
+    $this->assertDatabaseCount('contacts', 0);
 })->with('invalid-contact-first-name');
 
 it('fails with invalid last name', function (mixed $invalidValue, string $expectedMessage) {
@@ -178,7 +178,7 @@ it('fails with invalid last name', function (mixed $invalidValue, string $expect
             'last_name' => $expectedMessage,
         ]);
 
-    $this->assertDatabaseCount('accounts', 0);
+    $this->assertDatabaseCount('contacts', 0);
 })->with('invalid-contact-last-name');
 
 it('fails with invalid phone number', function (mixed $invalidValue, string $expectedMessage) {
@@ -200,7 +200,7 @@ it('fails with invalid phone number', function (mixed $invalidValue, string $exp
             'phone' => $expectedMessage,
         ]);
 
-    $this->assertDatabaseCount('accounts', 0);
+    $this->assertDatabaseCount('contacts', 0);
 })->with('invalid-contact-phone');
 
 it('fails with invalid email', function (mixed $invalidValue, string $expectedMessage) {
@@ -222,7 +222,7 @@ it('fails with invalid email', function (mixed $invalidValue, string $expectedMe
             'email' => $expectedMessage,
         ]);
 
-    $this->assertDatabaseCount('accounts', 0);
+    $this->assertDatabaseCount('contacts', 0);
 })->with('invalid-contact-email');
 
 it('fails with invalid status', function (mixed $invalidValue, string $expectedMessage) {
@@ -244,7 +244,7 @@ it('fails with invalid status', function (mixed $invalidValue, string $expectedM
             'status' => $expectedMessage,
         ]);
 
-    $this->assertDatabaseCount('accounts', 0);
+    $this->assertDatabaseCount('contacts', 0);
 })->with('invalid-contact-status');
 
 test('create users is rate limited', function () {

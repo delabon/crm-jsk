@@ -45,7 +45,7 @@ Route::middleware(['auth', 'verified'])
                     ->middleware('throttle:users-manage')
                     ->can('delete', 'user')
                     ->name('destroy');
-                Route::get('/{user}', 'edit')
+                Route::get('/edit/{user}', 'edit')
                     ->can('update', 'user')
                     ->name('edit');
                 Route::patch('/{user}', 'update')
@@ -72,7 +72,7 @@ Route::middleware(['auth', 'verified'])
                 Route::get('/{account}', 'show')
                     ->can('view', 'account')
                     ->name('show');
-                Route::get('/{account}/edit', 'edit')
+                Route::get('/edit/{account}', 'edit')
                     ->can('update', 'account')
                     ->name('edit');
                 Route::patch('/{account}', 'update')
@@ -100,6 +100,13 @@ Route::middleware(['auth', 'verified'])
                     ->middleware(['throttle:contacts-manage'])
                     ->can('create', [Contact::class])
                     ->name('store');
+                Route::get('/edit/{contact}', 'edit')
+                    ->can('update', 'contact')
+                    ->name('edit');
+                Route::patch('/{contact}', 'update')
+                    ->middleware('throttle:contacts-manage')
+                    ->can('update', 'contact')
+                    ->name('update');
             });
     });
 

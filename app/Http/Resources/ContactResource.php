@@ -24,7 +24,8 @@ final class ContactResource extends JsonResource
             'id' => $this->resource->id,
             'first_name' => $this->resource->first_name,
             'last_name' => $this->resource->last_name,
-            'status' => $this->resource->status->label(),
+            'status_label' => $this->resource->status->label(),
+            'status' => $this->resource->status,
             'email' => $this->resource->email,
             'phone' => $this->resource->phone,
             'owner' => $this->when(

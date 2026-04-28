@@ -79,7 +79,7 @@ export default function Index({ collection, search, filters, statuses }: Props) 
                                         {contact.first_name} {contact.last_name}
                                     </Link>
                                 </TableCell>
-                                <TableCell>{contact.status}</TableCell>
+                                <TableCell>{contact.status_label}</TableCell>
                                 <TableCell>{contact.phone}</TableCell>
                                 <TableCell>{contact.email}</TableCell>
                                 <TableCell>
@@ -92,11 +92,11 @@ export default function Index({ collection, search, filters, statuses }: Props) 
                                     <div className="inline-flex gap-2">
                                         <Button asChild variant="default">
                                             <Link
-                                                // href={
-                                                //     contactRoute.edit(
-                                                //         contact.id,
-                                                //     ).url
-                                                // }
+                                                href={
+                                                    contactRoute.edit(
+                                                        contact.id,
+                                                    ).url
+                                                }
                                             >
                                                 Edit
                                             </Link>
