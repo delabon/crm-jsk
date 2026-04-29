@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace App\Actions\Dashboard;
 
 use App\Enums\UserRole;
-use App\Http\Resources\AccountResource;
 use App\Models\Account;
 use App\Models\Contact;
 use App\Models\User;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Throwable;
@@ -27,7 +25,6 @@ final class GetDashboardMetricsAction
     {
         $metrics = [
             'stats' => $this->buildStats($user),
-            'recent_accounts' => $this->recentAccounts($user),
         ];
 
         $roleDistribution = $this->roleDistribution($user);
@@ -53,23 +50,6 @@ final class GetDashboardMetricsAction
         $this->buildUserStats($stats, $user);
 
         return $stats;
-    }
-
-    /**
-     * @throws Throwable
-     */
-    private function recentAccounts(User $user): AnonymousResourceCollection
-    {
-        $query = $user->canViewAnyAccount()
-            ? Account::query()
-            : $user->accounts();
-
-        $accounts = $query->with('user')
-            ->latest()
-            ->limit(5)
-            ->get();
-
-        return AccountResource::collection($accounts);
     }
 
     /**

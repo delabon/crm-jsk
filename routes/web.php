@@ -100,6 +100,9 @@ Route::middleware(['auth', 'verified'])
                     ->middleware(['throttle:contacts-manage'])
                     ->can('create', [Contact::class])
                     ->name('store');
+                Route::get('/{contact}', 'show')
+                    ->can('view', 'contact')
+                    ->name('show');
                 Route::get('/edit/{contact}', 'edit')
                     ->can('update', 'contact')
                     ->name('edit');

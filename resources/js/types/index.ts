@@ -47,7 +47,13 @@ export type Account = {
     website: string;
     phone: string;
     owner?: UserBrief;
+    contacts?: Contact[];
     formatted_created_at: string;
+};
+
+export type ContactAccount = {
+    id: number;
+    name: string;
 };
 
 export type Contact = {
@@ -59,5 +65,6 @@ export type Contact = {
     email?: string;
     phone: string;
     owner?: UserBrief;
+    account?: ContactAccount | null;
     formatted_created_at: string;
 };

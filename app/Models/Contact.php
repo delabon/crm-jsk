@@ -14,8 +14,8 @@ use Laravel\Scout\Searchable;
 final class Contact extends Model
 {
     /** @use HasFactory<\Database\Factories\ContactFactory> */
-    use HasFactory,
-        FormatsDate,
+    use FormatsDate,
+        HasFactory,
         Searchable;
 
     protected $fillable = [
@@ -38,6 +38,14 @@ final class Contact extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @return BelongsTo<Account, $this>
+     */
+    public function account(): BelongsTo
+    {
+        return $this->belongsTo(Account::class);
     }
 
     public function toSearchableArray(): array

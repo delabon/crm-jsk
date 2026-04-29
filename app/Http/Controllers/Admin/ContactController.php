@@ -15,6 +15,7 @@ use App\Http\Resources\ContactResource;
 use App\Models\Contact;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
@@ -62,6 +63,22 @@ final class ContactController extends Controller
 
         return to_route('contacts.index')
             ->with('success', 'The contact has been created.');
+    }
+
+    public function show(Request $request, Contact $contact): InertiaResponse
+    {
+        $contact->load(['user', 'account']);
+
+        /** @var User $user */
+        $user = $request->user();
+
+        return Inertia::render('contacts/show', [
+            'contact' => new ContactResource($contact),
+            'can' => [
+                'update' => $user->can('update', $contact),
+                'delete' => $user->can('delete', $contact),
+            ],
+        ]);
     }
 
     public function edit(Contact $contact): InertiaResponse

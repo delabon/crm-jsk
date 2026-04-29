@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-// TODO: update contacts is rate limited
-
 use App\Enums\ContactStatus;
 use App\Enums\UserRole;
 use App\Models\Contact;

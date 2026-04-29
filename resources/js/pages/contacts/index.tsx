@@ -73,7 +73,7 @@ export default function Index({ collection, search, filters, statuses }: Props) 
                                 </TableCell>
                                 <TableCell>
                                     <Link
-                                        // href={contactRoute.show(contact.id).url}
+                                        href={contactRoute.show(contact.id).url}
                                         className="font-medium text-primary hover:underline"
                                     >
                                         {contact.first_name} {contact.last_name}

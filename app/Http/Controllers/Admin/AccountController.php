@@ -52,7 +52,7 @@ final class AccountController extends Controller
 
     public function show(Request $request, Account $account): InertiaResponse
     {
-        $account->load('user');
+        $account->load(['user', 'contacts.user']);
 
         /** @var User $user */
         $user = $request->user();

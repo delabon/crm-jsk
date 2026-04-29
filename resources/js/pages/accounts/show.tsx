@@ -8,6 +8,8 @@ import {
     DollarSign,
     Edit,
     ExternalLink,
+    Mail,
+    User,
 } from 'lucide-react';
 import DeleteButton from '@/components/delete-button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -15,11 +17,20 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
 import { useInitials } from '@/hooks/use-initials';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import accountRoute from '@/routes/accounts';
-import type { Account, BreadcrumbItem } from '@/types';
+import contactRoute from '@/routes/contacts';
+import type { Account, BreadcrumbItem, Contact } from '@/types';
 
 type Props = {
     account: Account;
@@ -162,18 +173,65 @@ export default function Show({ account, can }: Props) {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <div className="flex flex-col items-center justify-center py-8 text-center">
-                                    <div className="mb-3 rounded-full bg-muted p-3">
-                                        <Users className="h-6 w-6 text-muted-foreground" />
+                                {account.contacts && account.contacts.length > 0 ? (
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead>Name</TableHead>
+                                                <TableHead>Status</TableHead>
+                                                <TableHead>Email</TableHead>
+                                                <TableHead>Phone</TableHead>
+                                                <TableHead>Owner</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {account.contacts.map((contact: Contact) => (
+                                                <TableRow key={contact.id}>
+                                                    <TableCell>
+                                                        <Link
+                                                            href={contactRoute.show(contact.id).url}
+                                                            className="font-medium text-primary hover:underline"
+                                                        >
+                                                            {contact.first_name} {contact.last_name}
+                                                        </Link>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <Badge variant="secondary">
+                                                            {contact.status_label}
+                                                        </Badge>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {contact.email ? (
+                                                            <span className="inline-flex items-center gap-1.5 text-sm">
+                                                                <Mail className="h-3.5 w-3.5 text-muted-foreground" />
+                                                                {contact.email}
+                                                            </span>
+                                                        ) : '—'}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {contact.phone || '—'}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        {contact.owner?.name ?? '—'}
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                ) : (
+                                    <div className="flex flex-col items-center justify-center py-8 text-center">
+                                        <div className="mb-3 rounded-full bg-muted p-3">
+                                            <Users className="h-6 w-6 text-muted-foreground" />
+                                        </div>
+                                        <p className="text-sm font-medium">
+                                            No contacts yet
+                                        </p>
+                                        <p className="mt-1 text-sm text-muted-foreground">
+                                            Contacts associated with this account
+                                            will appear here.
+                                        </p>
                                     </div>
-                                    <p className="text-sm font-medium">
-                                        No contacts yet
-                                    </p>
-                                    <p className="mt-1 text-sm text-muted-foreground">
-                                        Contacts associated with this account
-                                        will appear here.
-                                    </p>
-                                </div>
+                                )}
                             </CardContent>
                         </Card>
 

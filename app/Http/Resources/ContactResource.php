@@ -32,6 +32,15 @@ final class ContactResource extends JsonResource
                 $this->resource->relationLoaded('user'),
                 fn () => new UserBriefResource($this->resource->user),
             ),
+            'account' => $this->when(
+                $this->resource->relationLoaded('account'),
+                fn () => $this->resource->account
+                    ? [
+                        'id' => $this->resource->account->id,
+                        'name' => $this->resource->account->name,
+                    ]
+                    : null,
+            ),
             'formatted_created_at' => $this->resource->formatted_created_at,
         ];
     }

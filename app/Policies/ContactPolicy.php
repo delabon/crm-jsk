@@ -9,6 +9,12 @@ use App\Models\User;
 
 final class ContactPolicy
 {
+    public function view(User $user, Contact $contact): bool
+    {
+        return $user->can('contacts.view-any')
+            || ($user->can('contacts.view-own') && $contact->user_id === $user->id);
+    }
+
     public function viewAny(User $user): bool
     {
         return $user->can('contacts.view-any')

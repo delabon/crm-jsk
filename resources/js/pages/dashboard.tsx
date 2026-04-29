@@ -1,6 +1,7 @@
 import { Head, Link, usePage } from '@inertiajs/react';
 import {
     Building2,
+    BookUserIcon,
     Plus,
     TrendingUp,
     UserPlus,
@@ -9,7 +10,7 @@ import {
     CalendarDays,
     GlobeIcon,
     UsersIcon,
-    BookUserIcon,
+    Mail,
 } from 'lucide-react';
 import React from "react";
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -31,7 +32,7 @@ import { dashboard } from '@/routes';
 import accountRoutes from '@/routes/accounts';
 import userRoutes from '@/routes/users';
 import contactRoutes from '@/routes/contacts';
-import type { Account, BreadcrumbItem } from '@/types';
+import type { Account, BreadcrumbItem, Contact } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -76,6 +77,9 @@ type Props = {
         };
         recent_accounts: {
             data: Account[];
+        };
+        recent_contacts: {
+            data: Contact[];
         };
         role_distribution?: RoleDistribution[] | null;
     };
@@ -219,10 +223,10 @@ const ROLE_COLORS: Record<string, string> = {
 
 export default function Dashboard({ metrics }: Props) {
     const { user } = usePage().props.auth;
-    const getInitials = useInitials();
-    const { stats, recent_accounts, role_distribution } = metrics;
+    const { stats, role_distribution } = metrics;
     const statCards = getStatCards(stats);
     const permissions = user.permission_names ?? [];
+    const showRoleDistribution = role_distribution && role_distribution.length > 0;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -305,115 +309,10 @@ export default function Dashboard({ metrics }: Props) {
                     </div>
                 )}
 
-                <Separator />
+                {showRoleDistribution && (
+                    <>
+                        <Separator />
 
-                <div className="grid gap-6 lg:grid-cols-3">
-                    <div className="lg:col-span-2">
-                        <Card>
-                            <CardHeader className="flex flex-row items-center justify-between pb-2">
-                                <CardTitle className="flex items-center gap-2 text-base">
-                                    <Building2 className="h-4 w-4" />
-                                    Recent Accounts
-                                </CardTitle>
-                                {permissions.includes('accounts.view-own') && (
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        asChild
-                                    >
-                                        <Link href={accountRoutes.index()}>
-                                            View all
-                                            <ArrowRight className="ml-1 h-3.5 w-3.5" />
-                                        </Link>
-                                    </Button>
-                                )}
-                            </CardHeader>
-                            <CardContent className="pt-0">
-                                {recent_accounts.data.length === 0 ? (
-                                    <div className="flex flex-col items-center justify-center py-10 text-center">
-                                        <div className="mb-3 rounded-full bg-muted p-3">
-                                            <Building2 className="h-6 w-6 text-muted-foreground" />
-                                        </div>
-                                        <p className="text-sm font-medium">
-                                            No accounts yet
-                                        </p>
-                                        <p className="mt-1 text-sm text-muted-foreground">
-                                            {permissions.includes(
-                                                'accounts.create',
-                                            )
-                                                ? 'Create your first account to get started.'
-                                                : 'Accounts will appear here once created.'}
-                                        </p>
-                                    </div>
-                                ) : (
-                                    <Table>
-                                        <TableHeader>
-                                            <TableRow>
-                                                <TableHead>Name</TableHead>
-                                                <TableHead>Industry</TableHead>
-                                                <TableHead>Owner</TableHead>
-                                                <TableHead>Created</TableHead>
-                                            </TableRow>
-                                        </TableHeader>
-                                        <TableBody>
-                                            {recent_accounts.data.map(
-                                                (account) => (
-                                                    <TableRow
-                                                        key={account.id}
-                                                    >
-                                                        <TableCell>
-                                                            <Link
-                                                                href={accountRoutes.show(
-                                                                    account.id,
-                                                                )}
-                                                                className="font-medium text-primary hover:underline"
-                                                            >
-                                                                {account.name}
-                                                            </Link>
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            {account.industry ? (
-                                                                <Badge variant="secondary">
-                                                                    {
-                                                                        account.industry
-                                                                    }
-                                                                </Badge>
-                                                            ) : (
-                                                                '—'
-                                                            )}
-                                                        </TableCell>
-                                                        <TableCell>
-                                                            {account.owner ? (
-                                                                <div className="flex items-center gap-2">
-                                                                    <Avatar className="h-6 w-6">
-                                                                        <AvatarFallback className="bg-neutral-200 text-[10px] text-black dark:bg-neutral-700 dark:text-white">
-                                                                            {getInitials(account.owner.name ?? '')}
-                                                                        </AvatarFallback>
-                                                                    </Avatar>
-                                                                    <span className="text-sm">
-                                                                        {account.owner.name}
-                                                                    </span>
-                                                                </div>
-                                                            ) : (
-                                                                '—'
-                                                            )}
-                                                        </TableCell>
-                                                        <TableCell className="text-sm text-muted-foreground">
-                                                            {
-                                                                account.formatted_created_at
-                                                            }
-                                                        </TableCell>
-                                                    </TableRow>
-                                                ),
-                                            )}
-                                        </TableBody>
-                                    </Table>
-                                )}
-                            </CardContent>
-                        </Card>
-                    </div>
-
-                    {role_distribution && role_distribution.length > 0 && (
                         <div>
                             <Card className="h-full">
                                 <CardHeader className="pb-3">
@@ -461,8 +360,8 @@ export default function Dashboard({ metrics }: Props) {
                                 </CardContent>
                             </Card>
                         </div>
-                    )}
-                </div>
+                    </>
+                )}
             </div>
         </AppLayout>
     );
