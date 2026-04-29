@@ -23,6 +23,14 @@ it("returns a forbidden response when user doesn't have required permissions", f
         ->assertForbidden();
 });
 
+it("returns a not found response when account does not exist", function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->get(route('accounts.show', 2321421))
+        ->assertNotFound();
+});
+
 test('super admin can view any account show page', function () {
     $admin = User::factory()->create()->syncRoles([UserRole::SuperAdmin->value]);
     $account = Account::factory()->create();
@@ -71,7 +79,7 @@ test('sales agent can view their own account show page', function () {
         });
 });
 
-test('sales agent cannot view another agents account show page', function () {
+test("sales agent cannot view another sales agent's account show page", function () {
     $agent1 = User::factory()->create()->syncRoles([UserRole::SalesAgent->value]);
     $agent2 = User::factory()->create()->syncRoles([UserRole::SalesAgent->value]);
     $account = Account::factory()->create(['user_id' => $agent2->id]);
