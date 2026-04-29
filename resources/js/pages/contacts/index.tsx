@@ -1,5 +1,6 @@
 import {Head, Link, usePage} from '@inertiajs/react';
 import { CollectionPagination } from '@/components/collection-pagination';
+import DeleteButton from "@/components/delete-button";
 import Filter from "@/components/filter";
 import ListFilters from "@/components/list-filters";
 import ListSearch from '@/components/list-search';
@@ -102,7 +103,11 @@ export default function Index({ collection, search, filters, statuses }: Props) 
                                             </Link>
                                         </Button>
                                         {user.permission_names?.includes('contacts.delete') &&
-                                            <>Delete Button</>
+                                            <DeleteButton
+                                                {...contactRoute.destroy.form(
+                                                    contact.id,
+                                                )}
+                                            />
                                         }
                                     </div>
                                 </TableCell>

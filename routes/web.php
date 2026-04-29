@@ -41,10 +41,6 @@ Route::middleware(['auth', 'verified'])
                 Route::post('/', 'store')
                     ->middleware('throttle:users-manage')
                     ->name('store');
-                Route::delete('/{user}', 'destroy')
-                    ->middleware('throttle:users-manage')
-                    ->can('delete', 'user')
-                    ->name('destroy');
                 Route::get('/edit/{user}', 'edit')
                     ->can('update', 'user')
                     ->name('edit');
@@ -52,6 +48,10 @@ Route::middleware(['auth', 'verified'])
                     ->middleware('throttle:users-manage')
                     ->can('update', 'user')
                     ->name('update');
+                Route::delete('/{user}', 'destroy')
+                    ->middleware('throttle:users-manage')
+                    ->can('delete', 'user')
+                    ->name('destroy');
             });
 
         // --- Accounts ---
@@ -110,6 +110,10 @@ Route::middleware(['auth', 'verified'])
                     ->middleware('throttle:contacts-manage')
                     ->can('update', 'contact')
                     ->name('update');
+                Route::delete('/{contact}', 'destroy')
+                    ->middleware('throttle:contacts-manage')
+                    ->can('delete', 'contact')
+                    ->name('destroy');
             });
     });
 

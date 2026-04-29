@@ -34,4 +34,9 @@ final class ContactPolicy
 
         return $contact->user_id === $user->id || $user->can('contacts.delete');
     }
+
+    public function delete(User $user, Contact $contact): bool
+    {
+        return $user->can('contacts.delete');
+    }
 }

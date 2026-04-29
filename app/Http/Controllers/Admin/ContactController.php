@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\Contacts\DeleteContactAction;
 use App\Actions\Contacts\GetPaginatedContactAction;
 use App\Actions\Contacts\StoreContactAction;
 use App\Actions\Contacts\UpdateContactAction;
@@ -95,5 +96,13 @@ final class ContactController extends Controller
 
         return to_route('contacts.index')
             ->with('success', 'The contact #'.$contact->id.' has been updated.');
+    }
+
+    public function destroy(Contact $contact, DeleteContactAction $action): RedirectResponse
+    {
+        $id = $action->handle($contact);
+
+        return to_route('contacts.index')
+            ->with('success', 'The contact #'.$id.' has been deleted.');
     }
 }

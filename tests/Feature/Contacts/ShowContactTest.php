@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-// TODO: sales agent can only see their contacts
-
 use App\Enums\UserRole;
 use App\Models\Contact;
 use App\Models\User;
