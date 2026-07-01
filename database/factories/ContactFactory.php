@@ -24,9 +24,7 @@ final class ContactFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'account_id' => fake()->randomDigit() > 5
-                ? Account::factory()
-                : null,
+            'account_id' => null,
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),

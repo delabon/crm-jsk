@@ -63,7 +63,6 @@ final class ContactFormRequest extends FormRequest
             ],
             'account_id' => [
                 'nullable',
-                'exists:accounts,id',
                 new ValidAccountAssignment($this->user(), $this->integer('account_id')),
             ],
         ];

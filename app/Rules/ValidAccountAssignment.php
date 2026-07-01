@@ -27,6 +27,7 @@ final readonly class ValidAccountAssignment implements ValidationRule
         $account = Account::find($this->accountId);
 
         if (! $account) {
+            $fail('The account does not exist.');
             return;
         }
 
