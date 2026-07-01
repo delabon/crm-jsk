@@ -68,4 +68,3 @@ dataset('invalid-contact-status', [
         'The selected status is invalid.',
     ],
 ]);
-

@@ -16,7 +16,7 @@ it('redirects to email verification page when email is not verified', function (
     $user = User::factory()->unverified()->create();
 
     $contact = Contact::factory()->create([
-        'user_id' => $user->id
+        'user_id' => $user->id,
     ]);
 
     $this->actingAs($user)
@@ -36,7 +36,7 @@ it('returns a forbidden response when missing required permissions', function ()
     $user = User::factory()->create();
 
     $contact = Contact::factory()->create([
-        'user_id' => $user->id
+        'user_id' => $user->id,
     ]);
 
     $this->actingAs($user)
@@ -50,7 +50,7 @@ it('renders the contact show page successfully', function () {
         ->syncRoles([UserRole::SuperAdmin->value]);
 
     $contact = Contact::factory()->create([
-        'user_id' => $user->id
+        'user_id' => $user->id,
     ]);
 
     $this->actingAs($user)
@@ -105,13 +105,13 @@ it("returns a forbidden response when a sales agent is trying to access a contac
         ->assertForbidden();
 });
 
-test("sales agent can only see their contacts", function () {
+test('sales agent can only see their contacts', function () {
     $salesAgent = User::factory()
         ->create()
         ->syncRoles([UserRole::SalesAgent->value]);
 
     $contact = Contact::factory()->create([
-        'user_id' => $salesAgent->id
+        'user_id' => $salesAgent->id,
     ]);
 
     $this->actingAs($salesAgent)

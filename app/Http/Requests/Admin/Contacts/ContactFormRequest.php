@@ -55,7 +55,7 @@ final class ContactFormRequest extends FormRequest
                 'max:255',
                 $contact
                     ? Rule::unique('contacts', 'email')->ignore($contact->id)
-                    : Rule::unique('contacts', 'email')
+                    : Rule::unique('contacts', 'email'),
             ],
             'status' => [
                 'required',
@@ -64,8 +64,8 @@ final class ContactFormRequest extends FormRequest
             'account_id' => [
                 'nullable',
                 'exists:accounts,id',
-                new ValidAccountAssignment($this->user(), $this->integer('account_id'))
-            ]
+                new ValidAccountAssignment($this->user(), $this->integer('account_id')),
+            ],
         ];
     }
 

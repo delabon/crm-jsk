@@ -10,15 +10,6 @@ enum ContactStatus: string
     case Prospect = 'prospect';
     case Client = 'client';
 
-    public function label(): string
-    {
-        return match ($this) {
-            self::Lead => 'Lead',
-            self::Prospect => 'Prospect',
-            self::Client => 'Client',
-        };
-    }
-
     /**
      * @return array<int, array<string, string>>
      */
@@ -30,5 +21,14 @@ enum ContactStatus: string
                 'label' => $case->label(),
             ])
             ->all();
+    }
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::Lead => 'Lead',
+            self::Prospect => 'Prospect',
+            self::Client => 'Client',
+        };
     }
 }

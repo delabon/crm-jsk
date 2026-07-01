@@ -17,9 +17,9 @@ use Laravel\Scout\Searchable;
 final class Account extends Model
 {
     /** @use HasFactory<\Database\Factories\AccountFactory> */
-    use HasFactory,
-        Searchable,
-        FormatsDate;
+    use FormatsDate,
+        HasFactory,
+        Searchable;
 
     protected $fillable = [
         'user_id',

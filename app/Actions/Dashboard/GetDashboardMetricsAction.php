@@ -87,9 +87,7 @@ final class GetDashboardMetricsAction
     }
 
     /**
-     * @param array<string, int> $stats
-     * @param User $user
-     * @return void
+     * @param  array<string, int>  $stats
      */
     private function buildAccountStats(array &$stats, User $user): void
     {
@@ -117,9 +115,7 @@ final class GetDashboardMetricsAction
     }
 
     /**
-     * @param array<string, int> $stats
-     * @param User $user
-     * @return void
+     * @param  array<string, int>  $stats
      */
     private function buildContactStats(array &$stats, User $user): void
     {
@@ -147,9 +143,7 @@ final class GetDashboardMetricsAction
     }
 
     /**
-     * @param array<string, int> $stats
-     * @param User $user
-     * @return void
+     * @param  array<string, int>  $stats
      */
     private function buildUserStats(array &$stats, User $user): void
     {

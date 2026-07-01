@@ -5,7 +5,6 @@ declare(strict_types=1);
 use App\Enums\UserRole;
 use App\Models\Contact;
 use App\Models\User;
-use Inertia\Testing\AssertableInertia;
 
 // TODO: delete contacts is rate limited
 
@@ -18,7 +17,7 @@ it('redirects to email verification page when email is not verified', function (
     $user = User::factory()->unverified()->create();
 
     $contact = Contact::factory()->create([
-        'user_id' => $user->id
+        'user_id' => $user->id,
     ]);
 
     $this->actingAs($user)
@@ -78,4 +77,3 @@ test('delete contacts is rate limited', function () {
         ->delete(route('contacts.destroy', $contact))
         ->assertTooManyRequests();
 });
-

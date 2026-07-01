@@ -23,7 +23,7 @@ final class GetPaginatedContactAction
             ->query(static function (Builder $builder) use ($user, $dto) {
                 $builder->with(['user', 'user.roles'])
                     ->when(
-                        !$user->canViewAnyContact(),
+                        ! $user->canViewAnyContact(),
                         static fn (Builder $query) => $query->where('contacts.user_id', $user->id)
                     )
                     ->when(

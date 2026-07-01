@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Rules;
 
 use App\Models\Account;
-use Closure;
 use App\Models\User;
+use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
 
@@ -15,8 +15,7 @@ final readonly class ValidAccountAssignment implements ValidationRule
     public function __construct(
         private User $user,
         private int $accountId
-    ) {
-    }
+    ) {}
 
     /**
      * Run the validation rule.
@@ -27,7 +26,7 @@ final readonly class ValidAccountAssignment implements ValidationRule
     {
         $account = Account::find($this->accountId);
 
-        if (!$account) {
+        if (! $account) {
             return;
         }
 

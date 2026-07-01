@@ -47,7 +47,7 @@ final class IndexContactRequest extends FormRequest
     {
         return implode(',', [
             'all',
-            ...array_column(ContactStatus::cases(), 'value')
+            ...array_column(ContactStatus::cases(), 'value'),
         ]);
     }
 }

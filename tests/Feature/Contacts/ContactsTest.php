@@ -6,8 +6,8 @@ use App\Enums\ContactStatus;
 use App\Enums\UserRole;
 use App\Models\Contact;
 use App\Models\User;
-use Inertia\Testing\AssertableInertia;
 use Illuminate\Support\Facades\Config;
+use Inertia\Testing\AssertableInertia;
 
 it('redirects to login page when not authenticated', function () {
     $this->get(route('contacts.index'))
@@ -107,7 +107,7 @@ test('admins and managers can search all contacts', function () {
         ->syncRoles([UserRole::Manager->value]);
 
     $contacts = Contact::factory(3)->create([
-        'first_name' => 'search query'
+        'first_name' => 'search query',
     ]);
 
     $contacts[0]->update([
@@ -120,7 +120,7 @@ test('admins and managers can search all contacts', function () {
 
     $this->actingAs($admin)
         ->get(route('contacts.index', [
-            'search' => 'search query'
+            'search' => 'search query',
         ]))
         ->assertInertia(static function (AssertableInertia $page) {
             $page->component('contacts/index')
@@ -129,7 +129,7 @@ test('admins and managers can search all contacts', function () {
 
     $this->actingAs($manager)
         ->get(route('contacts.index', [
-            'search' => 'search query'
+            'search' => 'search query',
         ]))
         ->assertInertia(static function (AssertableInertia $page) {
             $page->component('contacts/index')
@@ -143,7 +143,7 @@ test('sales agent can search only their contacts', function () {
         ->syncRoles([UserRole::SalesAgent->value]);
 
     $contacts = Contact::factory(3)->create([
-        'first_name' => 'search query'
+        'first_name' => 'search query',
     ]);
 
     $contacts[0]->update([
@@ -152,7 +152,7 @@ test('sales agent can search only their contacts', function () {
 
     $this->actingAs($salesAgent)
         ->get(route('contacts.index', [
-            'search' => 'search query'
+            'search' => 'search query',
         ]))
         ->assertInertia(static function (AssertableInertia $page) use ($contacts) {
             $page->component('contacts/index')
@@ -184,7 +184,7 @@ test('admins and managers can filter contacts by status', function () {
 
     $this->actingAs($admin)
         ->get(route('contacts.index', [
-            'status' => ContactStatus::Client->value
+            'status' => ContactStatus::Client->value,
         ]))
         ->assertInertia(static function (AssertableInertia $page) {
             $page->component('contacts/index')
@@ -193,7 +193,7 @@ test('admins and managers can filter contacts by status', function () {
 
     $this->actingAs($manager)
         ->get(route('contacts.index', [
-            'status' => ContactStatus::Client->value
+            'status' => ContactStatus::Client->value,
         ]))
         ->assertInertia(static function (AssertableInertia $page) {
             $page->component('contacts/index')
@@ -216,7 +216,7 @@ test('sales agent can filter only their contacts by status', function () {
 
     $this->actingAs($salesAgent)
         ->get(route('contacts.index', [
-            'status' => ContactStatus::Prospect->value
+            'status' => ContactStatus::Prospect->value,
         ]))
         ->assertInertia(static function (AssertableInertia $page) use ($contacts) {
             $page->component('contacts/index')

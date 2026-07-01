@@ -24,12 +24,12 @@ use Spatie\Permission\Traits\HasRoles;
 final class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory,
+    use FormatsDate,
+        HasFactory,
         HasRoles,
         Notifiable,
         Searchable,
-        UserScopes,
-        FormatsDate;
+        UserScopes;
 
     /**
      * @var list<string>

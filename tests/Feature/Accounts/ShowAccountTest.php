@@ -23,7 +23,7 @@ it("returns a forbidden response when user doesn't have required permissions", f
         ->assertForbidden();
 });
 
-it("returns a not found response when account does not exist", function () {
+it('returns a not found response when account does not exist', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user)

@@ -282,7 +282,7 @@ test('sales agents cannot assign accounts they do not own to their contacts', fu
         ->patch(route('contacts.update', $contact), $updatedData)
         ->assertRedirectBack()
         ->assertSessionHasErrors([
-            'account_id' => 'You do not have permission to assign this account.'
+            'account_id' => 'You do not have permission to assign this account.',
         ]);
 
     $this->assertDatabaseCount('contacts', 1);
