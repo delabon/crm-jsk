@@ -6,11 +6,14 @@ namespace App\Models;
 
 use App\Concerns\FormatsDate;
 use App\Enums\ContactStatus;
+use App\Observers\ContactObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laravel\Scout\Searchable;
 
+#[ObservedBy([ContactObserver::class])]
 final class Contact extends Model
 {
     /** @use HasFactory<\Database\Factories\ContactFactory> */
