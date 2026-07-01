@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Enums\ContactStatus;
 use App\Enums\UserRole;
+use App\Models\Account;
 use App\Models\Contact;
 use App\Models\User;
 use Inertia\Testing\AssertableInertia;
@@ -78,6 +79,61 @@ test('users with permissions can create contacts ', function () {
         ->and($contact->email)->toBe($contactData['email'])
         ->and($contact->status)->toBe(ContactStatus::Prospect)
         ->and($contact->user_id)->toBe($salesAgent->id);
+});
+
+test('sales agents can assign their accounts to their contacts', function () {
+    $salesAgent = User::factory()
+        ->create()
+        ->syncRoles([UserRole::SalesAgent->value]);
+
+    $account = Account::factory()->create([
+        'user_id' => $salesAgent->id,
+    ]);
+
+    $contactData = [
+        'first_name' => 'Joe',
+        'last_name' => 'Doe',
+        'phone' => '123-432-1234',
+        'email' => 'joe.doe@test.test',
+        'status' => ContactStatus::Prospect->value,
+        'account_id' => $account->id,
+    ];
+
+    $this->actingAs($salesAgent)
+        ->fromRoute('contacts.create')
+        ->post(route('contacts.store'), $contactData)
+        ->assertRedirectToRoute('contacts.index');
+
+    $this->assertDatabaseCount('contacts', 1);
+
+    expect(Contact::first()->user_id)->toBe($salesAgent->id);
+});
+
+test('sales agents cannot assign accounts they do not own to their contacts', function () {
+    $salesAgent = User::factory()
+        ->create()
+        ->syncRoles([UserRole::SalesAgent->value]);
+
+    $account = Account::factory()->create();
+
+    $contactData = [
+        'first_name' => 'Joe',
+        'last_name' => 'Doe',
+        'phone' => '123-432-1234',
+        'email' => 'joe.doe@test.test',
+        'status' => ContactStatus::Prospect->value,
+        'account_id' => $account->id,
+    ];
+
+    $this->actingAs($salesAgent)
+        ->fromRoute('contacts.create')
+        ->post(route('contacts.store'), $contactData)
+        ->assertRedirectBack()
+        ->assertSessionHasErrors([
+            'account_id' => 'You do not have permission to assign this account.'
+        ]);
+
+    $this->assertDatabaseCount('contacts', 0);
 });
 
 test('email can be nullable', function () {

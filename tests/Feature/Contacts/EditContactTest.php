@@ -216,6 +216,82 @@ test('sales agents can edit their contacts', function () {
         ->and($contact->account_id)->toBe($accountId);
 });
 
+test('sales agents can assign their accounts to their contacts', function () {
+    $salesAgent = User::factory()
+        ->create()
+        ->syncRoles([UserRole::SalesAgent->value]);
+
+    $contact = Contact::factory()->create([
+        'user_id' => $salesAgent->id,
+    ]);
+
+    $account = Account::factory()->create([
+        'user_id' => $salesAgent->id,
+    ]);
+
+    $updatedData = [
+        'first_name' => 'Xxx',
+        'last_name' => 'Yyy',
+        'email' => 'xxx.yyy@example.cc',
+        'phone' => '123-756-864',
+        'status' => ContactStatus::Client->value,
+        'account_id' => $account->id,
+    ];
+
+    $this->actingAs($salesAgent)
+        ->fromRoute('contacts.edit', $contact)
+        ->patch(route('contacts.update', $contact), $updatedData)
+        ->assertRedirectToRoute('contacts.index')
+        ->assertSessionHas('success', 'The contact #'.$contact->id.' has been updated.');
+
+    $this->assertDatabaseCount('contacts', 1);
+
+    $contact->refresh();
+
+    expect($contact->user_id)->toBe($salesAgent->id)
+        ->and($contact->first_name)->toBe($updatedData['first_name'])
+        ->and($contact->last_name)->toBe($updatedData['last_name'])
+        ->and($contact->email)->toBe($updatedData['email'])
+        ->and($contact->phone)->toBe($updatedData['phone'])
+        ->and($contact->status->value)->toBe($updatedData['status'])
+        ->and($contact->account_id)->toBe($account->id);
+});
+
+test('sales agents cannot assign accounts they do not own to their contacts', function () {
+    $salesAgent = User::factory()
+        ->create()
+        ->syncRoles([UserRole::SalesAgent->value]);
+
+    $contact = Contact::factory()->create([
+        'user_id' => $salesAgent->id,
+    ]);
+
+    $account = Account::factory()->create();
+
+    $updatedData = [
+        'first_name' => 'Xxx',
+        'last_name' => 'Yyy',
+        'email' => 'xxx.yyy@example.cc',
+        'phone' => '123-756-864',
+        'status' => ContactStatus::Client->value,
+        'account_id' => $account->id,
+    ];
+
+    $this->actingAs($salesAgent)
+        ->fromRoute('contacts.edit', $contact)
+        ->patch(route('contacts.update', $contact), $updatedData)
+        ->assertRedirectBack()
+        ->assertSessionHasErrors([
+            'account_id' => 'You do not have permission to assign this account.'
+        ]);
+
+    $this->assertDatabaseCount('contacts', 1);
+
+    $contact->refresh();
+
+    expect($contact->account_id)->toBeNull();
+});
+
 it('fails when using an already taken email', function () {
     $admin = User::factory()
         ->create()

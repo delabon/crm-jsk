@@ -6,6 +6,7 @@ namespace App\Http\Requests\Admin\Contacts;
 
 use App\DataTransferObjects\Contacts\ContactFormDto;
 use App\Enums\ContactStatus;
+use App\Rules\ValidAccountAssignment;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -60,7 +61,8 @@ final class ContactFormRequest extends FormRequest
             ],
             'account_id' => [
                 'nullable',
-                'exists:accounts,id'
+                'exists:accounts,id',
+                new ValidAccountAssignment($this->user(), $this->integer('account_id'))
             ]
         ];
     }
