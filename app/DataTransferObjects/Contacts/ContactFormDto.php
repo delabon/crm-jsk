@@ -17,7 +17,8 @@ final readonly class ContactFormDto implements Arrayable
         public string $lastName,
         public string $phone,
         public ContactStatus $status,
-        public ?string $email
+        public ?string $email,
+        public ?int $accountId
     ) {}
 
     public function toArray(): array
@@ -26,8 +27,9 @@ final readonly class ContactFormDto implements Arrayable
             'first_name' => $this->firstName,
             'last_name' => $this->lastName,
             'phone' => $this->phone,
-            'email' => $this->email,
             'status' => $this->status->value,
+            'email' => $this->email,
+            'account_id' => $this->accountId,
         ];
     }
 }

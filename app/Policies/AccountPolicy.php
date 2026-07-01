@@ -12,13 +12,18 @@ final class AccountPolicy
     public function viewAny(User $user): bool
     {
         return $user->can('accounts.view-any')
-            || $user->can('accounts.view-own');
+            || $this->viewOwn($user);
+    }
+
+    public function viewOwn(User $user): bool
+    {
+        return $user->can('accounts.view-own');
     }
 
     public function view(User $user, Account $account): bool
     {
-        return $user->can('accounts.view-any')
-            || ($user->can('accounts.view-own') && $user->id === $account->user_id);
+        return $this->viewAny($user)
+            || ($this->viewOwn($user) && $user->id === $account->user_id);
     }
 
     public function create(User $user): bool

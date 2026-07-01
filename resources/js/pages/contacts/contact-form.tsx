@@ -1,5 +1,6 @@
 import {Form} from "@inertiajs/react";
 import {Button} from "@/components/ui/button";
+import {Chips} from "@/components/ui/chips";
 import {FormField} from "@/components/ui/form-field";
 import {Input} from "@/components/ui/input";
 import {SelectWithItems} from "@/components/ui/select-with-items";
@@ -66,6 +67,16 @@ export default function ContactForm({action, method, contact, statuses}: Props) 
                         placeholder="Select status"
                         aria-invalid={!!errors['status']}
                         defaultValue={contact?.status ?? ''}
+                    />
+                </FormField>
+
+                <FormField label="Account" htmlFor="account_id" error={errors['account_id'] ?? null}>
+                    <Chips
+                        id="account_id"
+                        name="account_id"
+                        endpoint="/api/private/v1/accounts/search"
+                        placeholder="Search accounts..."
+                        defaultValue={contact?.account ? { value: String(contact.account.id), label: contact.account.name } : undefined}
                     />
                 </FormField>
 

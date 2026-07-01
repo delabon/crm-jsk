@@ -1,37 +1,25 @@
 import { Head, Link, usePage } from '@inertiajs/react';
 import {
-    Building2,
     BookUserIcon,
     Plus,
-    TrendingUp,
     UserPlus,
     UserCog,
-    ArrowRight,
     CalendarDays,
     GlobeIcon,
     UsersIcon,
-    Mail,
+    BuildingIcon,
+    TrendingUpIcon,
 } from 'lucide-react';
 import React from "react";
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
-import { useInitials } from '@/hooks/use-initials';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import accountRoutes from '@/routes/accounts';
-import userRoutes from '@/routes/users';
 import contactRoutes from '@/routes/contacts';
+import userRoutes from '@/routes/users';
 import type { Account, BreadcrumbItem, Contact } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -116,7 +104,7 @@ function getStatCards(stats: Props['metrics']['stats']): StatCards {
                 label: 'My Accounts',
                 value: stats.my_accounts,
                 description: 'Accounts assigned to you',
-                icon: Building2,
+                icon: BuildingIcon,
                 color: 'text-blue-600 dark:text-blue-400',
                 bgColor: 'bg-blue-50 dark:bg-blue-950/50',
             },
@@ -125,7 +113,7 @@ function getStatCards(stats: Props['metrics']['stats']): StatCards {
                 label: 'New This Month',
                 value: stats.accounts_this_month,
                 description: 'Accounts assigned to you this month',
-                icon: TrendingUp,
+                icon: TrendingUpIcon,
                 color: 'text-emerald-600 dark:text-emerald-400',
                 bgColor: 'bg-emerald-50 dark:bg-emerald-950/50',
             }
@@ -145,7 +133,7 @@ function getStatCards(stats: Props['metrics']['stats']): StatCards {
                 label: 'New This Month',
                 value: stats.contacts_this_month,
                 description: 'Contacts assigned to you this month',
-                icon: TrendingUp,
+                icon: TrendingUpIcon,
                 color: 'text-emerald-600 dark:text-emerald-400',
                 bgColor: 'bg-emerald-50 dark:bg-emerald-950/50',
             }

@@ -4,12 +4,11 @@ import {
     Globe,
     Phone,
     Calendar,
-    Users,
     DollarSign,
     Edit,
     ExternalLink,
     Mail,
-    User,
+    BookUserIcon,
 } from 'lucide-react';
 import DeleteButton from '@/components/delete-button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -168,7 +167,7 @@ export default function Show({ account, can }: Props) {
                         <Card>
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2">
-                                    <Users className="h-4 w-4" />
+                                    <BookUserIcon className="h-4 w-4" />
                                     Related Contacts
                                 </CardTitle>
                             </CardHeader>
@@ -221,7 +220,7 @@ export default function Show({ account, can }: Props) {
                                 ) : (
                                     <div className="flex flex-col items-center justify-center py-8 text-center">
                                         <div className="mb-3 rounded-full bg-muted p-3">
-                                            <Users className="h-6 w-6 text-muted-foreground" />
+                                            <BookUserIcon className="h-6 w-6 text-muted-foreground" />
                                         </div>
                                         <p className="text-sm font-medium">
                                             No contacts yet

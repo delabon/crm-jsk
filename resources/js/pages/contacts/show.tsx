@@ -1,6 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 import {
-    Building2,
+    Building2Icon,
     Calendar,
     Edit,
     Mail,
@@ -178,7 +178,7 @@ export default function Show({ contact, can }: Props) {
                                 <CardContent>
                                     <div className="flex items-center gap-3">
                                         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
-                                            <Building2 className="h-5 w-5 text-muted-foreground" />
+                                            <Building2Icon className="h-5 w-5 text-muted-foreground" />
                                         </div>
                                         <div>
                                             <Link

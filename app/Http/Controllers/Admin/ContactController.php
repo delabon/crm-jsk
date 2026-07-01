@@ -84,6 +84,8 @@ final class ContactController extends Controller
 
     public function edit(Contact $contact): InertiaResponse
     {
+        $contact->load(['user', 'account']);
+
         return Inertia::render('contacts/edit', [
             'contact' => new ContactResource($contact),
             'statuses' => ContactStatus::options(),

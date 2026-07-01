@@ -57,18 +57,27 @@ final class ContactFormRequest extends FormRequest
             'status' => [
                 'required',
                 Rule::enum(ContactStatus::class),
+            ],
+            'account_id' => [
+                'nullable',
+                'exists:accounts,id'
             ]
         ];
     }
 
     public function toDto(): ContactFormDto
     {
+        $accountId = $this->integer('account_id', 0);
+
         return new ContactFormDto(
             firstName: $this->string('first_name')->toString(),
             lastName: $this->string('last_name')->toString(),
             phone: $this->string('phone')->toString(),
             status: $this->enum('status', ContactStatus::class),
             email: $this->input('email'),
+            accountId: $accountId === 0
+                ? null
+                : $accountId,
         );
     }
 }
