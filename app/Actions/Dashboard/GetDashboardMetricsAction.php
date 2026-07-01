@@ -9,12 +9,18 @@ use App\Models\Account;
 use App\Models\Contact;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
 final class GetDashboardMetricsAction
 {
-    private const int CACHE_DAYS = 15;
+    private int $cacheDays;
+
+    public function __construct()
+    {
+        $this->cacheDays = (int) Config::get('app.dashboard.metrics_cache_days', 30);
+    }
 
     /**
      * @return array<string, mixed>
@@ -63,7 +69,7 @@ final class GetDashboardMetricsAction
 
         return Cache::remember(
             'dashboard:role_distribution',
-            now()->addDays(self::CACHE_DAYS),
+            now()->addDays($this->cacheDays),
             static function (): array {
                 $rows = DB::table('model_has_roles')
                     ->select('roles.name as role', DB::raw('COUNT(*) as count'))
@@ -84,28 +90,24 @@ final class GetDashboardMetricsAction
     {
         $stats['my_accounts'] = Cache::remember(
             'dashboard:my_accounts:'.$user->id,
-            now()->addDays(self::CACHE_DAYS),
+            now()->addDays($this->cacheDays),
             static fn (): int => $user->accounts()->count(),
         );
 
         if ($user->canViewAnyAccount()) {
             $stats['total_accounts'] = Cache::remember(
                 'dashboard:total_accounts',
-                now()->addDays(self::CACHE_DAYS),
+                now()->addDays($this->cacheDays),
                 static fn (): int => Account::query()->count(),
             );
         }
 
         $stats['accounts_this_month'] = Cache::remember(
             "dashboard:accounts_this_month:{$user->id}",
-            now()->addDays(self::CACHE_DAYS),
-            static fn (): int => $user->canViewAnyAccount()
-                ? Account::query()
-                    ->where('created_at', '>=', now()->startOfMonth())
-                    ->count()
-                : $user->accounts()
-                    ->where('created_at', '>=', now()->startOfMonth())
-                    ->count(),
+            now()->addDays($this->cacheDays),
+            static fn (): int => $user->accounts()
+                ->where('created_at', '>=', now()->startOfMonth())
+                ->count()
         );
     }
 
@@ -113,28 +115,24 @@ final class GetDashboardMetricsAction
     {
         $stats['my_contacts'] = Cache::remember(
             'dashboard:my_contacts:'.$user->id,
-            now()->addDays(self::CACHE_DAYS),
+            now()->addDays($this->cacheDays),
             static fn (): int => $user->contacts()->count(),
         );
 
         if ($user->canViewAnyContact()) {
             $stats['total_contacts'] = Cache::remember(
                 'dashboard:total_contacts',
-                now()->addDays(self::CACHE_DAYS),
+                now()->addDays($this->cacheDays),
                 static fn (): int => Contact::query()->count(),
             );
         }
 
         $stats['contacts_this_month'] = Cache::remember(
             "dashboard:contacts_this_month:{$user->id}",
-            now()->addDays(self::CACHE_DAYS),
-            static fn (): int => $user->canViewAnyContact()
-                ? Contact::query()
-                    ->where('created_at', '>=', now()->startOfMonth())
-                    ->count()
-                : $user->contacts()
-                    ->where('created_at', '>=', now()->startOfMonth())
-                    ->count(),
+            now()->addDays($this->cacheDays),
+            static fn (): int => $user->contacts()
+                ->where('created_at', '>=', now()->startOfMonth())
+                ->count(),
         );
     }
 
@@ -143,7 +141,7 @@ final class GetDashboardMetricsAction
         if ($user->canManageUsers()) {
             $stats['total_users'] = Cache::remember(
                 'dashboard:total_users',
-                now()->addDays(self::CACHE_DAYS),
+                now()->addDays($this->cacheDays),
                 static fn (): int => User::query()->count(),
             );
         }

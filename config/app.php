@@ -127,5 +127,6 @@ return [
 
     'dashboard' => [
         'per_page' => env('APP_DASHBOARD_PER_PAGE', 15),
+        'metrics_cache_days' => env('APP_DASHBOARD_METRICS_CACHE_DAYS', 30),
     ],
 ];
