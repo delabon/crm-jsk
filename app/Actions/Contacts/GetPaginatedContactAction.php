@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Builder;
 final class GetPaginatedContactAction
 {
     /**
-     * @return LengthAwarePaginator<int, Account>
+     * @return LengthAwarePaginator<int, Contact>
      */
     public function handle(int $perPage, User $user, ContactFilterDto $dto): LengthAwarePaginator
     {
