@@ -36,7 +36,7 @@ final readonly class ValidAccountAssignment implements ValidationRule
             return;
         }
 
-        if ($this->user->can('view', [$account])) {
+        if ($this->user->can('view', $account)) {
             return;
         }
 

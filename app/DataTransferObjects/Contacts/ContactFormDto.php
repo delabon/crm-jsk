@@ -8,7 +8,7 @@ use App\Enums\ContactStatus;
 use Illuminate\Contracts\Support\Arrayable;
 
 /**
- * @implements Arrayable<string, string>
+ * @implements Arrayable<string, ?string>
  */
 final readonly class ContactFormDto implements Arrayable
 {
