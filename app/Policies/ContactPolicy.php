@@ -32,11 +32,20 @@ final class ContactPolicy
 
     public function update(User $user, Contact $contact): bool
     {
+        if ($this->updateAny($user)) {
+            return true;
+        }
+
         if (! $user->can('contacts.update')) {
             return false;
         }
 
-        return $contact->user_id === $user->id || $user->can('contacts.delete');
+        return $contact->user_id === $user->id;
+    }
+
+    public function updateAny(User $user): bool
+    {
+        return $user->can('contacts.update-any');
     }
 
     public function delete(User $user, Contact $contact): bool

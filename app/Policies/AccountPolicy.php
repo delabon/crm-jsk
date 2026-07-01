@@ -32,11 +32,20 @@ final class AccountPolicy
 
     public function update(User $user, Account $account): bool
     {
+        if ($this->updateAny($user)) {
+            return true;
+        }
+
         if (! $user->can('accounts.update')) {
             return false;
         }
 
-        return $account->user_id === $user->id || $user->can('accounts.delete');
+        return $account->user_id === $user->id;
+    }
+
+    public function updateAny(User $user): bool
+    {
+        return $user->can('accounts.update-any');
     }
 
     public function delete(User $user, Account $account): bool

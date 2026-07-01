@@ -27,6 +27,7 @@ final class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'accounts.view-own']);
         Permission::create(['name' => 'accounts.create']);
         Permission::create(['name' => 'accounts.update']);
+        Permission::create(['name' => 'accounts.update-any']);
         Permission::create(['name' => 'accounts.delete']);
 
         // --- Contacts ---
@@ -34,6 +35,7 @@ final class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'contacts.view-own']);
         Permission::create(['name' => 'contacts.create']);
         Permission::create(['name' => 'contacts.update']);
+        Permission::create(['name' => 'contacts.update-any']);
         Permission::create(['name' => 'contacts.delete']);
 
         // --- Deals ---
@@ -41,6 +43,7 @@ final class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'deals.view-own']);
         Permission::create(['name' => 'deals.create']);
         Permission::create(['name' => 'deals.update']);
+        Permission::create(['name' => 'deals.update-any']);
         Permission::create(['name' => 'deals.delete']);
 
         // --- Campaigns ---
@@ -71,17 +74,20 @@ final class RolesAndPermissionsSeeder extends Seeder
             'accounts.view-own',
             'accounts.create',
             'accounts.update',
+            'accounts.update-any',
             'accounts.delete',
             // Contacts
             'contacts.view-any',
             'contacts.view-own',
             'contacts.create',
             'contacts.update',
+            'contacts.update-any',
             'contacts.delete',
             // Deals
             'deals.view-any',
             'deals.create',
             'deals.update',
+            'deals.update-any',
             'deals.delete',
             // Campaigns
             'campaigns.view',
