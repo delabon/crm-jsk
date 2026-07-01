@@ -18,6 +18,8 @@ import { dashboard } from '@/routes';
 import accountRoutes from '@/routes/accounts';
 import contactRoutes from '@/routes/contacts';
 import type { BreadcrumbItem, Contact } from '@/types';
+import DeleteButton from "@/components/delete-button";
+import accountRoute from "@/routes/accounts";
 
 type Props = {
     contact: Contact;
@@ -74,6 +76,12 @@ export default function Show({ contact, can }: Props) {
                                     Edit
                                 </Link>
                             </Button>
+                        )}
+                        {can.delete && (
+                            <DeleteButton
+                                size="sm"
+                                {...contactRoutes.destroy.form(contact.id)}
+                            />
                         )}
                     </div>
                 </div>
