@@ -53,6 +53,7 @@ Already completed. Users table with `manager_id` self-join, Spatie installed, ro
 | Dashboard | `view` |
 | Profile | `manage` |
 | Contacts | `view-any`, `view-own`, `create`, `update`, `delete` |
+| Accounts | `view-any`, `view-own`, `create`, `update`, `delete` |
 | Deals | `view-any`, `view-own`, `create`, `update`, `delete` |
 | Campaigns | `view`, `manage` |
 | Tasks | `manage` |
@@ -70,6 +71,11 @@ Already completed. Users table with `manager_id` self-join, Spatie installed, ro
 | `contacts.create` | ❌ | ✅ | ✅ | ✅ |
 | `contacts.update` | ❌ | ✅ | ✅ | ✅ |
 | `contacts.delete` | ❌ | ❌ | ✅ | ✅ |
+| `accounts.view-own` | ❌ | ✅ | ✅ | ✅ |
+| `accounts.view-any` | ❌ | ❌ | ✅ | ✅ |
+| `accounts.create` | ❌ | ✅ | ✅ | ✅ |
+| `accounts.update` | ❌ | ✅ | ✅ | ✅ |
+| `accounts.delete` | ❌ | ❌ | ✅ | ✅ |
 | `deals.view-own` | ❌ | ✅ | ✅ | ✅ |
 | `deals.view-any` | ❌ | ❌ | ✅ | ✅ |
 | `deals.create` | ❌ | ✅ | ✅ | ✅ |
@@ -89,41 +95,67 @@ Already completed. Users table with `manager_id` self-join, Spatie installed, ro
 
 > Companies · People · Profiles · Countries
 
-Accounts are the companies. Contacts are the people inside them. A contact can exist without an account (freelancer, individual). Status on contact drives the lead → prospect → client funnel.
+A `User` (sales rep) owns many Accounts and many Contacts independently. An Account is a company. A Contact is a person — they may work at an Account, or exist standalone (freelancer, individual). Status on Contact drives the lead → prospect → client funnel.
 
-### Architecture note
+### Ownership model
 
 ```
-users        → internal, log in, have roles
-accounts     → companies (Acme Corp, Google, etc.)
-contacts     → people, belong to an account, have a status (lead/prospect/client)
+User (sales rep)
+ ├── hasMany Accounts   (companies they manage)
+ └── hasMany Contacts   (people they manage)
+       └── belongsTo Account (nullable — the company they work at)
 ```
+
+The rep owns the contact directly via `contacts.user_id`. The account is just context. This means a rep can manage a contact who works at an account owned by a different rep — which is intentional and realistic.
 
 A "lead" is a contact with `status = 'lead'`. No separate leads table needed — status scopes handle the funnel.
+
+### FK layout
+
+```
+accounts: id, user_id, name, industry, website, phone
+contacts: id, user_id, account_id (nullable), first_name, last_name, email (nullable), phone, status
+profiles: id, contact_id, country_id, linkedin, avatar, job_title, bio
+
+addresses: id, addressable_id, addressable_type, name, line1, line2,
+           city, state, postal_code, country_id               ← poly
+           (e.g. name = "HQ", "Billing", "Warehouse")
+```
 
 ### Tasks
 
 - [ ] `countries` migration (`id`, `name`, `code`)
-- [ ] `accounts` migration (`id`, `name`, `industry`, `website`, `user_id`)
-- [ ] `contacts` migration (`id`, `user_id`, `account_id` nullable, `name`, `email`, `phone`, `status`)
+- [ ] `accounts` migration (`id`, `user_id`, `name`, `industry`, `website`, `phone`)
+- [ ] `contacts` migration (`id`, `user_id`, `account_id` nullable, `first_name`, `last_name`, `email` nullable, `phone`, `status`)
 - [ ] `profiles` migration (`id`, `contact_id`, `country_id`, `linkedin`, `avatar`, `job_title`, `bio`)
-- [ ] `Account` model: `hasMany(Contact)`, `belongsTo(User)`
-- [ ] `Contact` model: `belongsTo(Account)`, `hasOne(Profile)`, `hasMany(Deal)`
+- [ ] `addresses` migration with `morphs('addressable')`, `name`, `line1`, `line2`, `city`, `state`, `postal_code`, `country_id`
+- [ ] `User` model: `hasMany(Account)`, `hasMany(Contact)`
+- [ ] `Account` model: `belongsTo(User)`, `hasMany(Contact)`, `morphMany(Address)`
+- [ ] `Contact` model: `belongsTo(User)`, `belongsTo(Account)` nullable
+- [ ] `Contact` model: `hasOne(Profile)`, `hasMany(Deal)`, `morphOne(Address)`
 - [ ] `Contact` model: `hasOneThrough(Country via Profile)`
 - [ ] `Contact` model: `morphOne(Note)`, `morphMany(Task)`, `morphToMany(Tag)`
+- [ ] `Address` model: `morphTo()`, `belongsTo(Country)`
 - [ ] `Profile` model: `belongsTo(Contact)`, `belongsTo(Country)`
 - [ ] `ContactPolicy`: `view-own` vs `view-any` via Spatie
-- [ ] `AccountPolicy`: managers see all, agents see assigned only
+- [ ] `AccountPolicy`: `view-own` vs `view-any` via Spatie, `delete` locked to manager+
+- [ ] `ListContactsAction`, `CreateContactAction`, `UpdateContactAction`, `DeleteContactAction`
+- [ ] `ListAccountsAction`, `CreateAccountAction`, `UpdateAccountAction`, `DeleteAccountAction`
 - [ ] `ContactFactory` + `AccountFactory` with Faker
-- [ ] `AccountSeeder` + `ContactSeeder` with profiles
+- [ ] `AccountSeeder` + `ContactSeeder` with profiles and addresses
 
 ### Relationships in this phase
 
-| Type | Relationship |
-|---|---|
-| One-to-One | `Contact` → `Profile` |
-| One-to-Many | `Account` → `Contacts` |
-| Has One Through | `Contact` → `Country` (via `Profile`) |
+| Type | From | To | Notes |
+|---|---|---|---|
+| One-to-Many | `User` | `Account` | rep owns many companies |
+| One-to-Many | `User` | `Contact` | rep owns many people |
+| One-to-Many | `Account` | `Contact` | company has many employees |
+| Many-to-One | `Contact` | `Account` | nullable — person may have no company |
+| One-to-One | `Contact` | `Profile` | enriched contact data |
+| Has One Through | `Contact` | `Country` | via `Profile.country_id` |
+| Poly One-to-Many | `Account` | `Address` | labeled addresses e.g. HQ, Billing |
+| Poly One-to-One | `Contact` | `Address` | single personal address |
 
 ---
 
@@ -412,10 +444,13 @@ it('manager sees all contacts across team', function () {
 users           id, name, email, password, manager_id (self-join)
   ↳ roles       via Spatie model_has_roles pivot
 
-accounts        id, user_id, name, industry, website
-contacts        id, user_id, account_id (nullable), name, email, phone, status
+accounts        id, user_id, name, industry, website, phone
+contacts        id, user_id, account_id (nullable), first_name, last_name, email (nullable), phone, status
 profiles        id, contact_id, country_id, linkedin, avatar, job_title, bio
 countries       id, name, code
+addresses       id, name, line1, line2, city, state, postal_code, country_id,
+                addressable_id, addressable_type                ← poly
+                (Account → morphMany, Contact → morphOne)
 
 deals           id, contact_id, user_id, title, value, stage, expected_close
 campaigns       id, name, type, starts_at, ends_at
@@ -476,16 +511,7 @@ This application is a Laravel application and its main Laravel ecosystems packag
 
 ## Skills Activation
 
-This project has domain-specific skills available. You MUST activate the relevant skill whenever you work in that domain—don't wait until you're stuck.
-
-- `laravel-best-practices` — Apply this skill whenever writing, reviewing, or refactoring Laravel PHP code. This includes creating or modifying controllers, models, migrations, form requests, policies, jobs, scheduled commands, service classes, and Eloquent queries. Triggers for N+1 and query performance issues, caching strategies, authorization and security patterns, validation, error handling, queue and job configuration, route definitions, and architectural decisions. Also use for Laravel code reviews and refactoring existing Laravel code to follow best practices. Covers any task involving Laravel backend PHP code patterns.
-- `configuring-horizon` — Use this skill whenever the user mentions Horizon by name in a Laravel context. Covers the full Horizon lifecycle: installing Horizon (horizon:install, Sail setup), configuring config/horizon.php (supervisor blocks, queue assignments, balancing strategies, minProcesses/maxProcesses), fixing the dashboard (authorization via Gate::define viewHorizon, blank metrics, horizon:snapshot scheduling), and troubleshooting production issues (worker crashes, timeout chain ordering, LongWaitDetected notifications, waits config). Also covers job tagging and silencing. Do not use for generic Laravel queues without Horizon, SQS or database drivers, standalone Redis setup, Linux supervisord, Telescope, or job batching.
-- `scout-development` — Develops full-text search with Laravel Scout. Activates when installing or configuring Scout; choosing a search engine (Algolia, Meilisearch, Typesense, Database, Collection); adding the Searchable trait to models; customizing toSearchableArray or searchableAs; importing or flushing search indexes; writing search queries with where clauses, pagination, or soft deletes; configuring index settings; troubleshooting search results; or when the user mentions Scout, full-text search, search indexing, or search engines in a Laravel project. Make sure to use this skill whenever the user works with search functionality in Laravel, even if they don't explicitly mention Scout.
-- `wayfinder-development` — Use this skill for Laravel Wayfinder which auto-generates typed functions for Laravel controllers and routes. ALWAYS use this skill when frontend code needs to call backend routes or controller actions. Trigger when: connecting any React/Vue/Svelte/Inertia frontend to Laravel controllers, routes, building end-to-end features with both frontend and backend, wiring up forms or links to backend endpoints, fixing route-related TypeScript errors, importing from @/actions or @/routes, or running wayfinder:generate. Use Wayfinder route functions instead of hardcoded URLs. Covers: wayfinder() vite plugin, .url()/.get()/.post()/.form(), query params, route model binding, tree-shaking. Do not use for backend-only task
-- `pest-testing` — Use this skill for Pest PHP testing in Laravel projects only. Trigger whenever any test is being written, edited, fixed, or refactored — including fixing tests that broke after a code change, adding assertions, converting PHPUnit to Pest, adding datasets, and TDD workflows. Always activate when the user asks how to write something in Pest, mentions test files or directories (tests/Feature, tests/Unit, tests/Browser), or needs browser testing, smoke testing multiple pages for JS errors, or architecture tests. Covers: it()/expect() syntax, datasets, mocking, browser testing (visit/click/fill), smoke testing, arch(), Livewire component tests, RefreshDatabase, and all Pest 4 features. Do not use for factories, seeders, migrations, controllers, models, or non-test PHP code.
-- `inertia-react-development` — Develops Inertia.js v3 React client-side applications. Activates when creating React pages, forms, or navigation; using <Link>, <Form>, useForm, useHttp, setLayoutProps, or router; working with deferred props, prefetching, optimistic updates, instant visits, or polling; or when user mentions React with Inertia, React pages, React forms, or React navigation.
-- `tailwindcss-development` — Always invoke when the user's message includes 'tailwind' in any form. Also invoke for: building responsive grid layouts (multi-column card grids, product grids), flex/grid page structures (dashboards with sidebars, fixed topbars, mobile-toggle navs), styling UI components (cards, tables, navbars, pricing sections, forms, inputs, badges), adding dark mode variants, fixing spacing or typography, and Tailwind v3/v4 work. The core use case: writing or fixing Tailwind utility classes in HTML templates (Blade, JSX, Vue). Skip for backend PHP logic, database queries, API routes, JavaScript with no HTML/CSS component, CSS file audits, build tool configuration, and vanilla CSS.
-- `laravel-permission-development` — Build and work with Spatie Laravel Permission features, including roles, permissions, middleware, policies, teams, and Blade directives.
+This project has domain-specific skills available in `**/skills/**`. You MUST activate the relevant skill whenever you work in that domain—don't wait until you're stuck.
 
 ## Conventions
 
@@ -545,7 +571,6 @@ This project has domain-specific skills available. You MUST activate the relevan
 - Run Artisan commands directly via the command line (e.g., `vendor/bin/sail artisan route:list`). Use `vendor/bin/sail artisan list` to discover available commands and `vendor/bin/sail artisan [command] --help` to check parameters.
 - Inspect routes with `vendor/bin/sail artisan route:list`. Filter with: `--method=GET`, `--name=users`, `--path=api`, `--except-vendor`, `--only-vendor`.
 - Read configuration values using dot notation: `vendor/bin/sail artisan config:show app.name`, `vendor/bin/sail artisan config:show database.default`. Or read config files directly from the `config/` directory.
-- To check environment variables, read the `.env` file directly.
 
 ## Tinker
 
@@ -563,6 +588,12 @@ This project has domain-specific skills available. You MUST activate the relevan
 - Use TitleCase for Enum keys: `FavoritePerson`, `BestLake`, `Monthly`.
 - Prefer PHPDoc blocks over inline comments. Only add inline comments for exceptionally complex logic.
 - Use array shape type definitions in PHPDoc blocks.
+
+=== deployments rules ===
+
+# Deployment
+
+- Laravel can be deployed using [Laravel Cloud](https://cloud.laravel.com/), which is the fastest way to deploy and scale production Laravel applications.
 
 === sail rules ===
 
@@ -656,6 +687,7 @@ Use Wayfinder to generate TypeScript functions for Laravel routes. Import from `
 ## Pest
 
 - This project uses Pest for testing. Create tests: `vendor/bin/sail artisan make:test --pest {name}`.
+- The `{name}` argument should not include the test suite directory. Use `vendor/bin/sail artisan make:test --pest SomeFeatureTest` instead of `vendor/bin/sail artisan make:test --pest Feature/SomeFeatureTest`.
 - Run tests: `vendor/bin/sail artisan test --compact` or filter: `vendor/bin/sail artisan test --compact --filter=testName`.
 - Do NOT delete tests without approval.
 
