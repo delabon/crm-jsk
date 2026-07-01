@@ -20,7 +20,7 @@ The system tracks companies (accounts), the people inside them (contacts), and t
 
 **Key architectural decisions:**
 - Session-based auth via Laravel's built-in auth — no token layer needed with Inertia
-- Inertia handles all page transitions — no REST API, no JSON endpoints for the frontend
+- Inertia handles all page transitions
 - Leads are not a separate table — they are contacts with `status = 'lead'`
 - Clients are not a separate table — they are contacts whose deal reached `closed_won`
 - All polymorphic models (notes, tasks, tags) are reusable across any entity with zero new tables
