@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Enums\ContactStatus;
 use App\Enums\UserRole;
+use App\Models\Account;
 use App\Models\Contact;
 use App\Models\User;
 use Inertia\Testing\AssertableInertia;
@@ -76,6 +77,7 @@ test('admins can edit any contact', function () {
         ->syncRoles([UserRole::SuperAdmin->value]);
 
     $contact = Contact::factory()->create();
+    $account = Account::factory()->create();
 
     $updatedData = [
         'first_name' => 'Updated first name',
@@ -83,6 +85,7 @@ test('admins can edit any contact', function () {
         'email' => 'updated.email@test.cc',
         'phone' => '123-123-ABC',
         'status' => ContactStatus::Prospect->value,
+        'account_id' => $account->id,
     ];
 
     $this->actingAs($admin)
@@ -93,8 +96,6 @@ test('admins can edit any contact', function () {
 
     $this->assertDatabaseCount('contacts', 1);
 
-    $accountId = $contact->account_id;
-
     $contact->refresh();
 
     expect($contact->user_id)->not()->toBe($admin->id)
@@ -103,7 +104,7 @@ test('admins can edit any contact', function () {
         ->and($contact->email)->toBe($updatedData['email'])
         ->and($contact->phone)->toBe($updatedData['phone'])
         ->and($contact->status->value)->toBe($updatedData['status'])
-        ->and($contact->account_id)->toBe($accountId);
+        ->and($contact->account_id)->toBe($account->id);
 });
 
 test('managers can edit any contact', function () {
@@ -112,6 +113,7 @@ test('managers can edit any contact', function () {
         ->syncRoles([UserRole::Manager->value]);
 
     $contact = Contact::factory()->create();
+    $account = Account::factory()->create();
 
     $updatedData = [
         'first_name' => 'first name got updated',
@@ -119,6 +121,7 @@ test('managers can edit any contact', function () {
         'email' => 'updated.john@example.cc',
         'phone' => 'OPL-CSD-444',
         'status' => ContactStatus::Client->value,
+        'account_id' => $account->id,
     ];
 
     $this->actingAs($manager)
@@ -129,8 +132,6 @@ test('managers can edit any contact', function () {
 
     $this->assertDatabaseCount('contacts', 1);
 
-    $accountId = $contact->account_id;
-
     $contact->refresh();
 
     expect($contact->user_id)->not()->toBe($manager->id)
@@ -139,7 +140,7 @@ test('managers can edit any contact', function () {
         ->and($contact->email)->toBe($updatedData['email'])
         ->and($contact->phone)->toBe($updatedData['phone'])
         ->and($contact->status->value)->toBe($updatedData['status'])
-        ->and($contact->account_id)->toBe($accountId);
+        ->and($contact->account_id)->toBe($account->id);
 });
 
 it("returns forbidden when a sales agent tries to update another user's contact", function () {

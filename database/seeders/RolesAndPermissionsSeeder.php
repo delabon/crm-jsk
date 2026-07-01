@@ -66,22 +66,29 @@ final class RolesAndPermissionsSeeder extends Seeder
         $manager->givePermissionTo([
             'dashboard.view',
             'profile.manage',
+            // Accounts
             'accounts.view-any',
             'accounts.view-own',
             'accounts.create',
             'accounts.update',
             'accounts.delete',
+            // Contacts
             'contacts.view-any',
+            'contacts.view-own',
             'contacts.create',
             'contacts.update',
             'contacts.delete',
+            // Deals
             'deals.view-any',
             'deals.create',
             'deals.update',
             'deals.delete',
+            // Campaigns
             'campaigns.view',
             'campaigns.manage',
+            // Tasks
             'tasks.manage',
+            // Reports
             'reports.own',
             'reports.team',
         ]);

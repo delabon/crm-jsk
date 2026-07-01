@@ -60,7 +60,7 @@ Route::middleware(['auth', 'verified'])
             ->controller(AccountController::class)
             ->group(function () {
                 Route::get('/', 'index')
-                    ->can('view-any', [Account::class])
+                    ->can('view-own', [Account::class])
                     ->name('index');
                 Route::get('/create', 'create')
                     ->can('create', [Account::class])
@@ -91,7 +91,7 @@ Route::middleware(['auth', 'verified'])
             ->controller(ContactController::class)
             ->group(function () {
                 Route::get('/', 'index')
-                    ->can('view-any', [Contact::class])
+                    ->can('view-own', [Contact::class])
                     ->name('index');
                 Route::get('/create', 'create')
                     ->can('create', [Contact::class])

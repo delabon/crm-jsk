@@ -11,8 +11,7 @@ final class AccountPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->can('accounts.view-any')
-            || $this->viewOwn($user);
+        return $user->can('accounts.view-any');
     }
 
     public function viewOwn(User $user): bool
