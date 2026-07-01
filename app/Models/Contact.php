@@ -51,6 +51,9 @@ final class Contact extends Model
         return $this->belongsTo(Account::class);
     }
 
+    /**
+     * @return array<string, ?string>
+     */
     public function toSearchableArray(): array
     {
         return [

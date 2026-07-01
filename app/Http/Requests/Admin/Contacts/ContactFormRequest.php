@@ -6,6 +6,7 @@ namespace App\Http\Requests\Admin\Contacts;
 
 use App\DataTransferObjects\Contacts\ContactFormDto;
 use App\Enums\ContactStatus;
+use App\Models\Contact;
 use App\Rules\ValidAccountAssignment;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -28,6 +29,7 @@ final class ContactFormRequest extends FormRequest
      */
     public function rules(): array
     {
+        /** @var ?Contact $contact */
         $contact = $this->route('contact');
 
         return [

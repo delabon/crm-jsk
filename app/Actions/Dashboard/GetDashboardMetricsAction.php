@@ -86,6 +86,11 @@ final class GetDashboardMetricsAction
         );
     }
 
+    /**
+     * @param array<string, int> $stats
+     * @param User $user
+     * @return void
+     */
     private function buildAccountStats(array &$stats, User $user): void
     {
         $stats['my_accounts'] = Cache::remember(
@@ -111,6 +116,11 @@ final class GetDashboardMetricsAction
         );
     }
 
+    /**
+     * @param array<string, int> $stats
+     * @param User $user
+     * @return void
+     */
     private function buildContactStats(array &$stats, User $user): void
     {
         $stats['my_contacts'] = Cache::remember(
@@ -136,6 +146,11 @@ final class GetDashboardMetricsAction
         );
     }
 
+    /**
+     * @param array<string, int> $stats
+     * @param User $user
+     * @return void
+     */
     private function buildUserStats(array &$stats, User $user): void
     {
         if ($user->canManageUsers()) {

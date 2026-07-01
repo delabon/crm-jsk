@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Builder;
 
 final class SearchAccountAction
 {
+    /**
+     * @return LengthAwarePaginator<int, Account>
+     */
     public function handle(
         string $query,
         ?int $userId = null,
