@@ -6,7 +6,6 @@ namespace App\Actions\Contacts;
 
 use App\DataTransferObjects\Contacts\ContactFilterDto;
 use App\Enums\ContactStatus;
-use App\Models\Account;
 use App\Models\Contact;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;

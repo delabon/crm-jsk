@@ -28,6 +28,7 @@ final readonly class ValidAccountAssignment implements ValidationRule
 
         if (! $account) {
             $fail('The account does not exist.');
+
             return;
         }
 
