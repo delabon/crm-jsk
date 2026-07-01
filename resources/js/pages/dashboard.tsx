@@ -63,12 +63,6 @@ type Props = {
 
             total_users?: number;
         };
-        recent_accounts: {
-            data: Account[];
-        };
-        recent_contacts: {
-            data: Contact[];
-        };
         role_distribution?: RoleDistribution[] | null;
     };
 };
