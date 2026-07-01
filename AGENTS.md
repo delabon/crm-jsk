@@ -52,9 +52,9 @@ Already completed. Users table with `manager_id` self-join, Spatie installed, ro
 |---|---|
 | Dashboard | `view` |
 | Profile | `manage` |
-| Contacts | `view-any`, `view-own`, `create`, `update`, `delete` |
-| Accounts | `view-any`, `view-own`, `create`, `update`, `delete` |
-| Deals | `view-any`, `view-own`, `create`, `update`, `delete` |
+| Contacts | `view-any`, `view-own`, `create`, `update`, `update-any`, `delete` |
+| Accounts | `view-any`, `view-own`, `create`, `update`, `update-any`, `delete` |
+| Deals | `view-any`, `view-own`, `create`, `update`, `update-any`, `delete` |
 | Campaigns | `view`, `manage` |
 | Tasks | `manage` |
 | Users | `manage` |
@@ -70,16 +70,19 @@ Already completed. Users table with `manager_id` self-join, Spatie installed, ro
 | `contacts.view-any` | ❌ | ❌ | ✅ | ✅ |
 | `contacts.create` | ❌ | ✅ | ✅ | ✅ |
 | `contacts.update` | ❌ | ✅ | ✅ | ✅ |
+| `contacts.update-any` | ❌ | ❌ | ✅ | ✅ |
 | `contacts.delete` | ❌ | ❌ | ✅ | ✅ |
 | `accounts.view-own` | ❌ | ✅ | ✅ | ✅ |
 | `accounts.view-any` | ❌ | ❌ | ✅ | ✅ |
 | `accounts.create` | ❌ | ✅ | ✅ | ✅ |
 | `accounts.update` | ❌ | ✅ | ✅ | ✅ |
+| `accounts.update-any` | ❌ | ❌ | ✅ | ✅ |
 | `accounts.delete` | ❌ | ❌ | ✅ | ✅ |
 | `deals.view-own` | ❌ | ✅ | ✅ | ✅ |
 | `deals.view-any` | ❌ | ❌ | ✅ | ✅ |
 | `deals.create` | ❌ | ✅ | ✅ | ✅ |
 | `deals.update` | ❌ | ✅ | ✅ | ✅ |
+| `deals.update-any` | ❌ | ❌ | ✅ | ✅ |
 | `deals.delete` | ❌ | ❌ | ✅ | ✅ |
 | `campaigns.view` | ❌ | ✅ | ✅ | ✅ |
 | `campaigns.manage` | ❌ | ❌ | ✅ | ✅ |
