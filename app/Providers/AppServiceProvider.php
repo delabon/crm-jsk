@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Listeners\RolePermissionEventSubscriber;
+use App\Models\Country;
+use App\Models\Region;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -14,6 +16,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Squire\Repository;
 
 final class AppServiceProvider extends ServiceProvider
 {
@@ -33,12 +36,13 @@ final class AppServiceProvider extends ServiceProvider
         $this->configureDefaults();
         $this->configureRateLimits();
         $this->eventSubscribers();
+        $this->registerSquireModels();
     }
 
     /**
      * Configure default behaviors for production-ready applications.
      */
-    protected function configureDefaults(): void
+    private function configureDefaults(): void
     {
         Date::use(CarbonImmutable::class);
 
@@ -95,5 +99,11 @@ final class AppServiceProvider extends ServiceProvider
     private function eventSubscribers(): void
     {
         Event::subscribe(RolePermissionEventSubscriber::class);
+    }
+
+    private function registerSquireModels(): void
+    {
+        Repository::registerSource(Region::class, 'en', base_path('vendor/squirephp/regions-en/resources/data.csv'));
+        Repository::registerSource(Country::class, 'en', base_path('vendor/squirephp/countries-en/resources/data.csv'));
     }
 }
