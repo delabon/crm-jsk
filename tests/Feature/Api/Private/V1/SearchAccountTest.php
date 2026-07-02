@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Config;
 
 it('returns unauthorized when not authenticated', function () {
-    $this->postJson(route('api.private.v1.accounts.search', ['search' => 'acme',]))
+    $this->postJson(route('api.private.v1.accounts.search', ['search' => 'acme']))
         ->assertUnauthorized();
 });
 
@@ -16,7 +16,7 @@ it('returns forbidden when the email is not verified', function () {
     $user = User::factory()->unverified()->create();
 
     $this->actingAs($user)
-        ->postJson(route('api.private.v1.accounts.search', ['search' => 'acme',]))
+        ->postJson(route('api.private.v1.accounts.search', ['search' => 'acme']))
         ->assertForbidden();
 });
 
@@ -29,7 +29,7 @@ it('requires a search term', function () {
     $this->actingAs($admin)
         ->postJson(route('api.private.v1.accounts.search'))
         ->assertUnprocessable()
-        ->assertJsonValidationErrors(['search',]);
+        ->assertJsonValidationErrors(['search']);
 });
 
 it('returns matching accounts for an admin', function () {
@@ -38,9 +38,9 @@ it('returns matching accounts for an admin', function () {
             UserRole::SuperAdmin->value,
         ]);
     $acme = Account::factory()->create([
-            'name' => 'Acme Corporation',
-            'user_id' => $admin->id,
-        ]);
+        'name' => 'Acme Corporation',
+        'user_id' => $admin->id,
+    ]);
     Account::factory()->create(['name' => 'Globex']);
 
     $this->actingAs($admin)
@@ -76,7 +76,7 @@ it('scopes a sales agent to their own accounts only', function () {
     Account::factory()->create([
         'name' => 'Acme Beta',
         'user_id' => $otherAgent->id,
-        ]);
+    ]);
 
     $this->actingAs($agent)
         ->postJson(route('api.private.v1.accounts.search', ['search' => 'Acme']))
