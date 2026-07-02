@@ -96,9 +96,11 @@ Already completed. Users table with `manager_id` self-join, Spatie installed, ro
 
 ## Phase 2 — Accounts & Contacts ⬅️ Up Next
 
-> Companies · People · Profiles · Countries
+> Companies · People · Countries (Squire)
 
 A `User` (sales rep) owns many Accounts and many Contacts independently. An Account is a company. A Contact is a person — they may work at an Account, or exist standalone (freelancer, individual). Status on Contact drives the lead → prospect → client funnel.
+
+> **Countries & regions are provided by [Squire](https://github.com/squirephp/squire)** — read-only Eloquent models backed by CSV (no `countries` table, no country seeder). FK columns (`country_id`, `region_id`) store Squire's string primary keys (ISO alpha-2 / ISO 3166-2) and are validated at the app layer via `Squire\Rules\CountryRule` / `RegionRule`, not by DB constraints.
 
 ### Ownership model
 
@@ -117,35 +119,36 @@ A "lead" is a contact with `status = 'lead'`. No separate leads table needed —
 
 ```
 accounts: id, user_id, name, industry, website, phone
-contacts: id, user_id, account_id (nullable), first_name, last_name, email (nullable), phone, status
-profiles: id, contact_id, country_id, linkedin, avatar, job_title, bio
+contacts: id, user_id, account_id (nullable), first_name, last_name, email (nullable),
+          phone, status, job_title (nullable), linkedin (nullable),
+          avatar (nullable), bio (nullable)                    ← no country_id (country lives on address)
 
 addresses: id, addressable_id, addressable_type, name, line1, line2,
-           city, state, postal_code, country_id               ← poly
+           city, region_id, postal_code, country_id            ← poly
            (e.g. name = "HQ", "Billing", "Warehouse")
+           region_id  → Squire Region (ISO 3166-2, e.g. "us-ny")
+           country_id → Squire Country (ISO alpha-2, e.g. "us")
 ```
 
 ### Tasks
 
-- [ ] `countries` migration (`id`, `name`, `code`)
+- [ ] `composer require squirephp/countries-en squirephp/regions-en` (pulls in `squirephp/model` + `squirephp/repository`)
+- [ ] Optional `App\Models\Country` / `App\Models\Region` extending the Squire models (to register `hasMany` relationships back to our models)
 - [ ] `accounts` migration (`id`, `user_id`, `name`, `industry`, `website`, `phone`)
-- [ ] `contacts` migration (`id`, `user_id`, `account_id` nullable, `first_name`, `last_name`, `email` nullable, `phone`, `status`)
-- [ ] `profiles` migration (`id`, `contact_id`, `country_id`, `linkedin`, `avatar`, `job_title`, `bio`)
-- [ ] `addresses` migration with `morphs('addressable')`, `name`, `line1`, `line2`, `city`, `state`, `postal_code`, `country_id`
+- [ ] `contacts` migration (`id`, `user_id`, `account_id` nullable, `first_name`, `last_name`, `email` nullable, `phone`, `status`, `job_title` nullable, `linkedin` nullable, `avatar` nullable, `bio` nullable)
+- [ ] `addresses` migration with `morphs('addressable')`, `name`, `line1`, `line2`, `city`, `region_id` nullable (string), `postal_code`, `country_id` nullable (string)
 - [ ] `User` model: `hasMany(Account)`, `hasMany(Contact)`
 - [ ] `Account` model: `belongsTo(User)`, `hasMany(Contact)`, `morphMany(Address)`
 - [ ] `Contact` model: `belongsTo(User)`, `belongsTo(Account)` nullable
-- [ ] `Contact` model: `hasOne(Profile)`, `hasMany(Deal)`, `morphOne(Address)`
-- [ ] `Contact` model: `hasOneThrough(Country via Profile)`
-- [ ] `Contact` model: `morphOne(Note)`, `morphMany(Task)`, `morphToMany(Tag)`
-- [ ] `Address` model: `morphTo()`, `belongsTo(Country)`
-- [ ] `Profile` model: `belongsTo(Contact)`, `belongsTo(Country)`
+- [ ] `Contact` model: `hasMany(Deal)`, `morphOne(Address)`, `morphOne(Note)`, `morphMany(Task)`, `morphToMany(Tag)`
+- [ ] `Address` model: `morphTo()`, `belongsTo(Country, 'country_id', 'code_2')`, `belongsTo(Region, 'region_id', 'code')`
+- [ ] Use `Squire\Rules\CountryRule` / `RegionRule` in address form requests
 - [ ] `ContactPolicy`: `view-own` vs `view-any` via Spatie
 - [ ] `AccountPolicy`: `view-own` vs `view-any` via Spatie, `delete` locked to manager+
 - [ ] `ListContactsAction`, `CreateContactAction`, `UpdateContactAction`, `DeleteContactAction`
 - [ ] `ListAccountsAction`, `CreateAccountAction`, `UpdateAccountAction`, `DeleteAccountAction`
 - [ ] `ContactFactory` + `AccountFactory` with Faker
-- [ ] `AccountSeeder` + `ContactSeeder` with profiles and addresses
+- [ ] `AccountSeeder` + `ContactSeeder` with addresses (no country seeder — Squire provides countries/regions)
 
 ### Relationships in this phase
 
@@ -155,8 +158,8 @@ addresses: id, addressable_id, addressable_type, name, line1, line2,
 | One-to-Many | `User` | `Contact` | rep owns many people |
 | One-to-Many | `Account` | `Contact` | company has many employees |
 | Many-to-One | `Contact` | `Account` | nullable — person may have no company |
-| One-to-One | `Contact` | `Profile` | enriched contact data |
-| Has One Through | `Contact` | `Country` | via `Profile.country_id` |
+| Many-to-One | `Address` | `Country` | Squire — `belongsTo(Country, 'country_id', 'code_2')` |
+| Many-to-One | `Address` | `Region` | Squire — `belongsTo(Region, 'region_id', 'code')` |
 | Poly One-to-Many | `Account` | `Address` | labeled addresses e.g. HQ, Billing |
 | Poly One-to-One | `Contact` | `Address` | single personal address |
 
@@ -286,7 +289,7 @@ class ListContactsAction
                 $user->cannot('contacts.view-any'),
                 fn($q) => $q->where('user_id', $user->id)
             )
-            ->with(['profile.country', 'account', 'tags'])
+            ->with(['account', 'addresses.country', 'addresses.region', 'tags'])
             ->paginate(25);
     }
 }
@@ -448,12 +451,16 @@ users           id, name, email, password, manager_id (self-join)
   ↳ roles       via Spatie model_has_roles pivot
 
 accounts        id, user_id, name, industry, website, phone
-contacts        id, user_id, account_id (nullable), first_name, last_name, email (nullable), phone, status
-profiles        id, contact_id, country_id, linkedin, avatar, job_title, bio
-countries       id, name, code
-addresses       id, name, line1, line2, city, state, postal_code, country_id,
+contacts        id, user_id, account_id (nullable), first_name, last_name, email (nullable),
+                phone, status, job_title, linkedin, avatar, bio
+addresses       id, name, line1, line2, city, region_id, postal_code, country_id,
                 addressable_id, addressable_type                ← poly
                 (Account → morphMany, Contact → morphOne)
+                region_id  → Squire Region (ISO 3166-2 string)
+                country_id → Squire Country (ISO alpha-2 string)
+
+countries       provided by Squire (in-memory, no DB table)
+regions         provided by Squire (in-memory, no DB table)
 
 deals           id, contact_id, user_id, title, value, stage, expected_close
 campaigns       id, name, type, starts_at, ends_at
