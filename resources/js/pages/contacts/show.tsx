@@ -7,6 +7,7 @@ import {
     Phone,
     User,
 } from 'lucide-react';
+import DeleteButton from "@/components/delete-button";
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -18,8 +19,6 @@ import { dashboard } from '@/routes';
 import accountRoutes from '@/routes/accounts';
 import contactRoutes from '@/routes/contacts';
 import type { BreadcrumbItem, Contact } from '@/types';
-import DeleteButton from "@/components/delete-button";
-import accountRoute from "@/routes/accounts";
 
 type Props = {
     contact: Contact;
