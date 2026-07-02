@@ -20,7 +20,7 @@ import { dashboard } from '@/routes';
 import accountRoutes from '@/routes/accounts';
 import contactRoutes from '@/routes/contacts';
 import userRoutes from '@/routes/users';
-import type { Account, BreadcrumbItem, Contact } from '@/types';
+import type { BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -91,7 +91,7 @@ function formatDate(): string {
 }
 
 function getStatCards(stats: Props['metrics']['stats']): StatCards {
-    const statCards = {
+    const statCards: StatCards = {
         accounts: [
             {
                 key: 'my_accounts',
@@ -160,7 +160,6 @@ function getStatCards(stats: Props['metrics']['stats']): StatCards {
     }
 
     if (stats.total_users !== undefined) {
-        // @ts-ignore
         statCards.users.push({
             key: 'total_users',
             label: 'Total Users',
