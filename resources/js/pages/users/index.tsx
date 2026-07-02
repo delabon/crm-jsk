@@ -18,7 +18,7 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import {dashboard} from "@/routes";
 import usersRoute from '@/routes/users';
-import type {BreadcrumbItem, PaginatedCollection, RoleOption, User} from '@/types';
+import type {BreadcrumbItem, PaginatedCollection, SelectOption, User} from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -53,7 +53,7 @@ type Filters = {
 
 type Props = {
     collection: PaginatedCollection<User>;
-    roles: RoleOption[];
+    roles: SelectOption[];
     filters: Filters;
     search?: string;
 }

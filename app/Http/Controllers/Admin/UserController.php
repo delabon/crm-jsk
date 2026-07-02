@@ -8,7 +8,7 @@ use App\Actions\Users\AdminDeleteUserAction;
 use App\Actions\Users\AdminUpdateUserAction;
 use App\Actions\Users\GetPaginatedUsersAction;
 use App\Actions\Users\StoreUserAction;
-use App\Enums\Role;
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Users\IndexUserRequest;
 use App\Http\Requests\Admin\Users\StoreUserRequest;
@@ -27,17 +27,17 @@ final class UserController extends Controller
     {
         $userFiltersDto = $request->toDto();
 
+        $users = $action->handle(Config::integer('app.dashboard.per_page'), $userFiltersDto)
+            ->appends(array_filter($userFiltersDto->toArray()));
+
         return Inertia::render('users/index', [
-            'collection' => UserResource::collection(
-                $action->handle(Config::integer('app.dashboard.per_page'), $userFiltersDto)
-                    ->appends($userFiltersDto->toArray())
-            ),
+            'collection' => UserResource::collection($users),
             'roles' => [
                 [
                     'value' => 'all',
                     'label' => 'All',
                 ],
-                ...Role::options(),
+                ...UserRole::options(),
             ],
             'filters' => [
                 'verified' => $request->verified ?? 'all',
@@ -50,7 +50,7 @@ final class UserController extends Controller
     public function create(): InertiaResponse
     {
         return Inertia::render('users/create', [
-            'roles' => Role::options(),
+            'roles' => UserRole::options(),
         ]);
     }
 
@@ -69,7 +69,7 @@ final class UserController extends Controller
     {
         return Inertia::render('users/edit', [
             'user' => new UserResource($user),
-            'roles' => Role::options(),
+            'roles' => UserRole::options(),
         ]);
     }
 

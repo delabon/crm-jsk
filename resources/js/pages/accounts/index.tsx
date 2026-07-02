@@ -38,7 +38,7 @@ export default function Index({ collection, search }: Props) {
 
     const renderItems = (user: User) => {
         if (collection.data.length === 0) {
-            return <div>Nothing here, come back later!</div>;
+            return <div>Nothing here, add yours!</div>;
         }
 
         return (

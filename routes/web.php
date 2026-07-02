@@ -3,11 +3,13 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Models\Account;
+use App\Models\Contact;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -39,17 +41,17 @@ Route::middleware(['auth', 'verified'])
                 Route::post('/', 'store')
                     ->middleware('throttle:users-manage')
                     ->name('store');
-                Route::delete('/{user}', 'destroy')
-                    ->middleware('throttle:users-manage')
-                    ->can('delete', 'user')
-                    ->name('destroy');
-                Route::get('/{user}', 'edit')
+                Route::get('/edit/{user}', 'edit')
                     ->can('update', 'user')
                     ->name('edit');
                 Route::patch('/{user}', 'update')
                     ->middleware('throttle:users-manage')
                     ->can('update', 'user')
                     ->name('update');
+                Route::delete('/{user}', 'destroy')
+                    ->middleware('throttle:users-manage')
+                    ->can('delete', 'user')
+                    ->name('destroy');
             });
 
         // --- Accounts ---
@@ -58,7 +60,7 @@ Route::middleware(['auth', 'verified'])
             ->controller(AccountController::class)
             ->group(function () {
                 Route::get('/', 'index')
-                    ->can('view-any', [Account::class])
+                    ->can('view-own', [Account::class])
                     ->name('index');
                 Route::get('/create', 'create')
                     ->can('create', [Account::class])
@@ -70,7 +72,7 @@ Route::middleware(['auth', 'verified'])
                 Route::get('/{account}', 'show')
                     ->can('view', 'account')
                     ->name('show');
-                Route::get('/{account}/edit', 'edit')
+                Route::get('/edit/{account}', 'edit')
                     ->can('update', 'account')
                     ->name('edit');
                 Route::patch('/{account}', 'update')
@@ -80,6 +82,37 @@ Route::middleware(['auth', 'verified'])
                 Route::delete('/{account}', 'destroy')
                     ->middleware('throttle:accounts-manage')
                     ->can('delete', 'account')
+                    ->name('destroy');
+            });
+
+        // --- Contacts ---
+        Route::prefix('contacts')
+            ->name('contacts.')
+            ->controller(ContactController::class)
+            ->group(function () {
+                Route::get('/', 'index')
+                    ->can('view-own', [Contact::class])
+                    ->name('index');
+                Route::get('/create', 'create')
+                    ->can('create', [Contact::class])
+                    ->name('create');
+                Route::post('/', 'store')
+                    ->middleware(['throttle:contacts-manage'])
+                    ->can('create', [Contact::class])
+                    ->name('store');
+                Route::get('/{contact}', 'show')
+                    ->can('view', 'contact')
+                    ->name('show');
+                Route::get('/edit/{contact}', 'edit')
+                    ->can('update', 'contact')
+                    ->name('edit');
+                Route::patch('/{contact}', 'update')
+                    ->middleware('throttle:contacts-manage')
+                    ->can('update', 'contact')
+                    ->name('update');
+                Route::delete('/{contact}', 'destroy')
+                    ->middleware('throttle:contacts-manage')
+                    ->can('delete', 'contact')
                     ->name('destroy');
             });
     });
@@ -108,3 +141,4 @@ Route::middleware(['auth', 'verified'])
     });
 
 require __DIR__.'/auth.php';
+require __DIR__.'/api.php';

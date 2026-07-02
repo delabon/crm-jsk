@@ -26,7 +26,7 @@ export type PaginatedCollection<T> = {
     };
 };
 
-export type RoleOption = {
+export type SelectOption = {
     value: string;
     label: string;
 };
@@ -47,5 +47,25 @@ export type Account = {
     website: string;
     phone: string;
     owner?: UserBrief;
+    contacts?: Contact[];
+    formatted_created_at: string;
+};
+
+export type ContactAccount = {
+    id: number;
+    name: string;
+};
+
+export type Contact = {
+    id: number;
+    account_id?: number;
+    first_name: string;
+    last_name: string;
+    status: string;
+    status_label: string;
+    email?: string;
+    phone: string;
+    owner?: UserBrief;
+    account?: ContactAccount | null;
     formatted_created_at: string;
 };

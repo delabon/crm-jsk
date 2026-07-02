@@ -14,24 +14,26 @@ export function CollectionPagination({collection}: Props) {
             Page {collection.meta.current_page} of {collection.meta.last_page}
         </div>
 
-        <nav role="navigation" aria-label="Pagination">
-            <ul className="flex items-center gap-1">
-                {collection.meta.links.map((link, index) => (
-                    <li key={index}>
-                        <Button
-                            asChild
-                            disabled={link.url === null}
-                            aria-current={link.active ? 'page' : undefined}
-                            data-active={link.active}
-                            variant={link.active ? 'outline' : 'ghost'}
-                            className={link.url === null ? 'pointer-events-none' : ''}
-                        >
-                            <Link href={link.url ?? '#'}>{label(link.label, index, collection.meta.links.length)}</Link>
-                        </Button>
-                    </li>
-                ))}
-            </ul>
-        </nav>
+        {collection.meta.last_page > 1 && (
+            <nav role="navigation" aria-label="Pagination">
+                <ul className="flex items-center gap-1">
+                    {collection.meta.links.map((link, index) => (
+                        <li key={index}>
+                            <Button
+                                asChild
+                                disabled={link.url === null}
+                                aria-current={link.active ? 'page' : undefined}
+                                data-active={link.active}
+                                variant={link.active ? 'outline' : 'ghost'}
+                                className={link.url === null ? 'pointer-events-none' : ''}
+                            >
+                                <Link href={link.url ?? '#'}>{label(link.label, index, collection.meta.links.length)}</Link>
+                            </Button>
+                        </li>
+                    ))}
+                </ul>
+            </nav>
+        )}
     </div>
 }
 

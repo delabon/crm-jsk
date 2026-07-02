@@ -7,7 +7,7 @@ namespace App\Http\Requests\Admin\Users;
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
 use App\DataTransferObjects\UpdateUserDto;
-use App\Enums\Role;
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -40,7 +40,7 @@ final class UpdateUserRequest extends FormRequest
             'role' => [
                 'required',
                 'string',
-                Rule::enum(Role::class),
+                Rule::enum(UserRole::class),
             ],
         ];
     }
@@ -51,7 +51,7 @@ final class UpdateUserRequest extends FormRequest
             firstName: $this->string('first_name')->value(),
             lastName: $this->string('last_name')->value(),
             email: $this->string('email')->value(),
-            role: $this->enum('role', Role::class)
+            role: $this->enum('role', UserRole::class)
         );
     }
 }

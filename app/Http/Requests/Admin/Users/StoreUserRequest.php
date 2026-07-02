@@ -7,7 +7,7 @@ namespace App\Http\Requests\Admin\Users;
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
 use App\DataTransferObjects\StoreUserDto;
-use App\Enums\Role;
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -40,7 +40,7 @@ final class StoreUserRequest extends FormRequest
             'role' => [
                 'required',
                 'string',
-                Rule::enum(Role::class),
+                Rule::enum(UserRole::class),
             ],
             'password' => $this->passwordRules(),
         ];
@@ -53,7 +53,7 @@ final class StoreUserRequest extends FormRequest
             lastName: $this->string('last_name')->value(),
             email: $this->string('email')->value(),
             password: $this->string('password')->value(),
-            role: $this->enum('role', Role::class),
+            role: $this->enum('role', UserRole::class),
         );
     }
 }

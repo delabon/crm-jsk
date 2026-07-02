@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Admin\Users;
 
 use App\DataTransferObjects\UserFilterDto;
-use App\Enums\Role;
+use App\Enums\UserRole;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -52,7 +52,7 @@ final class IndexUserRequest extends FormRequest
 
     private function allowedRoles(): string
     {
-        $roles = array_column(Role::options(), 'value');
+        $roles = array_column(UserRole::options(), 'value');
         array_unshift($roles, 'all');
 
         return implode(',', $roles);

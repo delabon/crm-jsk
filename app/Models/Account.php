@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Concerns\FormatsDate;
 use App\Observers\AccountObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Scout\Searchable;
 
 #[ObservedBy([AccountObserver::class])]
 final class Account extends Model
 {
     /** @use HasFactory<\Database\Factories\AccountFactory> */
-    use HasFactory,
+    use FormatsDate,
+        HasFactory,
         Searchable;
-
-    private const string DATE_FORMAT = 'M j, Y';
 
     protected $fillable = [
         'user_id',
@@ -37,9 +38,12 @@ final class Account extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function getFormattedCreatedAtAttribute(): ?string
+    /**
+     * @return HasMany<Contact, $this>
+     */
+    public function contacts(): HasMany
     {
-        return $this->created_at?->format(self::DATE_FORMAT);
+        return $this->hasMany(Contact::class);
     }
 
     /**

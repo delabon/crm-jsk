@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\Role;
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Testing\AssertableInertia;
@@ -18,7 +18,7 @@ test('non logged in users will be redirected to login page', function () {
 
 test('super admins can visit the edit user page', function () {
     $admin = User::factory()->create()
-        ->syncRoles([Role::SuperAdmin->value]);
+        ->syncRoles([UserRole::SuperAdmin->value]);
 
     $this->actingAs($admin);
 
@@ -39,7 +39,7 @@ test('non super admins cannot visit the edit user page', function () {
 
 test('super admins can edit a user', function () {
     $admin = User::factory()->create()
-        ->syncRoles([Role::SuperAdmin->value]);
+        ->syncRoles([UserRole::SuperAdmin->value]);
 
     $this->actingAs($admin);
 
@@ -51,7 +51,7 @@ test('super admins can edit a user', function () {
         'email' => 'john.doe@test.com',
         'password' => '12345678',
         'password_confirmation' => '12345678',
-        'role' => Role::Manager->value,
+        'role' => UserRole::Manager->value,
     ];
 
     $this->patch(route('users.update', $user), $newUserData)
@@ -78,19 +78,19 @@ test('non super admins cannot edit users', function () {
             'email' => 'john.doe@test.com',
             'password' => '12345678',
             'password_confirmation' => '12345678',
-            'role' => Role::User->value,
+            'role' => UserRole::User->value,
         ])
         ->assertForbidden();
 });
 
 test('super admins cannot edit other super admins', function () {
     $admin1 = User::factory()->create()
-        ->syncRoles([Role::SuperAdmin->value]);
+        ->syncRoles([UserRole::SuperAdmin->value]);
 
     $this->actingAs($admin1);
 
     $admin2 = User::factory()->create()
-        ->syncRoles([Role::SuperAdmin->value]);
+        ->syncRoles([UserRole::SuperAdmin->value]);
 
     $this->patch(route('users.update', $admin2), [])
         ->assertForbidden();
@@ -99,7 +99,7 @@ test('super admins cannot edit other super admins', function () {
 it('fails to edit a user when using invalid first name',
     function (mixed $invalidValue, string $expectedMessage) {
         $admin = User::factory()->create()
-            ->syncRoles([Role::SuperAdmin->value]);
+            ->syncRoles([UserRole::SuperAdmin->value]);
 
         $this->actingAs($admin);
 
@@ -109,7 +109,7 @@ it('fails to edit a user when using invalid first name',
             'first_name' => $invalidValue,
             'last_name' => 'User',
             'email' => 'test@example.com',
-            'role' => Role::User->value,
+            'role' => UserRole::User->value,
             'password' => 'password',
             'password_confirmation' => 'password',
         ])
@@ -125,7 +125,7 @@ it('fails to edit a user when using invalid first name',
 it('fails to edit a user when using invalid last name',
     function (mixed $invalidValue, string $expectedMessage) {
         $admin = User::factory()->create()
-            ->syncRoles([Role::SuperAdmin->value]);
+            ->syncRoles([UserRole::SuperAdmin->value]);
 
         $this->actingAs($admin);
 
@@ -135,7 +135,7 @@ it('fails to edit a user when using invalid last name',
             'first_name' => 'User',
             'last_name' => $invalidValue,
             'email' => 'test@example.com',
-            'role' => Role::User->value,
+            'role' => UserRole::User->value,
             'password' => 'password',
             'password_confirmation' => 'password',
         ])
@@ -151,7 +151,7 @@ it('fails to edit a user when using invalid last name',
 it('fails to edit a user when using invalid email',
     function (mixed $invalidValue, string $expectedMessage) {
         $admin = User::factory()->create()
-            ->syncRoles([Role::SuperAdmin->value]);
+            ->syncRoles([UserRole::SuperAdmin->value]);
 
         $this->actingAs($admin);
 
@@ -161,7 +161,7 @@ it('fails to edit a user when using invalid email',
             'first_name' => 'User',
             'last_name' => 'Test',
             'email' => $invalidValue,
-            'role' => Role::User->value,
+            'role' => UserRole::User->value,
             'password' => 'password',
             'password_confirmation' => 'password',
         ])
@@ -177,7 +177,7 @@ it('fails to edit a user when using invalid email',
 it('fails to edit a user when using invalid role',
     function (mixed $invalidValue, string $expectedMessage) {
         $admin = User::factory()->create()
-            ->syncRoles([Role::SuperAdmin->value]);
+            ->syncRoles([UserRole::SuperAdmin->value]);
 
         $this->actingAs($admin);
 
@@ -203,7 +203,7 @@ it('fails to edit a user when using invalid role',
 it('fails to edit the password of the user when using invalid password',
     function (mixed $invalidValue, string $expectedMessage) {
         $admin = User::factory()->create()
-            ->syncRoles([Role::SuperAdmin->value]);
+            ->syncRoles([UserRole::SuperAdmin->value]);
 
         $this->actingAs($admin);
 
@@ -225,7 +225,7 @@ it('fails to edit the password of the user when using invalid password',
 
 test('super admins can update the password of a user', function () {
     $admin = User::factory()->create()
-        ->syncRoles([Role::SuperAdmin->value]);
+        ->syncRoles([UserRole::SuperAdmin->value]);
 
     $this->actingAs($admin);
 
@@ -264,7 +264,7 @@ test('non super admins cannot update the password of a user', function () {
 
 test('edit users is rate limited', function () {
     $admin = User::factory()->create()
-        ->syncRoles([Role::SuperAdmin->value]);
+        ->syncRoles([UserRole::SuperAdmin->value]);
 
     $this->actingAs($admin);
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\Role;
+use App\Enums\UserRole;
 use App\Models\Account;
 use App\Models\User;
 use Inertia\Testing\AssertableInertia;
@@ -23,8 +23,16 @@ it("returns a forbidden response when user doesn't have required permissions", f
         ->assertForbidden();
 });
 
+it('returns a not found response when account does not exist', function () {
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->get(route('accounts.show', 2321421))
+        ->assertNotFound();
+});
+
 test('super admin can view any account show page', function () {
-    $admin = User::factory()->create()->syncRoles([Role::SuperAdmin->value]);
+    $admin = User::factory()->create()->syncRoles([UserRole::SuperAdmin->value]);
     $account = Account::factory()->create();
 
     $this->actingAs($admin)
@@ -42,7 +50,7 @@ test('super admin can view any account show page', function () {
 });
 
 test('manager can view any account show page', function () {
-    $manager = User::factory()->create()->syncRoles([Role::Manager->value]);
+    $manager = User::factory()->create()->syncRoles([UserRole::Manager->value]);
     $account = Account::factory()->create();
 
     $this->actingAs($manager)
@@ -56,7 +64,7 @@ test('manager can view any account show page', function () {
 });
 
 test('sales agent can view their own account show page', function () {
-    $agent = User::factory()->create()->syncRoles([Role::SalesAgent->value]);
+    $agent = User::factory()->create()->syncRoles([UserRole::SalesAgent->value]);
     $account = Account::factory()->create(['user_id' => $agent->id]);
 
     $this->actingAs($agent)
@@ -71,9 +79,9 @@ test('sales agent can view their own account show page', function () {
         });
 });
 
-test('sales agent cannot view another agents account show page', function () {
-    $agent1 = User::factory()->create()->syncRoles([Role::SalesAgent->value]);
-    $agent2 = User::factory()->create()->syncRoles([Role::SalesAgent->value]);
+test("sales agent cannot view another sales agent's account show page", function () {
+    $agent1 = User::factory()->create()->syncRoles([UserRole::SalesAgent->value]);
+    $agent2 = User::factory()->create()->syncRoles([UserRole::SalesAgent->value]);
     $account = Account::factory()->create(['user_id' => $agent2->id]);
 
     $this->actingAs($agent1)

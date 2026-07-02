@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import {BuildingIcon, LayoutGrid, UsersIcon} from 'lucide-react';
+import {BookUserIcon, BuildingIcon, LayoutGrid, UsersIcon} from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import accounts from '@/routes/accounts';
+import contacts from '@/routes/contacts';
 import users from '@/routes/users';
 import type { NavItem } from '@/types';
 
@@ -30,6 +31,12 @@ const mainNavItems: NavItem[] = [
         href: users.index(),
         icon: UsersIcon,
         permission: 'users.manage',
+    },
+    {
+        title: 'Contacts',
+        href: contacts.index(),
+        icon: BookUserIcon,
+        permission: 'contacts.view-own',
     },
     {
         title: 'Accounts',

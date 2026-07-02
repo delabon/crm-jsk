@@ -86,6 +86,10 @@ final class AppServiceProvider extends ServiceProvider
         RateLimiter::for('accounts-manage', static function (Request $request) {
             return Limit::perMinute(10)->by($request->user()?->id ?: $request->ip());
         });
+
+        RateLimiter::for('contacts-manage', static function (Request $request) {
+            return Limit::perMinute(10)->by($request->user()?->id ?: $request->ip());
+        });
     }
 
     private function eventSubscribers(): void

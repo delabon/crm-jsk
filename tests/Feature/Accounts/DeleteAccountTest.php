@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\Role;
+use App\Enums\UserRole;
 use App\Models\Account;
 use App\Models\User;
 
@@ -29,7 +29,7 @@ it('returns a forbidden response when the authenticated user lacks the required 
 test('admins can delete their accounts and others', function () {
     $admin = User::factory()
         ->create()
-        ->syncRoles([Role::SuperAdmin->value]);
+        ->syncRoles([UserRole::SuperAdmin->value]);
 
     $accounts = Account::factory(2)
         ->create();
@@ -59,7 +59,7 @@ test('admins can delete their accounts and others', function () {
 test('managers can delete their accounts and others', function () {
     $manager = User::factory()
         ->create()
-        ->syncRoles([Role::Manager->value]);
+        ->syncRoles([UserRole::Manager->value]);
 
     $accounts = Account::factory(2)
         ->create();
@@ -89,7 +89,7 @@ test('managers can delete their accounts and others', function () {
 test('sales agents cannot delete their accounts or others', function () {
     $salesAgent = User::factory()
         ->create()
-        ->syncRoles([Role::SalesAgent->value]);
+        ->syncRoles([UserRole::SalesAgent->value]);
 
     $accounts = Account::factory(2)
         ->create();
@@ -117,7 +117,7 @@ test('sales agents cannot delete their accounts or others', function () {
 test('delete accounts is rate limited', function () {
     $admin = User::factory()
         ->create()
-        ->syncRoles([Role::SuperAdmin->value]);
+        ->syncRoles([UserRole::SuperAdmin->value]);
 
     $account = Account::factory()
         ->create();

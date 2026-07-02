@@ -20,7 +20,7 @@ The system tracks companies (accounts), the people inside them (contacts), and t
 
 **Key architectural decisions:**
 - Session-based auth via Laravel's built-in auth — no token layer needed with Inertia
-- Inertia handles all page transitions — no REST API, no JSON endpoints for the frontend
+- Inertia handles all page transitions
 - Leads are not a separate table — they are contacts with `status = 'lead'`
 - Clients are not a separate table — they are contacts whose deal reached `closed_won`
 - All polymorphic models (notes, tasks, tags) are reusable across any entity with zero new tables
@@ -47,9 +47,9 @@ Already completed. Users table with `manager_id` self-join, Spatie installed, ro
 |---|---|
 | Dashboard | `view` |
 | Profile | `manage` |
-| Contacts | `view-any`, `view-own`, `create`, `update`, `delete` |
-| Accounts | `view-any`, `view-own`, `create`, `update`, `delete` |
-| Deals | `view-any`, `view-own`, `create`, `update`, `delete` |
+| Contacts | `view-any`, `view-own`, `create`, `update`, `update-any`, `delete` |
+| Accounts | `view-any`, `view-own`, `create`, `update`, `update-any`, `delete` |
+| Deals | `view-any`, `view-own`, `create`, `update`, `update-any`, `delete` |
 | Campaigns | `view`, `manage` |
 | Tasks | `manage` |
 | Users | `manage` |
@@ -64,16 +64,19 @@ Already completed. Users table with `manager_id` self-join, Spatie installed, ro
 | `contacts.view-any` | ❌ | ❌ | ✅ | ✅ |
 | `contacts.create` | ❌ | ✅ | ✅ | ✅ |
 | `contacts.update` | ❌ | ✅ | ✅ | ✅ |
+| `contacts.update-any` | ❌ | ❌ | ✅ | ✅ |
 | `contacts.delete` | ❌ | ❌ | ✅ | ✅ |
 | `accounts.view-own` | ❌ | ✅ | ✅ | ✅ |
 | `accounts.view-any` | ❌ | ❌ | ✅ | ✅ |
 | `accounts.create` | ❌ | ✅ | ✅ | ✅ |
 | `accounts.update` | ❌ | ✅ | ✅ | ✅ |
+| `accounts.update-any` | ❌ | ❌ | ✅ | ✅ |
 | `accounts.delete` | ❌ | ❌ | ✅ | ✅ |
 | `deals.view-own` | ❌ | ✅ | ✅ | ✅ |
 | `deals.view-any` | ❌ | ❌ | ✅ | ✅ |
 | `deals.create` | ❌ | ✅ | ✅ | ✅ |
 | `deals.update` | ❌ | ✅ | ✅ | ✅ |
+| `deals.update-any` | ❌ | ❌ | ✅ | ✅ |
 | `deals.delete` | ❌ | ❌ | ✅ | ✅ |
 | `campaigns.view` | ❌ | ✅ | ✅ | ✅ |
 | `campaigns.manage` | ❌ | ❌ | ✅ | ✅ |
@@ -105,7 +108,7 @@ A "lead" is a contact with `status = 'lead'`. No separate leads table needed —
 ### FK layout
 ```
 accounts: id, user_id, name, industry, website, phone
-contacts: id, user_id, account_id (nullable), name, email, phone, status
+contacts: id, user_id, account_id (nullable), first_name, last_name, email (nullable), phone, status
 profiles: id, contact_id, country_id, linkedin, avatar, job_title, bio
 
 addresses: id, addressable_id, addressable_type, name, line1, line2,
@@ -116,7 +119,7 @@ addresses: id, addressable_id, addressable_type, name, line1, line2,
 ### Tasks
 - [ ] `countries` migration (`id`, `name`, `code`)
 - [ ] `accounts` migration (`id`, `user_id`, `name`, `industry`, `website`, `phone`)
-- [ ] `contacts` migration (`id`, `user_id`, `account_id` nullable, `name`, `email`, `phone`, `status`)
+- [ ] `contacts` migration (`id`, `user_id`, `account_id` nullable, `first_name`, `last_name`, `email` nullable, `phone`, `status`)
 - [ ] `profiles` migration (`id`, `contact_id`, `country_id`, `linkedin`, `avatar`, `job_title`, `bio`)
 - [ ] `addresses` migration with `morphs('addressable')`, `name`, `line1`, `line2`, `city`, `state`, `postal_code`, `country_id`
 - [ ] `User` model: `hasMany(Account)`, `hasMany(Contact)`
@@ -415,7 +418,7 @@ users           id, name, email, password, manager_id (self-join)
   ↳ roles       via Spatie model_has_roles pivot
 
 accounts        id, user_id, name, industry, website, phone
-contacts        id, user_id, account_id (nullable), name, email, phone, status
+contacts        id, user_id, account_id (nullable), first_name, last_name, email (nullable), phone, status
 profiles        id, contact_id, country_id, linkedin, avatar, job_title, bio
 countries       id, name, code
 addresses       id, name, line1, line2, city, state, postal_code, country_id,

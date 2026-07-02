@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Enums\Role;
+use App\Enums\UserRole;
 use App\Models\Account;
 use App\Models\User;
 use Inertia\Testing\AssertableInertia;
@@ -30,7 +30,7 @@ it('returns a forbidden response when the authenticated user lacks the required 
 it('renders the create account page successfully', function () {
     $admin = User::factory()
         ->create()
-        ->syncRoles([Role::SuperAdmin->value]);
+        ->syncRoles([UserRole::SuperAdmin->value]);
 
     $this->actingAs($admin)
         ->get(route('accounts.create'))
@@ -43,7 +43,7 @@ it('renders the create account page successfully', function () {
 test('an admin can create an account', function () {
     $admin = User::factory()
         ->create()
-        ->syncRoles([Role::SuperAdmin->value]);
+        ->syncRoles([UserRole::SuperAdmin->value]);
 
     $newAccountData = [
         'name' => 'AcmE CorP',
@@ -74,7 +74,7 @@ test('an admin can create an account', function () {
 test('a manager can create an account', function () {
     $manager = User::factory()
         ->create()
-        ->syncRoles([Role::Manager->value]);
+        ->syncRoles([UserRole::Manager->value]);
 
     $newAccountData = [
         'name' => fake()->company(),
@@ -103,7 +103,7 @@ test('a manager can create an account', function () {
 test('a sales agent can create an account', function () {
     $salesAgent = User::factory()
         ->create()
-        ->syncRoles([Role::SalesAgent->value]);
+        ->syncRoles([UserRole::SalesAgent->value]);
 
     $newAccountData = [
         'name' => fake()->company(),
@@ -132,7 +132,7 @@ test('a sales agent can create an account', function () {
 it('fails with invalid name', function (mixed $invalidValue, string $expectedMessage) {
     $salesAgent = User::factory()
         ->create()
-        ->syncRoles([Role::SalesAgent->value]);
+        ->syncRoles([UserRole::SalesAgent->value]);
 
     $this->actingAs($salesAgent)
         ->fromRoute('accounts.create')
@@ -153,7 +153,7 @@ it('fails with invalid name', function (mixed $invalidValue, string $expectedMes
 it('fails with invalid industry', function (mixed $invalidValue, string $expectedMessage) {
     $salesAgent = User::factory()
         ->create()
-        ->syncRoles([Role::SalesAgent->value]);
+        ->syncRoles([UserRole::SalesAgent->value]);
 
     $this->actingAs($salesAgent)
         ->fromRoute('accounts.create')
@@ -174,7 +174,7 @@ it('fails with invalid industry', function (mixed $invalidValue, string $expecte
 it('fails with invalid website', function (mixed $invalidValue, string $expectedMessage) {
     $salesAgent = User::factory()
         ->create()
-        ->syncRoles([Role::SalesAgent->value]);
+        ->syncRoles([UserRole::SalesAgent->value]);
 
     $this->actingAs($salesAgent)
         ->fromRoute('accounts.create')
@@ -195,7 +195,7 @@ it('fails with invalid website', function (mixed $invalidValue, string $expected
 it('fails with invalid phone', function (mixed $invalidValue, string $expectedMessage) {
     $salesAgent = User::factory()
         ->create()
-        ->syncRoles([Role::SalesAgent->value]);
+        ->syncRoles([UserRole::SalesAgent->value]);
 
     $this->actingAs($salesAgent)
         ->fromRoute('accounts.create')
@@ -216,7 +216,7 @@ it('fails with invalid phone', function (mixed $invalidValue, string $expectedMe
 test('create accounts is rate limited', function () {
     $admin = User::factory()
         ->create()
-        ->syncRoles([Role::SuperAdmin->value]);
+        ->syncRoles([UserRole::SuperAdmin->value]);
 
     exhaustRateLimit('accounts-manage', (string) $admin->id, 10);
 

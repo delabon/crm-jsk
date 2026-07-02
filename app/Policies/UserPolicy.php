@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Enums\Role;
+use App\Enums\UserRole;
 use App\Models\User;
 
 final class UserPolicy
@@ -17,14 +17,14 @@ final class UserPolicy
 
         // Bail if non-admin trying to update another user's password
         if ($user->id !== $model->id
-            && $user->main_role !== Role::SuperAdmin
+            && $user->main_role !== UserRole::SuperAdmin
         ) {
             return false;
         }
 
         // Bail if admin trying to update another admin's password
         if ($user->id !== $model->id
-            && $model->main_role === Role::SuperAdmin
+            && $model->main_role === UserRole::SuperAdmin
         ) {
             return false;
         }
@@ -39,7 +39,7 @@ final class UserPolicy
         }
 
         // Bail if last admin trying to delete themselves
-        if ($model->main_role === Role::SuperAdmin && User::query()->superAdmins()->count() === 1) {
+        if ($model->main_role === UserRole::SuperAdmin && User::query()->superAdmins()->count() === 1) {
             return false;
         }
 

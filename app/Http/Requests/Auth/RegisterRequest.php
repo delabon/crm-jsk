@@ -7,7 +7,7 @@ namespace App\Http\Requests\Auth;
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
 use App\DataTransferObjects\StoreUserDto;
-use App\Enums\Role;
+use App\Enums\UserRole;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -44,7 +44,7 @@ final class RegisterRequest extends FormRequest
             lastName: $this->string('last_name')->value(),
             email: $this->string('email')->value(),
             password: $this->string('password')->value(),
-            role: Role::User,
+            role: UserRole::User,
         );
     }
 }
