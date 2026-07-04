@@ -8,6 +8,7 @@ use App\Actions\Contacts\DeleteContactAction;
 use App\Actions\Contacts\GetPaginatedContactAction;
 use App\Actions\Contacts\StoreContactAction;
 use App\Actions\Contacts\UpdateContactAction;
+use App\Actions\Countries\GetCountryOptionsAction;
 use App\Enums\ContactStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Contacts\ContactFormRequest;
@@ -51,10 +52,11 @@ final class ContactController extends Controller
         ]);
     }
 
-    public function create(): InertiaResponse
+    public function create(GetCountryOptionsAction $getCountryOptionsAction): InertiaResponse
     {
         return Inertia::render('contacts/create', [
             'statuses' => ContactStatus::options(),
+            'countries' => $getCountryOptionsAction->handle(),
         ]);
     }
 
@@ -68,7 +70,7 @@ final class ContactController extends Controller
 
     public function show(Request $request, Contact $contact): InertiaResponse
     {
-        $contact->load(['user', 'account']);
+        $contact->load(['user', 'account', 'address.country', 'address.region']);
 
         /** @var User $user */
         $user = $request->user();
@@ -82,13 +84,18 @@ final class ContactController extends Controller
         ]);
     }
 
-    public function edit(Contact $contact): InertiaResponse
+    public function edit(Contact $contact, Request $request, GetCountryOptionsAction $getCountryOptionsAction): InertiaResponse
     {
-        $contact->load(['user', 'account']);
+        $contact->load(['user', 'account', 'address.country', 'address.region']);
 
         return Inertia::render('contacts/edit', [
             'contact' => new ContactResource($contact),
             'statuses' => ContactStatus::options(),
+            'countries' => $getCountryOptionsAction->handle(),
+            'can' => [
+                'create_address' => $request->user()->can('addresses.create'),
+                'update_address' => $request->user()->can('addresses.update'),
+            ],
         ]);
     }
 

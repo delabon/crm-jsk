@@ -4,6 +4,7 @@ import {
     Calendar,
     Edit,
     Mail,
+    MapPinIcon,
     Phone,
     User,
 } from 'lucide-react';
@@ -196,6 +197,37 @@ export default function Show({ contact, can }: Props) {
                                             </Link>
                                         </div>
                                     </div>
+                                </CardContent>
+                            </Card>
+                        )}
+
+                        {contact.address && (
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2">
+                                        <MapPinIcon className="h-4 w-4" />
+                                        Address
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <address className="not-italic space-y-0.5 text-sm leading-relaxed text-muted-foreground">
+                                        {contact.address.name && (
+                                            <span className="block font-medium text-foreground">
+                                                {contact.address.name}
+                                            </span>
+                                        )}
+                                        <span className="block">{contact.address.line1}</span>
+                                        {contact.address.line2 && (
+                                            <span className="block">{contact.address.line2}</span>
+                                        )}
+                                        <span className="block">
+                                            {[contact.address.city, contact.address.region_name].filter(Boolean).join(', ')}
+                                            {contact.address.postal_code ? ` ${contact.address.postal_code}` : ''}
+                                        </span>
+                                        {contact.address.country_name && (
+                                            <span className="block">{contact.address.country_name}</span>
+                                        )}
+                                    </address>
                                 </CardContent>
                             </Card>
                         )}

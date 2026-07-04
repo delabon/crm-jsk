@@ -35,6 +35,10 @@ final class AccountResource extends JsonResource
                 $this->resource->relationLoaded('contacts'),
                 fn () => ContactResource::collection($this->resource->contacts),
             ),
+            'addresses' => $this->when(
+                $this->resource->relationLoaded('addresses'),
+                fn () => AddressResource::collection($this->resource->addresses),
+            ),
             'formatted_created_at' => $this->resource->formatted_created_at,
         ];
     }

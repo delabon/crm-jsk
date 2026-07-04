@@ -8,11 +8,13 @@ use App\Actions\Accounts\DeleteAccountAction;
 use App\Actions\Accounts\GetPaginatedAccountAction;
 use App\Actions\Accounts\StoreAccountAction;
 use App\Actions\Accounts\UpdateAccountAction;
+use App\Actions\Countries\GetCountryOptionsAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Accounts\AccountFormRequest;
 use App\Http\Requests\Admin\Accounts\IndexAccountRequest;
 use App\Http\Resources\AccountResource;
 use App\Models\Account;
+use App\Models\Address;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -50,28 +52,41 @@ final class AccountController extends Controller
             ->with('success', 'The account has been created.');
     }
 
-    public function show(Request $request, Account $account): InertiaResponse
+    public function show(Request $request, Account $account, GetCountryOptionsAction $getCountryOptionsAction): InertiaResponse
     {
-        $account->load(['user', 'contacts.user']);
+        $account->load(['user', 'addresses.country', 'addresses.region', 'contacts.user']);
 
         /** @var User $user */
         $user = $request->user();
 
         return Inertia::render('accounts/show', [
             'account' => new AccountResource($account),
+            'countries' => $getCountryOptionsAction->handle(),
             'can' => [
                 'update' => $user->can('update', $account),
                 'delete' => $user->can('delete', $account),
+                'create_address' => $user->can('addresses.create'),
+                'update_address' => $user->can('addresses.update'),
+                'delete_address' => $user->can('addresses.delete'),
             ],
         ]);
     }
 
-    public function edit(Account $account): InertiaResponse
+    public function edit(Request $request, Account $account, GetCountryOptionsAction $getCountryOptionsAction): InertiaResponse
     {
-        $account->load('user');
+        $account->load(['user', 'addresses.country', 'addresses.region']);
+
+        /** @var User $user */
+        $user = $request->user();
 
         return Inertia::render('accounts/edit', [
             'account' => new AccountResource($account),
+            'countries' => $getCountryOptionsAction->handle(),
+            'can' => [
+                'create_address' => $user->can('create', Address::class),
+                'update_address' => $user->can('addresses.update'),
+                'delete_address' => $user->can('addresses.delete'),
+            ],
         ]);
     }
 

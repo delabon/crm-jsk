@@ -5,11 +5,12 @@ import {FormField} from "@/components/ui/form-field";
 import {Input} from "@/components/ui/input";
 import {SelectWithItems} from "@/components/ui/select-with-items";
 import {Spinner} from "@/components/ui/spinner";
+import { search as searchAccountsApiRoute} from '@/routes/api/private/v1/accounts';
 import type {Contact, SelectOption} from "@/types";
 
 type Props = {
     action: string;
-    method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | undefined;
+    method: "get" | "post" | "put" | "delete" | "patch" | undefined;
     contact?: Contact;
     statuses: SelectOption[];
 }

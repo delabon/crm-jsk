@@ -28,6 +28,10 @@ final class ContactResource extends JsonResource
             'status' => $this->resource->status,
             'email' => $this->resource->email,
             'phone' => $this->resource->phone,
+            'address' => $this->when(
+                $this->resource->relationLoaded('address'),
+                fn () => new AddressResource($this->resource->address),
+            ),
             'owner' => $this->when(
                 $this->resource->relationLoaded('user'),
                 fn () => new UserBriefResource($this->resource->user),

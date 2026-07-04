@@ -48,12 +48,26 @@ export type Account = {
     phone: string;
     owner?: UserBrief;
     contacts?: Contact[];
+    addresses?: Address[];
     formatted_created_at: string;
 };
 
 export type ContactAccount = {
     id: number;
     name: string;
+};
+
+export type Address = {
+    id: number;
+    name: string;
+    line1: string;
+    line2: string | null;
+    city: string;
+    region_id: string | null;
+    country_id: string;
+    postal_code: string;
+    country_name?: string | null;
+    region_name?: string | null;
 };
 
 export type Contact = {
@@ -65,6 +79,7 @@ export type Contact = {
     status_label: string;
     email?: string;
     phone: string;
+    address?: Address;
     owner?: UserBrief;
     account?: ContactAccount | null;
     formatted_created_at: string;

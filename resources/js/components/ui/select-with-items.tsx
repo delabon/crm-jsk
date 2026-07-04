@@ -16,12 +16,12 @@ type Props = {
     className?: string,
     name: string,
     defaultValue?: string,
-    value?: string,
+    value?: string | null,
     onValueChange?: (value: string) => void,
-} & ComponentProps<typeof SelectTrigger>;
+} & Omit<ComponentProps<typeof SelectTrigger>, "value" | "name" | "defaultValue" | "onValueChange">;
 
 export function SelectWithItems({items, placeholder, name, defaultValue, value, onValueChange, ...props}: Props) {
-    return <Select name={name} defaultValue={defaultValue} value={value} items={items} onValueChange={onValueChange ? (val) => onValueChange((val as string) ?? "") : undefined}>
+    return <Select<string, false> name={name} defaultValue={defaultValue} value={value} items={items} onValueChange={onValueChange ? (val) => onValueChange((val as string) ?? "") : undefined}>
         <SelectTrigger {...props} className={cn("w-full", props.className)}>
             <SelectValue placeholder={placeholder}/>
         </SelectTrigger>

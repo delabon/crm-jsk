@@ -8,6 +8,7 @@ import {
     Edit,
     ExternalLink,
     Mail,
+    MapPinIcon,
     BookUserIcon,
 } from 'lucide-react';
 import DeleteButton from '@/components/delete-button';
@@ -160,6 +161,55 @@ export default function Show({ account, can }: Props) {
                                             </dd>
                                         </div>
                                     </>
+                                )}
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <MapPinIcon className="h-4 w-4" />
+                                    Addresses
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                {account.addresses && account.addresses.length > 0 ? (
+                                    <ul className="space-y-4">
+                                        {account.addresses.map((address) => (
+                                            <li key={address.id}>
+                                                <address className="not-italic space-y-0.5 text-sm leading-relaxed text-muted-foreground">
+                                                    {address.name && (
+                                                        <span className="block font-medium text-foreground">
+                                                            {address.name}
+                                                        </span>
+                                                    )}
+                                                    <span className="block">{address.line1}</span>
+                                                    {address.line2 && (
+                                                        <span className="block">{address.line2}</span>
+                                                    )}
+                                                    <span className="block">
+                                                        {[address.city, address.region_name].filter(Boolean).join(', ')}
+                                                        {address.postal_code ? ` ${address.postal_code}` : ''}
+                                                    </span>
+                                                    {address.country_name && (
+                                                        <span className="block">{address.country_name}</span>
+                                                    )}
+                                                </address>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <div className="flex flex-col items-center justify-center py-8 text-center">
+                                        <div className="mb-3 rounded-full bg-muted p-3">
+                                            <MapPinIcon className="h-6 w-6 text-muted-foreground" />
+                                        </div>
+                                        <p className="text-sm font-medium">
+                                            No addresses yet
+                                        </p>
+                                        <p className="mt-1 text-sm text-muted-foreground">
+                                            Addresses for this account will appear here.
+                                        </p>
+                                    </div>
                                 )}
                             </CardContent>
                         </Card>

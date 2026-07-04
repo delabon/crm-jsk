@@ -38,6 +38,13 @@ final class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'contacts.update-any']);
         Permission::create(['name' => 'contacts.delete']);
 
+        // --- Addresses ---
+        Permission::create(['name' => 'addresses.create']);
+        Permission::create(['name' => 'addresses.update']);
+        Permission::create(['name' => 'addresses.update-any']);
+        Permission::create(['name' => 'addresses.delete']);
+        Permission::create(['name' => 'addresses.delete-any']);
+
         // --- Deals ---
         Permission::create(['name' => 'deals.view-any']);
         Permission::create(['name' => 'deals.view-own']);
@@ -83,6 +90,12 @@ final class RolesAndPermissionsSeeder extends Seeder
             'contacts.update',
             'contacts.update-any',
             'contacts.delete',
+            // Addresses
+            'addresses.create',
+            'addresses.update',
+            'addresses.update-any',
+            'addresses.delete',
+            'addresses.delete-any',
             // Deals
             'deals.view-any',
             'deals.create',
@@ -103,12 +116,19 @@ final class RolesAndPermissionsSeeder extends Seeder
         $salesAgent->givePermissionTo([
             'dashboard.view',
             'profile.manage',
+            // Accounts
             'accounts.view-own',
             'accounts.create',
             'accounts.update',
+            // Contacts
             'contacts.view-own',
             'contacts.create',
             'contacts.update',
+            // Addresses
+            'addresses.create',
+            'addresses.update',
+            'addresses.delete',
+            // Deals
             'deals.view-own',
             'deals.create',
             'deals.update',

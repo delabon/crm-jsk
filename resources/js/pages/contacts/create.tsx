@@ -1,4 +1,6 @@
 import {Head} from '@inertiajs/react';
+import {AlertCircleIcon} from "lucide-react";
+import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import AppLayout from '@/layouts/app-layout';
 import {dashboard} from "@/routes";
 import contactRoutes from '@/routes/contacts';
@@ -41,6 +43,13 @@ export default function Create({statuses}: Props) {
                     method={formProps.method}
                     statuses={statuses}
                 />
+            </div>
+
+            <div className="space-y-4 p-6 max-w-xl">
+                <Alert className="w-full">
+                    <AlertCircleIcon />
+                    <AlertTitle>Address fields will be available after saving the contact.</AlertTitle>
+                </Alert>
             </div>
         </AppLayout>
     );

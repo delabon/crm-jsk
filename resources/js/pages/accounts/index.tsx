@@ -1,4 +1,5 @@
 import {Head, Link, usePage} from '@inertiajs/react';
+import {ExternalLink, Globe} from "lucide-react";
 import { CollectionPagination } from '@/components/collection-pagination';
 import DeleteButton from '@/components/delete-button';
 import ListSearch from '@/components/list-search';
@@ -72,7 +73,20 @@ export default function Index({ collection, search }: Props) {
                                 </TableCell>
                                 <TableCell>{account.industry}</TableCell>
                                 <TableCell>{account.phone}</TableCell>
-                                <TableCell>{account.website}</TableCell>
+                                <TableCell>
+                                    <a
+                                        href={account.website}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+                                    >
+                                        {account.website.replace(
+                                            /^https?:\/\//,
+                                            '',
+                                        )}
+                                        <ExternalLink className="h-3 w-3" />
+                                    </a>
+                                </TableCell>
                                 <TableCell>
                                     {account.owner?.name ?? '—'}
                                 </TableCell>

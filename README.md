@@ -1,6 +1,6 @@
 # CRM-JSK
 
-A full-featured **Customer Relationship Management (CRM)** web application built with Laravel 13, Inertia.js 3, and React. Designed to help sales teams manage their entire pipeline from first contact to closed deal — with a fast, SPA-like experience and no separate API.
+A full-featured **Customer Relationship Management (CRM)** web application built with Laravel 13, Inertia.js 3, and React. Designed to help sales teams manage their entire pipeline from first contact to closed deal — with a fast SPA-like experience.
 
 The system tracks companies (accounts), the people inside them (contacts), and the sales opportunities attached to those people (deals). It supports marketing campaigns with contact enrollment, polymorphic tasks and notes across every entity, and a flexible tagging system — all rendered through server-driven Inertia pages with role-scoped data.
 
