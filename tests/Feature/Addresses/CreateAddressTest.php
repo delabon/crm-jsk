@@ -2,9 +2,6 @@
 
 declare(strict_types=1);
 
-// TODO: creating addresses for contacts is rate limited
-// TODO: creating addresses for accounts is rate limited
-
 use App\Enums\UserRole;
 use App\Models\Account;
 use App\Models\Address;
@@ -247,6 +244,77 @@ test('an account can have multiple addresses', function () {
     $this->assertDatabaseCount('addresses', 2);
 });
 
+test('a sales agent cannot create an address on a contact or account owned by another user', function () {
+    $salesAgent = User::factory()
+        ->create()
+        ->syncRoles([UserRole::SalesAgent->value]);
+
+    $account = Account::factory()->create();
+    $contact = Contact::factory()->create();
+    $region = Region::query()
+        ->inRandomOrder()
+        ->first();
+    $addressData = [
+        'name' => fake()->sentence(),
+        'line1' => fake()->streetAddress(),
+        'line2' => fake()->streetAddress(),
+        'city' => fake()->word(),
+        'region_id' => $region->id,
+        'country_id' => $region->country_id,
+        'postal_code' => fake()->postcode(),
+    ];
+
+    $this->actingAs($salesAgent)
+        ->fromRoute('accounts.edit', $account)
+        ->post(route('addresses.store.for.account', $account), $addressData)
+        ->assertForbidden();
+
+    $this->actingAs($salesAgent)
+        ->fromRoute('contacts.edit', $contact)
+        ->post(route('addresses.store.for.contact', $contact), $addressData)
+        ->assertForbidden();
+
+    $this->assertDatabaseCount('addresses', 0);
+});
+
+test('line2 is optional', function () {
+    $superAdmin = User::factory()
+        ->create()
+        ->syncRoles([UserRole::SuperAdmin->value]);
+    $account = Account::factory()->create();
+    $contact = Contact::factory()->create();
+    $region = Region::query()
+        ->inRandomOrder()
+        ->first();
+
+    $addressData = [
+        'name' => fake()->sentence(),
+        'line1' => fake()->streetAddress(),
+        'line2' => null,
+        'city' => fake()->word(),
+        'region_id' => $region->id,
+        'country_id' => $region->country_id,
+        'postal_code' => fake()->postcode(),
+    ];
+
+    $this->actingAs($superAdmin)
+        ->fromRoute('accounts.edit', $account)
+        ->post(route('addresses.store.for.account', $account), $addressData)
+        ->assertRedirectBack()
+        ->assertSessionHas('success', 'The address has been added.');
+
+    $this->actingAs($superAdmin)
+        ->fromRoute('contacts.edit', $contact)
+        ->post(route('addresses.store.for.contact', $contact), $addressData)
+        ->assertRedirectBack()
+        ->assertSessionHas('success', 'The address has been added.');
+
+    $this->assertDatabaseCount('addresses', 2);
+
+    expect($account->addresses->first()->line2)->toBeNull()
+        ->and($contact->address->line2)->toBeNull();
+});
+
 it('fails when the name is invalid', function ($invalidValue, string $errorMessage) {
     $superAdmin = User::factory()
         ->create()
@@ -380,7 +448,7 @@ it('fails when the region field is invalid', function ($invalidValue, string $er
         'name' => fake()->sentence(),
         'line1' => fake()->streetAddress(),
         'line2' => fake()->streetAddress(),
-        'city' => fake()->word,
+        'city' => fake()->word(),
         'region_id' => $invalidValue,
         'country_id' => $region->country_id,
         'postal_code' => fake()->postcode(),
@@ -410,7 +478,7 @@ it('fails when the country field is invalid', function ($invalidValue, string $e
         'name' => fake()->sentence(),
         'line1' => fake()->streetAddress(),
         'line2' => fake()->streetAddress(),
-        'city' => fake()->word,
+        'city' => fake()->word(),
         'country_id' => $invalidValue,
         'region_id' => $region->id,
         'postal_code' => fake()->postcode(),
@@ -440,7 +508,7 @@ it('fails when the postal code field is invalid', function ($invalidValue, strin
         'name' => fake()->sentence(),
         'line1' => fake()->streetAddress(),
         'line2' => fake()->streetAddress(),
-        'city' => fake()->word,
+        'city' => fake()->word(),
         'country_id' => $region->country_id,
         'region_id' => $region->id,
         'postal_code' => $invalidValue,
@@ -467,7 +535,7 @@ it('fails when the region selected does not belongs to the selected country', fu
         'name' => fake()->sentence(),
         'line1' => fake()->streetAddress(),
         'line2' => fake()->streetAddress(),
-        'city' => fake()->word,
+        'city' => fake()->word(),
         'country_id' => 'tn',
         'region_id' => 'us-123',
         'postal_code' => '1234',
