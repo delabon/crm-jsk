@@ -18,7 +18,7 @@ return new class extends Migration
             $table->morphs('addressable');
             $table->string('name');
             $table->string('line1');
-            $table->string('line2');
+            $table->string('line2')->nullable();
             $table->string('city');
             $table->string('region_id', 10)->nullable()->index();
             $table->string('country_id', 3)->index();

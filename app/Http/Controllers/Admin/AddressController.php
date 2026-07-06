@@ -7,8 +7,7 @@ namespace App\Http\Controllers\Admin;
 use App\Actions\Addresses\DeleteAddressAction;
 use App\Actions\Addresses\StoreAddressForAccountAction;
 use App\Actions\Addresses\StoreAddressForContactAction;
-use App\Actions\Addresses\UpdateAddressForAccountAction;
-use App\Actions\Addresses\UpdateAddressForContactAction;
+use App\Actions\Addresses\UpdateAddressAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Addresses\AddressFormRequest;
 use App\Models\Account;
@@ -41,19 +40,13 @@ final class AddressController extends Controller
         Contact $contact,
         Address $address,
         AddressFormRequest $request,
-        UpdateAddressForContactAction $action
+        UpdateAddressAction $action
     ): RedirectResponse {
-        try {
-            $action->handle($contact, $address, $request->toDto());
+        $action->handle($address, $request->toDto());
 
-            return back()->with([
-                'success' => 'The address has been updated.',
-            ]);
-        } catch (Throwable $e) {
-            return back()->withErrors([
-                'name' => 'Something went wrong updating the address.',
-            ]);
-        }
+        return back()->with([
+            'success' => 'The address has been updated.',
+        ]);
     }
 
     public function storeForAccount(
@@ -72,19 +65,13 @@ final class AddressController extends Controller
         Account $account,
         Address $address,
         AddressFormRequest $request,
-        UpdateAddressForAccountAction $action
+        UpdateAddressAction $action
     ): RedirectResponse {
-        try {
-            $action->handle($account, $address, $request->toDto());
+        $action->handle($address, $request->toDto());
 
-            return back()->with([
-                'success' => 'The address has been updated.',
-            ]);
-        } catch (Throwable $e) {
-            return back()->withErrors([
-                'name' => 'Something went wrong updating the address.',
-            ]);
-        }
+        return back()->with([
+            'success' => 'The address has been updated.',
+        ]);
     }
 
     public function destroy(

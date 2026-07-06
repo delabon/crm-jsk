@@ -11,6 +11,6 @@ final class StoreAddressForAccountAction
 {
     public function handle(Account $account, SaveAddressDto $saveAddressDto): void
     {
-        $account->addresses()->Create($saveAddressDto->toArray());
+        $account->addresses()->create($saveAddressDto->toArray());
     }
 }
