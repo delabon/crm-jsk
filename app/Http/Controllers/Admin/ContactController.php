@@ -14,6 +14,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Contacts\ContactFormRequest;
 use App\Http\Requests\Admin\Contacts\IndexContactRequest;
 use App\Http\Resources\ContactResource;
+use App\Models\Address;
 use App\Models\Contact;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -87,14 +88,15 @@ final class ContactController extends Controller
     public function edit(Contact $contact, Request $request, GetCountryOptionsAction $getCountryOptionsAction): InertiaResponse
     {
         $contact->load(['user', 'account', 'address.country', 'address.region']);
+        $user = $request->user();
 
         return Inertia::render('contacts/edit', [
             'contact' => new ContactResource($contact),
             'statuses' => ContactStatus::options(),
             'countries' => $getCountryOptionsAction->handle(),
             'can' => [
-                'create_address' => $request->user()->can('addresses.create'),
-                'update_address' => $request->user()->can('addresses.update'),
+                'create_address' => $user->can('create', [Address::class, $contact]),
+                'update_address' => $user->can('addresses.update'),
             ],
         ]);
     }

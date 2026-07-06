@@ -14,6 +14,7 @@ use App\Http\Requests\Admin\Accounts\AccountFormRequest;
 use App\Http\Requests\Admin\Accounts\IndexAccountRequest;
 use App\Http\Resources\AccountResource;
 use App\Models\Account;
+use App\Models\Address;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -64,7 +65,7 @@ final class AccountController extends Controller
             'can' => [
                 'update' => $user->can('update', $account),
                 'delete' => $user->can('delete', $account),
-                'create_address' => $user->can('addresses.create'),
+                'create_address' => $user->can('create', [Address::class, $account]),
                 'update_address' => $user->can('addresses.update'),
                 'delete_address' => $user->can('addresses.delete'),
             ],
@@ -82,7 +83,7 @@ final class AccountController extends Controller
             'account' => new AccountResource($account),
             'countries' => $getCountryOptionsAction->handle(),
             'can' => [
-                'create_address' => $user->can('addresses.create'),
+                'create_address' => $user->can('create', [Address::class, $account]),
                 'update_address' => $user->can('addresses.update'),
                 'delete_address' => $user->can('addresses.delete'),
             ],
