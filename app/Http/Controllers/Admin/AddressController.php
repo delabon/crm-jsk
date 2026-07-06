@@ -8,13 +8,13 @@ use App\Actions\Addresses\DeleteAddressAction;
 use App\Actions\Addresses\StoreAddressForAccountAction;
 use App\Actions\Addresses\StoreAddressForContactAction;
 use App\Actions\Addresses\UpdateAddressAction;
+use App\Exceptions\AddressExistsException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Addresses\AddressFormRequest;
 use App\Models\Account;
 use App\Models\Address;
 use App\Models\Contact;
 use Illuminate\Http\RedirectResponse;
-use Throwable;
 
 final class AddressController extends Controller
 {
@@ -29,7 +29,7 @@ final class AddressController extends Controller
             return back()->with([
                 'success' => 'The address has been saved.',
             ]);
-        } catch (Throwable $e) {
+        } catch (AddressExistsException $e) {
             return back()->withErrors([
                 'name' => 'The address already exists.',
             ]);

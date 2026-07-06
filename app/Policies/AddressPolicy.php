@@ -10,8 +10,17 @@ use Illuminate\Database\Eloquent\Model;
 
 final class AddressPolicy
 {
+    public function createAny(User $user): bool
+    {
+        return $user->can('addresses.create-any');
+    }
+
     public function create(User $user, Model $model): bool
     {
+        if ($this->createAny($user)) {
+            return true;
+        }
+
         if (($model->user_id ?? 0) !== $user->id) {
             return false;
         }
