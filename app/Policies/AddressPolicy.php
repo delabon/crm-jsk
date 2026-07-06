@@ -6,11 +6,16 @@ namespace App\Policies;
 
 use App\Models\Address;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 
 final class AddressPolicy
 {
-    public function create(User $user): bool
+    public function create(User $user, Model $model): bool
     {
+        if (($model->user_id ?? 0) !== $user->id) {
+            return false;
+        }
+
         return $user->can('addresses.create');
     }
 

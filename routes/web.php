@@ -125,7 +125,7 @@ Route::middleware(['auth', 'verified'])
             ->group(function () {
                 Route::post('/contact/{contact}', 'storeForContact')
                     ->middleware(['throttle:addresses-manage'])
-                    ->can('create', [Address::class])
+                    ->can('create', [Address::class, 'contact'])
                     ->name('save.for.contact');
                 Route::patch('/contact/{contact}/{address}', 'updateForContact')
                     ->middleware(['throttle:addresses-manage'])
@@ -133,7 +133,7 @@ Route::middleware(['auth', 'verified'])
                     ->name('update.for.contact');
                 Route::post('/account/{account}', 'storeForAccount')
                     ->middleware(['throttle:addresses-manage'])
-                    ->can('create', [Address::class])
+                    ->can('create', [Address::class, 'account'])
                     ->name('store.for.account');
                 Route::patch('/account/{account}/{address}', 'updateForAccount')
                     ->middleware(['throttle:addresses-manage'])

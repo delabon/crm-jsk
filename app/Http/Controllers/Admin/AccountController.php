@@ -83,7 +83,7 @@ final class AccountController extends Controller
             'account' => new AccountResource($account),
             'countries' => $getCountryOptionsAction->handle(),
             'can' => [
-                'create_address' => $user->can('create', Address::class),
+                'create_address' => $user->can('addresses.create'),
                 'update_address' => $user->can('addresses.update'),
                 'delete_address' => $user->can('addresses.delete'),
             ],
