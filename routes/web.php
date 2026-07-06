@@ -126,7 +126,7 @@ Route::middleware(['auth', 'verified'])
                 Route::post('/contact/{contact}', 'storeForContact')
                     ->middleware(['throttle:addresses-manage'])
                     ->can('create', [Address::class, 'contact'])
-                    ->name('save.for.contact');
+                    ->name('store.for.contact');
                 Route::patch('/contact/{contact}/{address}', 'updateForContact')
                     ->middleware(['throttle:addresses-manage'])
                     ->can('update', 'address')

@@ -65,9 +65,6 @@ final class AccountController extends Controller
             'can' => [
                 'update' => $user->can('update', $account),
                 'delete' => $user->can('delete', $account),
-                'create_address' => $user->can('create', [Address::class, $account]),
-                'update_address' => $user->can('addresses.update'),
-                'delete_address' => $user->can('addresses.delete'),
             ],
         ]);
     }
