@@ -28,7 +28,7 @@ final class DatabaseSeeder extends Seeder
 
         User::factory()->create([
             'first_name' => 'Manager',
-            'last_name' => 'User',
+            'last_name' => 'Account',
             'email' => 'manager@example.com',
         ])->syncRoles(UserRole::Manager->value);
 
@@ -37,9 +37,5 @@ final class DatabaseSeeder extends Seeder
             'last_name' => 'Agent',
             'email' => 'sales.agent@example.com',
         ])->syncRoles(UserRole::SalesAgent->value);
-
-        // User::factory(19)
-        //     ->create()
-        //     ->each(static fn (User $user) => $user->assignRole(Role::User->value));
     }
 }

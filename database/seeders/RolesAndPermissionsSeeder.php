@@ -39,6 +39,7 @@ final class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'contacts.delete']);
 
         // --- Addresses ---
+        Permission::create(['name' => 'addresses.create-any']);
         Permission::create(['name' => 'addresses.create']);
         Permission::create(['name' => 'addresses.update']);
         Permission::create(['name' => 'addresses.update-any']);
@@ -91,6 +92,7 @@ final class RolesAndPermissionsSeeder extends Seeder
             'contacts.update-any',
             'contacts.delete',
             // Addresses
+            'addresses.create-any',
             'addresses.create',
             'addresses.update',
             'addresses.update-any',
