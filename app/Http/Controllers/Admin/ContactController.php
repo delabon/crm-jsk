@@ -97,6 +97,7 @@ final class ContactController extends Controller
             'can' => [
                 'create_address' => $user->can('create', [Address::class, $contact]),
                 'update_address' => $user->can('addresses.update'),
+                'delete_address' => $user->can('addresses.delete'),
             ],
         ]);
     }

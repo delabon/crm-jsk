@@ -1,9 +1,11 @@
 import {MapPinIcon, PencilIcon, PlusIcon} from "lucide-react";
 import {useState} from "react";
 import AddressForm from "@/components/address-form";
+import DeleteButton from "@/components/delete-button";
 import {Button} from "@/components/ui/button";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Modal} from "@/components/ui/modal";
+import addressesRoutes from "@/routes/addresses";
 import saveForContact from "@/routes/addresses/save/for";
 import updateForContact from "@/routes/addresses/update/for";
 import type {Contact, SelectOption} from "@/types";
@@ -14,6 +16,7 @@ type Props = {
     can: {
         create_address: boolean;
         update_address: boolean;
+        delete_address: boolean;
     };
 };
 
@@ -21,6 +24,8 @@ export default function ContactAddress({contact, countries, can}: Props) {
     const [open, setOpen] = useState(false);
     const address = contact.address;
     const hasAddress = !!address;
+
+    console.log(address, hasAddress);
 
     const storeForm = saveForContact.contact.form(contact.id);
     const updateForm = address
@@ -37,21 +42,31 @@ export default function ContactAddress({contact, countries, can}: Props) {
                     Address
                 </CardTitle>
 
-                {canManage && (
-                    <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
-                        {hasAddress ? (
-                            <>
-                                <PencilIcon className="mr-1 h-4 w-4" />
-                                Edit
-                            </>
-                        ) : (
-                            <>
-                                <PlusIcon className="mr-1 h-4 w-4" />
-                                Add address
-                            </>
-                        )}
-                    </Button>
-                )}
+                <div className="flex flex-row items-center gap-2">
+                    {canManage && (
+                        <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
+                            {hasAddress ? (
+                                <>
+                                    <PencilIcon className="mr-1 h-4 w-4" />
+                                    Edit
+                                </>
+                            ) : (
+                                <>
+                                    <PlusIcon className="mr-1 h-4 w-4" />
+                                    Add address
+                                </>
+                            )}
+                        </Button>
+                    )}
+
+                    {hasAddress && address && can.delete_address && (
+                        <DeleteButton
+                            size="sm"
+                            message="Are you sure you want to delete this address?"
+                            {...addressesRoutes.destroy.form(address.id)}
+                        />
+                    )}
+                </div>
             </CardHeader>
 
             <CardContent>

@@ -81,7 +81,7 @@ export default function AccountAddresses({account, countries, can}: Props) {
                                     <div className="flex shrink-0 items-center gap-2">
                                         {can.update_address && (
                                             <Button
-                                                variant="ghost"
+                                                variant="outline"
                                                 size="sm"
                                                 onClick={() => setEditing(address)}
                                             >
