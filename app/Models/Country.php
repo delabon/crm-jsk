@@ -17,6 +17,4 @@ use Squire\Models\Country as SquireCountry;
  * @property-read string $flag
  * @property-read string $name
  */
-final class Country extends SquireCountry
-{
-}
+final class Country extends SquireCountry {}
