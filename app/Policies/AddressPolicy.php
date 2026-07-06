@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Models\Account;
 use App\Models\Address;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
 
 final class AddressPolicy
 {
@@ -15,7 +15,7 @@ final class AddressPolicy
         return $user->can('addresses.create-any');
     }
 
-    public function create(User $user, Model $model): bool
+    public function create(User $user, Address|Account $model): bool
     {
         if ($this->createAny($user)) {
             return true;
