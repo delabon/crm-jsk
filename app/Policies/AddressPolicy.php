@@ -6,6 +6,7 @@ namespace App\Policies;
 
 use App\Models\Account;
 use App\Models\Address;
+use App\Models\Contact;
 use App\Models\User;
 
 final class AddressPolicy
@@ -15,7 +16,7 @@ final class AddressPolicy
         return $user->can('addresses.create-any');
     }
 
-    public function create(User $user, Address|Account $model): bool
+    public function create(User $user, Contact|Account $model): bool
     {
         if ($this->createAny($user)) {
             return true;
