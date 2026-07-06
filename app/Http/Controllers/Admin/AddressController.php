@@ -27,7 +27,7 @@ final class AddressController extends Controller
             $action->handle($contact, $request->toDto());
 
             return back()->with([
-                'success' => 'The address has been saved.',
+                'success' => 'The address has been added.',
             ]);
         } catch (AddressExistsException $e) {
             return back()->withErrors([

@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\Http\Requests\Admin\Addresses;
 
 use App\DataTransferObjects\Addresses\SaveAddressDto;
+use App\Rules\ValidRegion;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Squire\Rules\CountryRule;
+use Squire\Rules\RegionRule;
 
 final class AddressFormRequest extends FormRequest
 {
@@ -46,21 +49,29 @@ final class AddressFormRequest extends FormRequest
                 'string',
                 'max:255',
             ],
-            'region_id' => [
-                'nullable',
-                'string',
-                'max:10',
-            ],
             'country_id' => [
                 'required',
                 'string',
                 'max:3',
+                new CountryRule('id'),
+            ],
+            'region_id' => [
+                'nullable',
+                new ValidRegion($this->input('country_id')),
             ],
             'postal_code' => [
                 'required',
                 'string',
                 'max:15',
             ],
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'region_id' => 'state',
+            'country_id' => 'country',
         ];
     }
 
