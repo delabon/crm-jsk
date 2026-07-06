@@ -16,6 +16,6 @@ final class StoreAddressForContactAction
             throw new LogicException('Address already exists.');
         }
 
-        $contact->address()->Create($saveAddressDto->toArray());
+        $contact->address()->create($saveAddressDto->toArray());
     }
 }
