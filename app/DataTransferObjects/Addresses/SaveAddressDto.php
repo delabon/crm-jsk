@@ -6,6 +6,9 @@ namespace App\DataTransferObjects\Addresses;
 
 use Illuminate\Contracts\Support\Arrayable;
 
+/**
+ * @implements Arrayable <string, mixed>
+ */
 final readonly class SaveAddressDto implements Arrayable
 {
     private function __construct(
@@ -18,6 +21,9 @@ final readonly class SaveAddressDto implements Arrayable
         public string $postalCode
     ) {}
 
+    /**
+     * @param array<string, mixed> $payload
+     */
     public static function fromArray(array $payload): self
     {
         return new self(

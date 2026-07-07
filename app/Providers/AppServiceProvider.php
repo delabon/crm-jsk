@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Listeners\RolePermissionEventSubscriber;
+use App\Models\Account;
+use App\Models\Contact;
 use App\Models\Country;
 use App\Models\Region;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -37,6 +40,7 @@ final class AppServiceProvider extends ServiceProvider
         $this->configureRateLimits();
         $this->eventSubscribers();
         $this->registerSquireModels();
+        $this->registerMorphMap();
     }
 
     /**
@@ -109,5 +113,13 @@ final class AppServiceProvider extends ServiceProvider
     {
         Repository::registerSource(Region::class, 'en', base_path('vendor/squirephp/regions-en/resources/data.csv'));
         Repository::registerSource(Country::class, 'en', base_path('vendor/squirephp/countries-en/resources/data.csv'));
+    }
+
+    private function registerMorphMap(): void
+    {
+        Relation::morphMap([
+            'account' => Account::class,
+            'contact' => Contact::class,
+        ]);
     }
 }

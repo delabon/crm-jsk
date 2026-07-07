@@ -47,6 +47,9 @@ final class Account extends Model
         return $this->hasMany(Contact::class);
     }
 
+    /**
+     * @return MorphMany<Address, $this>
+     */
     public function addresses(): MorphMany
     {
         return $this->morphMany(Address::class, 'addressable');

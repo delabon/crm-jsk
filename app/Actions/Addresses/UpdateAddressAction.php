@@ -17,7 +17,7 @@ final class UpdateAddressAction
      */
     public function handle(Account|Contact $model, Address $address, SaveAddressDto $saveAddressDto): void
     {
-        if (!$address->addressable()->is($model)) {
+        if (! $address->addressable()->is($model)) {
             throw AddressMismatchException::forModel($model);
         }
 

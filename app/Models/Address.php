@@ -24,16 +24,25 @@ final class Address extends Model
         'postal_code',
     ];
 
+    /**
+     * @return MorphTo<Account|Contact, $this>
+     */
     public function addressable(): MorphTo
     {
         return $this->morphTo();
     }
 
+    /**
+     * @return BelongsTo<Region, $this>
+     */
     public function region(): BelongsTo
     {
         return $this->belongsTo(Region::class);
     }
 
+    /**
+     * @return BelongsTo<Country, $this>
+     */
     public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class);

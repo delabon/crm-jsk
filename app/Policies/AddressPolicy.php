@@ -39,7 +39,7 @@ final class AddressPolicy
             return false;
         }
 
-        return $address->addressable?->user?->id === $user->id;
+        return $address->addressable?->user_id === $user->id;
     }
 
     public function updateAny(User $user): bool
@@ -57,7 +57,7 @@ final class AddressPolicy
             return false;
         }
 
-        return $address->addressable?->user?->id === $user->id;
+        return $address->addressable?->user_id === $user->id;
     }
 
     public function deleteAny(User $user): bool

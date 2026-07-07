@@ -134,7 +134,7 @@ test('addresses can be added to contacts and accounts', function () {
             ->fromRoute('contacts.edit', $contact)
             ->post(route('addresses.store.for.contact', $contact), [
                 ...$addressData,
-                'name' => $addressData['name'].' contact '.$contact->id
+                'name' => $addressData['name'].' contact '.$contact->id,
             ])
             ->assertRedirectBack()
             ->assertSessionHas('success', 'The address has been added.');
@@ -143,7 +143,7 @@ test('addresses can be added to contacts and accounts', function () {
             ->fromRoute('accounts.edit', $account)
             ->post(route('addresses.store.for.account', $account), [
                 ...$addressData,
-                'name' => $addressData['name'].' account '.$account->id
+                'name' => $addressData['name'].' account '.$account->id,
             ])
             ->assertRedirectBack()
             ->assertSessionHas('success', 'The address has been added.');
@@ -207,7 +207,7 @@ test('a contact can only have one address', function () {
         ->post(route('addresses.store.for.contact', $contact), $addressData)
         ->assertRedirectBack()
         ->assertSessionHasErrors([
-            'name' => 'The address already exists.'
+            'name' => 'The address already exists.',
         ]);
 
     $this->assertDatabaseCount('addresses', 1);
@@ -339,7 +339,7 @@ it('fails when the name is invalid', function ($invalidValue, string $errorMessa
         ->post(route('addresses.store.for.contact', $contact), $addressData)
         ->assertRedirectBack()
         ->assertSessionHasErrors([
-            'name' => $errorMessage
+            'name' => $errorMessage,
         ]);
 
     $this->assertDatabaseCount('addresses', 0);
@@ -369,7 +369,7 @@ it('fails when the line1 field is invalid', function ($invalidValue, string $err
         ->post(route('addresses.store.for.contact', $contact), $addressData)
         ->assertRedirectBack()
         ->assertSessionHasErrors([
-            'line1' => $errorMessage
+            'line1' => $errorMessage,
         ]);
 
     $this->assertDatabaseCount('addresses', 0);
@@ -399,7 +399,7 @@ it('fails when the line2 field is invalid', function ($invalidValue, string $err
         ->post(route('addresses.store.for.contact', $contact), $addressData)
         ->assertRedirectBack()
         ->assertSessionHasErrors([
-            'line2' => $errorMessage
+            'line2' => $errorMessage,
         ]);
 
     $this->assertDatabaseCount('addresses', 0);
@@ -429,7 +429,7 @@ it('fails when the city field is invalid', function ($invalidValue, string $erro
         ->post(route('addresses.store.for.contact', $contact), $addressData)
         ->assertRedirectBack()
         ->assertSessionHasErrors([
-            'city' => $errorMessage
+            'city' => $errorMessage,
         ]);
 
     $this->assertDatabaseCount('addresses', 0);
@@ -459,7 +459,7 @@ it('fails when the region field is invalid', function ($invalidValue, string $er
         ->post(route('addresses.store.for.contact', $contact), $addressData)
         ->assertRedirectBack()
         ->assertSessionHasErrors([
-            'region_id' => $errorMessage
+            'region_id' => $errorMessage,
         ]);
 
     $this->assertDatabaseCount('addresses', 0);
@@ -489,7 +489,7 @@ it('fails when the country field is invalid', function ($invalidValue, string $e
         ->post(route('addresses.store.for.contact', $contact), $addressData)
         ->assertRedirectBack()
         ->assertSessionHasErrors([
-            'country_id' => $errorMessage
+            'country_id' => $errorMessage,
         ]);
 
     $this->assertDatabaseCount('addresses', 0);
@@ -519,7 +519,7 @@ it('fails when the postal code field is invalid', function ($invalidValue, strin
         ->post(route('addresses.store.for.contact', $contact), $addressData)
         ->assertRedirectBack()
         ->assertSessionHasErrors([
-            'postal_code' => $errorMessage
+            'postal_code' => $errorMessage,
         ]);
 
     $this->assertDatabaseCount('addresses', 0);
@@ -546,7 +546,7 @@ it('fails when the region selected does not belongs to the selected country', fu
         ->post(route('addresses.store.for.contact', $contact), $addressData)
         ->assertRedirectBack()
         ->assertSessionHasErrors([
-            'region_id' => 'The state field is invalid.'
+            'region_id' => 'The state field is invalid.',
         ]);
 
     $this->assertDatabaseCount('addresses', 0);

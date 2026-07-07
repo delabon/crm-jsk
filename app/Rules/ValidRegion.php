@@ -28,7 +28,7 @@ final readonly class ValidRegion implements ValidationRule
 
         $country = Country::find($this->countryId);
 
-        if (!$country) {
+        if (! $country) {
             return;
         }
 
@@ -36,15 +36,15 @@ final readonly class ValidRegion implements ValidationRule
             return;
         }
 
-        if (!is_string($value)) {
+        if (! is_string($value)) {
             $fail('The state field must be a string.');
         }
 
-        if (strlen($value) > 10) {
+        if (mb_strlen($value) > 10) {
             $fail('The state field must not be greater than 10 characters.');
         }
 
-        if (!$country->regions()->where('id', $value)->exists()) {
+        if (! $country->regions()->where('id', $value)->exists()) {
             $fail('The state field is invalid.');
         }
     }

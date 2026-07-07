@@ -52,6 +52,9 @@ final class Contact extends Model
         return $this->belongsTo(Account::class);
     }
 
+    /**
+     * @return MorphOne<Address, $this>
+     */
     public function address(): MorphOne
     {
         return $this->morphOne(Address::class, 'addressable');

@@ -9,7 +9,6 @@ use App\Rules\ValidRegion;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Squire\Rules\CountryRule;
-use Squire\Rules\RegionRule;
 
 final class AddressFormRequest extends FormRequest
 {
