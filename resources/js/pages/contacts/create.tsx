@@ -1,6 +1,6 @@
 import {Head} from '@inertiajs/react';
 import {AlertCircleIcon} from "lucide-react";
-import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
+import {Alert, AlertTitle} from "@/components/ui/alert";
 import AppLayout from '@/layouts/app-layout';
 import {dashboard} from "@/routes";
 import contactRoutes from '@/routes/contacts';
