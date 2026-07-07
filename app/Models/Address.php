@@ -29,7 +29,7 @@ final class Address extends Model
      */
     public function addressable(): MorphTo
     {
-        return $this->morphTo();
+        return $this->morphTo(); // @phpstan-ignore return.type
     }
 
     /**
