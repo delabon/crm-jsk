@@ -22,7 +22,7 @@ final readonly class SaveAddressDto implements Arrayable
     ) {}
 
     /**
-     * @param array<string, mixed> $payload
+     * @param  array<string, mixed>  $payload
      */
     public static function fromArray(array $payload): self
     {
