@@ -1,5 +1,5 @@
 import {Head, Link, usePage} from '@inertiajs/react';
-import {ExternalLink, Globe} from "lucide-react";
+import {ExternalLink} from "lucide-react";
 import { CollectionPagination } from '@/components/collection-pagination';
 import DeleteButton from '@/components/delete-button';
 import ListSearch from '@/components/list-search';
