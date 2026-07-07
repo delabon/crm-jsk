@@ -87,7 +87,6 @@ export function Chips({
                         method: 'post',
                     });
                     const data: SelectOption[] = await res.json();
-                    console.log(data)
                     setResults(data);
                 } catch (err) {
                     if (err instanceof DOMException && err.name === "AbortError") {

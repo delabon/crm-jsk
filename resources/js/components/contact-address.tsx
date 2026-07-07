@@ -6,7 +6,7 @@ import {Button} from "@/components/ui/button";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Modal} from "@/components/ui/modal";
 import addressesRoutes from "@/routes/addresses";
-import saveForContact from "@/routes/addresses/save/for";
+import storeForContact from "@/routes/addresses/store";
 import updateForContact from "@/routes/addresses/update/for";
 import type {Contact, SelectOption} from "@/types";
 
@@ -25,9 +25,7 @@ export default function ContactAddress({contact, countries, can}: Props) {
     const address = contact.address;
     const hasAddress = !!address;
 
-    console.log(address, hasAddress);
-
-    const storeForm = saveForContact.contact.form(contact.id);
+    const storeForm = storeForContact.for.contact.form(contact.id);
     const updateForm = address
         ? updateForContact.contact.form({contact: contact.id, address: address.id})
         : null;
