@@ -9,6 +9,7 @@ use App\Actions\Addresses\StoreAddressForAccountAction;
 use App\Actions\Addresses\StoreAddressForContactAction;
 use App\Actions\Addresses\UpdateAddressAction;
 use App\Exceptions\AddressExistsException;
+use App\Exceptions\AddressMismatchException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Addresses\AddressFormRequest;
 use App\Models\Account;
@@ -42,11 +43,17 @@ final class AddressController extends Controller
         AddressFormRequest $request,
         UpdateAddressAction $action
     ): RedirectResponse {
-        $action->handle($address, $request->toDto());
+        try {
+            $action->handle($contact, $address, $request->toDto());
 
-        return back()->with([
-            'success' => 'The address has been updated.',
-        ]);
+            return back()->with([
+                'success' => 'The address has been updated.',
+            ]);
+        } catch (AddressMismatchException $e) {
+            return back()->withErrors([
+                'name' => 'The address does not belong to the contact.',
+            ]);
+        }
     }
 
     public function storeForAccount(
@@ -67,11 +74,17 @@ final class AddressController extends Controller
         AddressFormRequest $request,
         UpdateAddressAction $action
     ): RedirectResponse {
-        $action->handle($address, $request->toDto());
+        try {
+            $action->handle($account, $address, $request->toDto());
 
-        return back()->with([
-            'success' => 'The address has been updated.',
-        ]);
+            return back()->with([
+                'success' => 'The address has been updated.',
+            ]);
+        } catch (AddressMismatchException $e) {
+            return back()->withErrors([
+                'name' => 'The address does not belong to the account.',
+            ]);
+        }
     }
 
     public function destroy(

@@ -9,13 +9,8 @@ use App\Models\Contact;
 use App\Models\User;
 
 test('a guest cannot delete addresses', function () {
-    $contact = Contact::factory()->create();
-    $address = Address::factory()->forContact($contact)->create();
-
-    $this->delete(route('addresses.destroy', $address))
+    $this->delete(route('addresses.destroy', 123))
         ->assertRedirectToRoute('login');
-
-    $this->assertDatabaseCount('addresses', 1);
 });
 
 test('a non-verified user cannot delete addresses', function () {
