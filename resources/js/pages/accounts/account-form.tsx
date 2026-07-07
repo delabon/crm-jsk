@@ -8,7 +8,7 @@ import type {Account} from "@/types";
 
 type Props = {
     action: string;
-    method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | undefined;
+    method: "get" | "post" | "put" | "delete" | "patch" | undefined;
     account?: Account;
 }
 

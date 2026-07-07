@@ -1,0 +1,21 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Actions\Addresses;
+
+use App\DataTransferObjects\Addresses\SaveAddressDto;
+use App\Exceptions\AddressExistsException;
+use App\Models\Contact;
+
+final class StoreAddressForContactAction
+{
+    public function handle(Contact $contact, SaveAddressDto $saveAddressDto): void
+    {
+        if ($contact->address !== null) {
+            throw AddressExistsException::withContactId($contact->id);
+        }
+
+        $contact->address()->create($saveAddressDto->toArray());
+    }
+}

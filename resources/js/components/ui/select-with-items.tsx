@@ -8,11 +8,7 @@ import {
 } from "@/components/ui/select"
 import {ComponentProps} from "react";
 import { cn } from "@/lib/utils"
-
-export type SelectOption = {
-    label: string,
-    value: string,
-};
+import type {SelectOption} from "@/types";
 
 type Props = {
     items: SelectOption[],
@@ -20,10 +16,12 @@ type Props = {
     className?: string,
     name: string,
     defaultValue?: string,
-} & ComponentProps<typeof SelectTrigger>;
+    value?: string | null,
+    onValueChange?: (value: string) => void,
+} & Omit<ComponentProps<typeof SelectTrigger>, "value" | "name" | "defaultValue" | "onValueChange">;
 
-export function SelectWithItems({items, placeholder, name, defaultValue, ...props}: Props) {
-    return <Select name={name} defaultValue={defaultValue}>
+export function SelectWithItems({items, placeholder, name, defaultValue, value, onValueChange, ...props}: Props) {
+    return <Select<string, false> name={name} defaultValue={defaultValue} value={value} items={items} onValueChange={onValueChange ? (val) => onValueChange((val as string) ?? "") : undefined}>
         <SelectTrigger {...props} className={cn("w-full", props.className)}>
             <SelectValue placeholder={placeholder}/>
         </SelectTrigger>

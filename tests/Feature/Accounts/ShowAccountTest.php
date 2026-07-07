@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Enums\UserRole;
 use App\Models\Account;
+use App\Models\Address;
 use App\Models\User;
 use Inertia\Testing\AssertableInertia;
 
@@ -87,4 +88,36 @@ test("sales agent cannot view another sales agent's account show page", function
     $this->actingAs($agent1)
         ->get(route('accounts.show', $account))
         ->assertForbidden();
+});
+
+test('account addresses are visible on the show page when present', function () {
+    $admin = User::factory()->create()->syncRoles([UserRole::SuperAdmin->value]);
+    $account = Account::factory()->create();
+    Address::factory()->count(2)->forAccount($account)->create();
+
+    $this->actingAs($admin)
+        ->get(route('accounts.show', $account))
+        ->assertOk()
+        ->assertInertia(static function (AssertableInertia $page) use ($account) {
+            $page->component('accounts/show')
+                ->where('account.id', $account->id)
+                ->has('account.addresses', 2)
+                ->has('account.addresses.0.id')
+                ->has('account.addresses.0.country_name')
+                ->has('account.addresses.0.region_name');
+        });
+});
+
+test('account addresses prop is empty when none exist', function () {
+    $admin = User::factory()->create()->syncRoles([UserRole::SuperAdmin->value]);
+    $account = Account::factory()->create();
+
+    $this->actingAs($admin)
+        ->get(route('accounts.show', $account))
+        ->assertOk()
+        ->assertInertia(static function (AssertableInertia $page) use ($account) {
+            $page->component('accounts/show')
+                ->where('account.id', $account->id)
+                ->has('account.addresses', 0);
+        });
 });

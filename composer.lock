@@ -3853,7 +3853,7 @@
         },
         {
             "name": "squirephp/countries",
-            "version": "v3.11.0",
+            "version": "v3.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squirephp/countries.git",
@@ -3907,7 +3907,7 @@
         },
         {
             "name": "squirephp/countries-en",
-            "version": "v3.11.0",
+            "version": "v3.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squirephp/countries-en.git",
@@ -3961,16 +3961,16 @@
         },
         {
             "name": "squirephp/model",
-            "version": "v3.11.0",
+            "version": "v3.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squirephp/model.git",
-                "reference": "ec7e29ccb7fa19fdfbb22045a11624ec95c97a09"
+                "reference": "0efca361623b81a452a8c2ae764231dd6ebb1d7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squirephp/model/zipball/ec7e29ccb7fa19fdfbb22045a11624ec95c97a09",
-                "reference": "ec7e29ccb7fa19fdfbb22045a11624ec95c97a09",
+                "url": "https://api.github.com/repos/squirephp/model/zipball/0efca361623b81a452a8c2ae764231dd6ebb1d7a",
+                "reference": "0efca361623b81a452a8c2ae764231dd6ebb1d7a",
                 "shasum": ""
             },
             "require": {
@@ -4011,11 +4011,11 @@
                 "issues": "https://github.com/squirephp/squire/issues",
                 "source": "https://github.com/squirephp/squire"
             },
-            "time": "2026-03-19T09:25:21+00:00"
+            "time": "2026-07-02T08:25:36+00:00"
         },
         {
             "name": "squirephp/regions",
-            "version": "v3.11.0",
+            "version": "v3.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squirephp/regions.git",
@@ -4069,7 +4069,7 @@
         },
         {
             "name": "squirephp/regions-en",
-            "version": "v3.11.0",
+            "version": "v3.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squirephp/regions-en.git",
@@ -4123,7 +4123,7 @@
         },
         {
             "name": "squirephp/repository",
-            "version": "v3.11.0",
+            "version": "v3.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squirephp/repository.git",
@@ -4178,7 +4178,7 @@
         },
         {
             "name": "squirephp/rule",
-            "version": "v3.11.0",
+            "version": "v3.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squirephp/rule.git",

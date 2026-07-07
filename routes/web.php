@@ -3,12 +3,14 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Admin\AddressController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Models\Account;
+use App\Models\Address;
 use App\Models\Contact;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -113,6 +115,33 @@ Route::middleware(['auth', 'verified'])
                 Route::delete('/{contact}', 'destroy')
                     ->middleware('throttle:contacts-manage')
                     ->can('delete', 'contact')
+                    ->name('destroy');
+            });
+
+        // --- Addresses ---
+        Route::prefix('addresses')
+            ->name('addresses.')
+            ->controller(AddressController::class)
+            ->group(function () {
+                Route::post('/contact/{contact}', 'storeForContact')
+                    ->middleware(['throttle:addresses-manage'])
+                    ->can('create', [Address::class, 'contact'])
+                    ->name('store.for.contact');
+                Route::patch('/contact/{contact}/{address}', 'updateForContact')
+                    ->middleware(['throttle:addresses-manage'])
+                    ->can('update', 'address')
+                    ->name('update.for.contact');
+                Route::post('/account/{account}', 'storeForAccount')
+                    ->middleware(['throttle:addresses-manage'])
+                    ->can('create', [Address::class, 'account'])
+                    ->name('store.for.account');
+                Route::patch('/account/{account}/{address}', 'updateForAccount')
+                    ->middleware(['throttle:addresses-manage'])
+                    ->can('update', 'address')
+                    ->name('update.for.account');
+                Route::delete('/{address}', 'destroy')
+                    ->middleware(['throttle:addresses-manage'])
+                    ->can('delete', 'address')
                     ->name('destroy');
             });
     });
