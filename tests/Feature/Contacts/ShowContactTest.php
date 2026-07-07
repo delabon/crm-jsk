@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Enums\UserRole;
+use App\Models\Address;
 use App\Models\Contact;
 use App\Models\User;
 use Inertia\Testing\AssertableInertia;
@@ -117,4 +118,40 @@ test('sales agent can only see their contacts', function () {
     $this->actingAs($salesAgent)
         ->get(route('contacts.show', $contact))
         ->assertOk();
+});
+
+test('contact address is visible on the show page when present', function () {
+    $admin = User::factory()
+        ->create()
+        ->syncRoles([UserRole::SuperAdmin->value]);
+
+    $contact = Contact::factory()->create();
+    $address = Address::factory()->forContact($contact)->create();
+
+    $this->actingAs($admin)
+        ->get(route('contacts.show', $contact))
+        ->assertOk()
+        ->assertInertia(static function (AssertableInertia $page) use ($address) {
+            $page->component('contacts/show')
+                ->has('contact.address')
+                ->where('contact.address.id', $address->id)
+                ->has('contact.address.country_name')
+                ->has('contact.address.region_name');
+        });
+});
+
+test('contact address prop is null when none exists', function () {
+    $admin = User::factory()
+        ->create()
+        ->syncRoles([UserRole::SuperAdmin->value]);
+
+    $contact = Contact::factory()->create();
+
+    $this->actingAs($admin)
+        ->get(route('contacts.show', $contact))
+        ->assertOk()
+        ->assertInertia(static function (AssertableInertia $page) {
+            $page->component('contacts/show')
+                ->where('contact.address', null);
+        });
 });
