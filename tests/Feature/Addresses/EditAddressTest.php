@@ -563,13 +563,49 @@ test('cannot update an address that belongs to a different parent model', functi
         ->fromRoute('contacts.edit', $contactA)
         ->patch(route('addresses.update.for.contact', ['contact' => $contactA, 'address' => $addressB]), $addressData)
         ->assertSessionHasErrors([
-            'name' => 'The address does not belong to the contact.'
+            'name' => 'The address does not belong to the contact.',
         ]);
 
     $addressB->refresh();
 
     expect($addressB->name)->not()->toBe('Updated via mismatched parent')
         ->and($addressB->addressable_id)->toBe($contactB->id);
+});
+
+test('cannot update an account address that belongs to a different parent model', function () {
+    $salesAgent = User::factory()
+        ->create()
+        ->syncRoles([UserRole::SalesAgent->value]);
+
+    $accountA = Account::factory()->create();
+    $accountB = Account::factory()->create(['user_id' => $salesAgent->id]);
+    $addressB = Address::factory()->forAccount($accountB)->create();
+
+    $region = Region::query()
+        ->inRandomOrder()
+        ->first();
+
+    $addressData = [
+        'name' => 'Updated via mismatched parent',
+        'line1' => fake()->streetAddress(),
+        'line2' => fake()->streetAddress(),
+        'city' => fake()->word(),
+        'region_id' => $region->id,
+        'country_id' => $region->country_id,
+        'postal_code' => fake()->postcode(),
+    ];
+
+    $this->actingAs($salesAgent)
+        ->fromRoute('accounts.edit', $accountA)
+        ->patch(route('addresses.update.for.account', ['account' => $accountA, 'address' => $addressB]), $addressData)
+        ->assertSessionHasErrors([
+            'name' => 'The address does not belong to the account.',
+        ]);
+
+    $addressB->refresh();
+
+    expect($addressB->name)->not()->toBe('Updated via mismatched parent')
+        ->and($addressB->addressable_id)->toBe($accountB->id);
 });
 
 test('updating addresses for contacts is rate limited', function () {
