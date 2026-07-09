@@ -6,7 +6,7 @@ namespace App\Http\Requests\Auth;
 
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
-use App\DataTransferObjects\StoreUserDto;
+use App\DataTransferObjects\Users\StoreUserDto;
 use App\Enums\UserRole;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;

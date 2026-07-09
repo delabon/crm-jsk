@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Accounts;
 
-use App\DataTransferObjects\AccountFormDto;
+use App\DataTransferObjects\Accounts\AccountFormDto;
 use App\Models\Account;
 use App\Models\User;
 

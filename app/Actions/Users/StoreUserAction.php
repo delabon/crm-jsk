@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Users;
 
-use App\DataTransferObjects\StoreUserDto;
+use App\DataTransferObjects\Users\StoreUserDto;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Events\Verified;

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\Admin\AccountController;
-use App\Http\Controllers\Admin\AddressController;
-use App\Http\Controllers\Admin\ContactController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Settings\PasswordController;
-use App\Http\Controllers\Settings\ProfileController;
+use App\Http\Controllers\Dashboard\AccountController;
+use App\Http\Controllers\Dashboard\AddressController;
+use App\Http\Controllers\Dashboard\ContactController;
+use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\Settings\PasswordController;
+use App\Http\Controllers\Dashboard\Settings\ProfileController;
+use App\Http\Controllers\Dashboard\UserController;
 use App\Models\Account;
 use App\Models\Address;
 use App\Models\Contact;
