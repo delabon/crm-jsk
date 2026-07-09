@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Actions\Countries;
+namespace App\Queries\Countries;
 
 use App\Models\Country;
 
-final class GetCountryOptionsAction
+final class GetCountryOptionsQuery
 {
     /**
      * @return array<int, array<string, string>>
      */
-    public function handle(): array
+    public function get(): array
     {
         return Country::all()
             ->map(static fn (Country $country) => [

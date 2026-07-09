@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Dashboard;
 
 use App\Actions\Accounts\DeleteAccountAction;
-use App\Actions\Accounts\GetPaginatedAccountAction;
 use App\Actions\Accounts\StoreAccountAction;
 use App\Actions\Accounts\UpdateAccountAction;
-use App\Actions\Countries\GetCountryOptionsAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\Accounts\AccountFormRequest;
 use App\Http\Requests\Dashboard\Accounts\IndexAccountRequest;
@@ -16,6 +14,8 @@ use App\Http\Resources\Accounts\AccountResource;
 use App\Models\Account;
 use App\Models\Address;
 use App\Models\User;
+use App\Queries\Accounts\GetPaginatedAccountsQuery;
+use App\Queries\Countries\GetCountryOptionsQuery;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -24,13 +24,13 @@ use Inertia\Response as InertiaResponse;
 
 final class AccountController extends Controller
 {
-    public function index(IndexAccountRequest $request, GetPaginatedAccountAction $action): InertiaResponse
+    public function index(IndexAccountRequest $request, GetPaginatedAccountsQuery $query): InertiaResponse
     {
         /** @var User $user */
         $user = $request->user();
         $dto = $request->toDto();
 
-        $accounts = $action->handle(Config::integer('app.dashboard.per_page'), $user, $dto)
+        $accounts = $query->get(Config::integer('app.dashboard.per_page'), $user, $dto)
             ->appends($dto->toArray());
 
         return Inertia::render('accounts/index', [
@@ -52,7 +52,7 @@ final class AccountController extends Controller
             ->with('success', 'The account has been created.');
     }
 
-    public function show(Request $request, Account $account, GetCountryOptionsAction $getCountryOptionsAction): InertiaResponse
+    public function show(Request $request, Account $account, GetCountryOptionsQuery $getCountryOptionsQuery): InertiaResponse
     {
         $account->load(['user', 'addresses.country', 'addresses.region', 'contacts.user']);
 
@@ -61,7 +61,7 @@ final class AccountController extends Controller
 
         return Inertia::render('accounts/show', [
             'account' => new AccountResource($account),
-            'countries' => $getCountryOptionsAction->handle(),
+            'countries' => $getCountryOptionsQuery->get(),
             'can' => [
                 'update' => $user->can('update', $account),
                 'delete' => $user->can('delete', $account),
@@ -69,7 +69,7 @@ final class AccountController extends Controller
         ]);
     }
 
-    public function edit(Request $request, Account $account, GetCountryOptionsAction $getCountryOptionsAction): InertiaResponse
+    public function edit(Request $request, Account $account, GetCountryOptionsQuery $getCountryOptionsQuery): InertiaResponse
     {
         $account->load(['user', 'addresses.country', 'addresses.region']);
 
@@ -78,7 +78,7 @@ final class AccountController extends Controller
 
         return Inertia::render('accounts/edit', [
             'account' => new AccountResource($account),
-            'countries' => $getCountryOptionsAction->handle(),
+            'countries' => $getCountryOptionsQuery->get(),
             'can' => [
                 'create_address' => $user->can('create', [Address::class, $account]),
                 'update_address' => $user->can('addresses.update'),

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Actions\Dashboard\GetDashboardMetricsAction;
 use App\Http\Controllers\Controller;
+use App\Queries\Dashboard\GetDashboardMetricsQuery;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
@@ -16,10 +16,10 @@ final class DashboardController extends Controller
     /**
      * @throws Throwable
      */
-    public function __invoke(Request $request, GetDashboardMetricsAction $action): InertiaResponse
+    public function __invoke(Request $request, GetDashboardMetricsQuery $getDashboardMetricsQuery): InertiaResponse
     {
         return Inertia::render('dashboard', [
-            'metrics' => $action->handle($request->user()),
+            'metrics' => $getDashboardMetricsQuery->handle($request->user()),
         ]);
     }
 }

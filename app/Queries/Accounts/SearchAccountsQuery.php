@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Actions\Accounts;
+namespace App\Queries\Accounts;
 
 use App\Models\Account;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 
-final class SearchAccountAction
+final class SearchAccountsQuery
 {
     /**
      * @return LengthAwarePaginator<int, Account>
      */
-    public function handle(
+    public function search(
         string $query,
         ?int $userId = null,
         int $perPage = 10

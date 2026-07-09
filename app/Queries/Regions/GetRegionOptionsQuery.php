@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Actions\Regions;
+namespace App\Queries\Regions;
 
 use App\Models\Region;
 
-final class GetRegionOptionsAction
+final class GetRegionOptionsQuery
 {
     /**
      * @return array<int, array<string, string>>
      */
-    public function handle(?string $countryId = null): array
+    public function get(?string $countryId = null): array
     {
         return Region::query()
             ->when(

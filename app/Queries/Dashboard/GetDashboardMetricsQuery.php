@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Actions\Dashboard;
+namespace App\Queries\Dashboard;
 
 use App\Enums\UserRole;
 use App\Models\Account;
@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
-final class GetDashboardMetricsAction
+final class GetDashboardMetricsQuery
 {
     private int $cacheDays;
 

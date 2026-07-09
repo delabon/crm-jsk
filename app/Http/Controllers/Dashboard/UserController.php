@@ -6,7 +6,6 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Actions\Users\AdminDeleteUserAction;
 use App\Actions\Users\AdminUpdateUserAction;
-use App\Actions\Users\GetPaginatedUsersAction;
 use App\Actions\Users\StoreUserAction;
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
@@ -15,6 +14,7 @@ use App\Http\Requests\Dashboard\Users\StoreUserRequest;
 use App\Http\Requests\Dashboard\Users\UpdateUserRequest;
 use App\Http\Resources\Users\UserResource;
 use App\Models\User;
+use App\Queries\Users\GetPaginatedUsersQuery;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Config;
 use Inertia\Inertia;
@@ -23,11 +23,11 @@ use Throwable;
 
 final class UserController extends Controller
 {
-    public function index(IndexUserRequest $request, GetPaginatedUsersAction $action): InertiaResponse
+    public function index(IndexUserRequest $request, GetPaginatedUsersQuery $getPaginatedUsersQuery): InertiaResponse
     {
         $userFiltersDto = $request->toDto();
 
-        $users = $action->handle(Config::integer('app.dashboard.per_page'), $userFiltersDto)
+        $users = $getPaginatedUsersQuery->get(Config::integer('app.dashboard.per_page'), $userFiltersDto)
             ->appends(array_filter($userFiltersDto->toArray()));
 
         return Inertia::render('users/index', [
