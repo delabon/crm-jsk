@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\API\Private\V1;
+namespace App\Http\Controllers\Api\Private\V1;
 
 use App\Actions\Accounts\SearchAccountAction;
 use App\Http\Controllers\Controller;
