@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Users;
 
-use App\DataTransferObjects\UpdateUserDto;
+use App\DataTransferObjects\Users\UpdateUserDto;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Throwable;

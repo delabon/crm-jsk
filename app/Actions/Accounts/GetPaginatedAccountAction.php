@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Accounts;
 
-use App\DataTransferObjects\AccountFilterDto;
+use App\DataTransferObjects\Accounts\AccountFilterDto;
 use App\Models\Account;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;

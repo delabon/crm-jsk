@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Auth;
 
-use App\DataTransferObjects\LoginDto;
+use App\DataTransferObjects\Users\LoginDto;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 

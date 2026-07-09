@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Requests\Admin\Users;
 
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;
-use App\DataTransferObjects\Users\StoreUserDto;
+use App\DataTransferObjects\Users\UpdateUserDto;
 use App\Enums\UserRole;
-use Illuminate\Contracts\Validation\ValidationRule;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-final class RegisterRequest extends FormRequest
+final class UpdateUserRequest extends FormRequest
 {
     use PasswordValidationRules,
         ProfileValidationRules;
@@ -27,24 +28,30 @@ final class RegisterRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array<mixed>|string>
+     * @return array<string, array<mixed>>
      */
     public function rules(): array
     {
+        /** @var User|null $user */
+        $user = $this->route('user');
+
         return [
-            ...$this->profileRules(),
-            'password' => $this->passwordRules(),
+            ...$this->profileRules($user?->id),
+            'role' => [
+                'required',
+                'string',
+                Rule::enum(UserRole::class),
+            ],
         ];
     }
 
-    public function toDto(): StoreUserDto
+    public function toDto(): UpdateUserDto
     {
-        return new StoreUserDto(
+        return new UpdateUserDto(
             firstName: $this->string('first_name')->value(),
             lastName: $this->string('last_name')->value(),
             email: $this->string('email')->value(),
-            password: $this->string('password')->value(),
-            role: UserRole::User,
+            role: $this->enum('role', UserRole::class)
         );
     }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Actions\Addresses;
 
 use App\DataTransferObjects\Addresses\SaveAddressDto;
-use App\Exceptions\AddressMismatchException;
+use App\Exceptions\Addresses\AddressMismatchException;
 use App\Models\Account;
 use App\Models\Address;
 use App\Models\Contact;

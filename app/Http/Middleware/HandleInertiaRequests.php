@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use App\Http\Resources\UserResource;
+use App\Http\Resources\Users\UserResource;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 

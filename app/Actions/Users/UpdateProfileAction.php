@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions\Users;
 
-use App\DataTransferObjects\UpdateProfileDto;
+use App\DataTransferObjects\Users\UpdateProfileDto;
 use App\Models\User;
 
 final class UpdateProfileAction
