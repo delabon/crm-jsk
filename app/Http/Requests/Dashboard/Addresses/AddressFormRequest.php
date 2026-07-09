@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\Admin\Addresses;
+namespace App\Http\Requests\Dashboard\Addresses;
 
 use App\DataTransferObjects\Addresses\SaveAddressDto;
 use App\Rules\ValidRegion;

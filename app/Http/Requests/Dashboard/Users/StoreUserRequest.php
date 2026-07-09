@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\Admin\Users;
+namespace App\Http\Requests\Dashboard\Users;
 
 use App\Concerns\PasswordValidationRules;
 use App\Concerns\ProfileValidationRules;

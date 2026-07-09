@@ -11,7 +11,7 @@ use App\Actions\Addresses\UpdateAddressAction;
 use App\Exceptions\Addresses\AddressExistsException;
 use App\Exceptions\Addresses\AddressMismatchException;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\Addresses\AddressFormRequest;
+use App\Http\Requests\Dashboard\Addresses\AddressFormRequest;
 use App\Models\Account;
 use App\Models\Address;
 use App\Models\Contact;

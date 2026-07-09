@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\Admin\Contacts;
+namespace App\Http\Requests\Dashboard\Contacts;
 
 use App\DataTransferObjects\Contacts\ContactFilterDto;
 use App\Enums\ContactStatus;

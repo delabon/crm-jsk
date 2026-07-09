@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\Admin\Accounts;
+namespace App\Http\Requests\Dashboard\Accounts;
 
 use App\DataTransferObjects\Accounts\AccountFormDto;
 use Illuminate\Foundation\Http\FormRequest;
